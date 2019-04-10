@@ -1,0 +1,10 @@
+.exe
+.out
+.vs
+x64
+Release
+Debug
+SA2LevelEditor/x64
+SA2LevelEditor/Release
+SA2LevelEditor/Debug
+makebuild

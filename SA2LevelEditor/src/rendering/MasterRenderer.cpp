@@ -1,0 +1,273 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "../entities/camera.h"
+#include "../shaders/shaderprogram.h"
+#include "../entities/entity.h"
+#include "../models/texturedmodel.h"
+#include "renderer.h"
+#include "masterrenderer.h"
+#include "../toolbox/maths.h"
+#include "../toolbox/matrix.h"
+#include "../main/main.h"
+#include "../main/displaymanager.h"
+//#include "../particles/particlemaster.h"
+
+#include <iostream>
+#include <list>
+#include <unordered_map>
+#include <stdexcept>
+
+ShaderProgram* MasterRenderer::shader = nullptr;
+EntityRenderer* MasterRenderer::renderer = nullptr;
+
+std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesMap;
+std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesMapPass2;
+std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesMapPass3;
+std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesTransparentMap;
+
+Matrix4f* MasterRenderer::projectionMatrix = nullptr;
+
+float MasterRenderer::VFOV_BASE = 60; //Vertical fov
+float MasterRenderer::VFOV_ADDITION = 0; //additional fov due to the vehicle going fast
+const float MasterRenderer::NEAR_PLANE = 1.5f; //0.5
+const float MasterRenderer::FAR_PLANE = 60000; //15000
+
+float MasterRenderer::RED = 0.2f;
+float MasterRenderer::GREEN = 0.2f;
+float MasterRenderer::BLUE = 0.2f;
+
+void MasterRenderer::init()
+{
+	shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
+	projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
+	renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
+
+	MasterRenderer::makeProjectionMatrix();
+	MasterRenderer::disableCulling();
+}
+
+void MasterRenderer::render(Camera* camera)
+{
+	prepare();
+	shader->start();
+	//shader->loadClipPlane(clipX, clipY, clipZ, clipW);
+
+	//calc behind clipm plane based on camera
+	Vector3f camDir = camera->calcForward();
+	camDir.normalize();
+	camDir.neg();
+	Vector3f startPos(&camera->eye);
+	//startPos = startPos + camDir.scaleCopy(-100);
+	Vector4f plane = Maths::calcPlaneValues(&startPos, &camDir);
+	shader->loadClipPlaneBehind(plane.x, plane.y, plane.z, plane.w);
+
+	//RED = SkyManager::getFogRed();
+	//GREEN = SkyManager::getFogGreen();
+	//BLUE = SkyManager::getFogBlue();
+	//shader->loadLight(Global::gameLightSun);
+	shader->loadViewMatrix(camera);
+	shader->connectTextureUnits();
+
+	renderer->renderNEW(&entitiesMap);
+	renderer->renderNEW(&entitiesMapPass2);
+	renderer->renderNEW(&entitiesMapPass3);
+
+	prepareTransparentRender();
+	renderer->renderNEW(&entitiesTransparentMap);
+	prepareTransparentRenderDepthOnly();
+	renderer->renderNEW(&entitiesTransparentMap);
+
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+	shader->stop();
+}
+
+void MasterRenderer::processEntity(Entity* entity)
+{
+	if (entity->visible == false)
+	{
+		return;
+	}
+
+	std::list<TexturedModel*>* modellist = entity->getModels();
+	for (TexturedModel* entityModel : (*modellist))
+	{
+		std::list<Entity*>* list = &entitiesMap[entityModel];
+		list->push_back(entity);
+	}
+}
+
+void MasterRenderer::processEntityPass2(Entity* entity)
+{
+	if (entity->visible == false)
+	{
+		return;
+	}
+
+	std::list<TexturedModel*>* modellist = entity->getModels();
+	for (TexturedModel* entityModel : (*modellist))
+	{
+		std::list<Entity*>* list = &entitiesMapPass2[entityModel];
+		list->push_back(entity);
+	}
+}
+
+void MasterRenderer::processEntityPass3(Entity* entity)
+{
+	if (entity->visible == false)
+	{
+		return;
+	}
+
+	std::list<TexturedModel*>* modellist = entity->getModels();
+	for (TexturedModel* entityModel : (*modellist))
+	{
+		std::list<Entity*>* list = &entitiesMapPass3[entityModel];
+		list->push_back(entity);
+	}
+}
+
+void MasterRenderer::processTransparentEntity(Entity* entity)
+{
+	if (entity->visible == false)
+	{
+		return;
+	}
+
+	std::list<TexturedModel*>* modellist = entity->getModels();
+	for (TexturedModel* entityModel : (*modellist))
+	{
+		std::list<Entity*>* list = &entitiesTransparentMap[entityModel];
+		list->push_back(entity);
+	}
+}
+
+void MasterRenderer::clearEntities()
+{
+	entitiesMap.clear();
+}
+
+void MasterRenderer::clearEntitiesPass2()
+{
+	entitiesMapPass2.clear();
+}
+
+void MasterRenderer::clearEntitiesPass3()
+{
+	entitiesMapPass3.clear();
+}
+
+void MasterRenderer::clearTransparentEntities()
+{
+	entitiesTransparentMap.clear();
+}
+
+void MasterRenderer::prepare()
+{
+	glEnable(GL_MULTISAMPLE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(true);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(RED, GREEN, BLUE, 1);
+}
+
+void MasterRenderer::prepareTransparentRender()
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(false);
+}
+
+void MasterRenderer::prepareTransparentRenderDepthOnly()
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(true);
+}
+
+void MasterRenderer::cleanUp()
+{
+	shader->cleanUp();
+	delete shader; INCR_DEL("ShaderProgram");
+	delete renderer; INCR_DEL("EntityRenderer");
+	delete projectionMatrix; INCR_DEL("Matrix4f");
+}
+
+void MasterRenderer::enableCulling()
+{
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+}
+
+void MasterRenderer::disableCulling()
+{
+	glDisable(GL_CULL_FACE);
+}
+
+void MasterRenderer::makeProjectionMatrix()
+{
+    extern unsigned int SCR_WIDTH;
+    extern unsigned int SCR_HEIGHT;
+
+	int displayWidth;
+	int displayHeight;
+	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+
+	float aspectRatio = (float)displayWidth / (float)displayHeight;
+
+
+	//FOV = 50;
+	float y_scale = 1.0f / tanf(Maths::toRadians((VFOV_BASE+VFOV_ADDITION) / 2.0f));
+	float x_scale = y_scale / aspectRatio;
+
+
+	//FOV = 88.88888;
+	//float x_scale = (float)((1.0f / tan(toRadians(HFOV / 2.0f))));
+	//float y_scale = x_scale * aspectRatio;
+
+
+	float frustum_length = FAR_PLANE - NEAR_PLANE;
+
+	projectionMatrix->m00 = x_scale;
+	projectionMatrix->m11 = y_scale;
+	projectionMatrix->m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+	projectionMatrix->m23 = -1;
+	projectionMatrix->m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+	projectionMatrix->m33 = 0;
+
+	renderer->updateProjectionMatrix(projectionMatrix);
+
+	//ParticleMaster::updateProjectionMatrix(projectionMatrix);
+}
+
+Matrix4f* MasterRenderer::getProjectionMatrix()
+{
+	return projectionMatrix;
+}
+
+float MasterRenderer::getVFOV()
+{
+	return VFOV_BASE;
+}
+
+float MasterRenderer::getNearPlane()
+{
+	return NEAR_PLANE;
+}
+
+float MasterRenderer::getFarPlane()
+{
+	return FAR_PLANE;
+}

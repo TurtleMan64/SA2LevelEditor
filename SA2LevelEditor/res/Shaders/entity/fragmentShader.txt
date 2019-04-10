@@ -1,0 +1,29 @@
+#version 400 core
+
+in vec2 pass_textureCoords;
+in vec3 color;
+
+out vec4 out_Color;
+
+uniform sampler2D textureSampler;
+uniform sampler2D textureSampler2;
+uniform int   hasTransparency;
+uniform vec3  baseColour;
+uniform float mixFactor;
+
+void main(void)
+{
+	vec4 rawTextureColour = mix(texture(textureSampler, pass_textureCoords), texture(textureSampler2, pass_textureCoords), mixFactor);
+    rawTextureColour.rgb *= baseColour*color;
+    
+	if (hasTransparency == 0)
+	{
+		if (rawTextureColour.a < 0.9)
+		{
+			discard;
+		}
+		rawTextureColour.a = 1;
+	}
+	
+	out_Color = rawTextureColour;
+}

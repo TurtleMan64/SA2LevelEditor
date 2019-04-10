@@ -1,0 +1,126 @@
+#include <glad/glad.h>
+
+#include "entity.h"
+#include "../models/texturedmodel.h"
+#include "../toolbox/vector.h"
+#include "../toolbox/maths.h"
+#include "../main/main.h"
+#include "../collision/collisionmodel.h"
+
+#include <list>
+#include <iostream>
+#include <string>
+
+Entity::Entity()
+{
+	this->position.x = 0;
+	this->position.y = 0;
+	this->position.z = 0;
+	this->rotationX = 0;
+	this->rotationY = 0;
+	this->rotationZ = 0; 
+	this->scale = 1;
+	this->visible = true;
+	this->baseColour.set(1,1,1);
+}
+
+Entity::Entity(Vector3f* position)
+{
+	this->position.x = position->x;
+	this->position.y = position->y;
+	this->position.z = position->z;
+	this->rotationX = 0;
+	this->rotationY = 0;
+	this->rotationZ = 0;
+	this->scale = 1;
+	this->visible = true;
+	this->baseColour.set(1,1,1);
+}
+
+Entity::~Entity()
+{
+
+}
+
+void Entity::step()
+{
+
+}
+
+void Entity::increasePosition(float dx, float dy, float dz)
+{
+	position.x += dx;
+	position.y += dy;
+	position.z += dz;
+}
+
+void Entity::increaseRotation(float dx, float dy, float dz)
+{
+	rotationX += dx;
+	rotationY += dy;
+	rotationZ += dz;
+}
+
+std::list<TexturedModel*>* Entity::getModels()
+{
+	return nullptr;
+}
+
+
+void Entity::setPosition(Vector3f* newPos)
+{
+	this->position.x = newPos->x;
+	this->position.y = newPos->y;
+	this->position.z = newPos->z;
+}
+void Entity::setPosition(float newX, float newY, float newZ)
+{
+	this->position.x = newX;
+	this->position.y = newY;
+	this->position.z = newZ;
+}
+
+void Entity::setBaseColour(float red, float green, float blue)
+{
+	baseColour.set(red, green, blue);
+}
+
+void Entity::updateTransformationMatrix()
+{
+	Maths::createTransformationMatrix(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scale);
+}
+
+void Entity::updateTransformationMatrix(float scaleX, float scaleY, float scaleZ)
+{
+	Maths::createTransformationMatrix(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixSADX()
+{
+	Maths::createTransformationMatrixSADX(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scale);
+}
+
+Matrix4f* Entity::getTransformationMatrix()
+{
+	return &transformationMatrix;
+}
+
+void Entity::deleteModels(std::list<TexturedModel*>* modelsToDelete)
+{
+	for (auto model : (*modelsToDelete))
+	{
+		model->deleteMe();
+		delete model; INCR_DEL("TexturedModel");
+	}
+	modelsToDelete->clear();
+}
+
+void Entity::deleteCollisionModel(CollisionModel** colModelToDelete)
+{
+	if ((*colModelToDelete) != nullptr)
+	{
+		(*colModelToDelete)->deleteMe();
+		delete (*colModelToDelete); INCR_DEL("CollisionModel");
+		(*colModelToDelete) = nullptr;
+	}
+}
