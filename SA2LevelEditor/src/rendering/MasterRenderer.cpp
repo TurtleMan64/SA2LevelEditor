@@ -28,10 +28,10 @@ std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesT
 
 Matrix4f* MasterRenderer::projectionMatrix = nullptr;
 
-float MasterRenderer::VFOV_BASE = 60; //Vertical fov
-float MasterRenderer::VFOV_ADDITION = 0; //additional fov due to the vehicle going fast
-const float MasterRenderer::NEAR_PLANE = 1.5f; //0.5
-const float MasterRenderer::FAR_PLANE = 60000; //15000
+float MasterRenderer::VFOV = 0; //Vertical fov
+float MasterRenderer::HFOV = 0; //Horizontal fov
+const float MasterRenderer::NEAR_PLANE = 1.5f; //0.5 old value
+const float MasterRenderer::FAR_PLANE = 60000; //15000 old value
 
 float MasterRenderer::RED = 0.2f;
 float MasterRenderer::GREEN = 0.2f;
@@ -42,7 +42,7 @@ void MasterRenderer::init()
 	shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
 	projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
 	renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
-
+    MasterRenderer::setVFOV(70);
 	MasterRenderer::makeProjectionMatrix();
 	MasterRenderer::disableCulling();
 }
@@ -218,9 +218,6 @@ void MasterRenderer::disableCulling()
 
 void MasterRenderer::makeProjectionMatrix()
 {
-    extern unsigned int SCR_WIDTH;
-    extern unsigned int SCR_HEIGHT;
-
 	int displayWidth;
 	int displayHeight;
 	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
@@ -229,7 +226,7 @@ void MasterRenderer::makeProjectionMatrix()
 
 
 	//FOV = 50;
-	float y_scale = 1.0f / tanf(Maths::toRadians((VFOV_BASE+VFOV_ADDITION) / 2.0f));
+	float y_scale = 1.0f / tanf(Maths::toRadians((VFOV) / 2.0f));
 	float x_scale = y_scale / aspectRatio;
 
 
@@ -257,9 +254,29 @@ Matrix4f* MasterRenderer::getProjectionMatrix()
 	return projectionMatrix;
 }
 
+void MasterRenderer::setVFOV(float newVFOV)
+{
+    int displayWidth;
+	int displayHeight;
+	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+
+	float aspectRatio = (float)displayWidth / (float)displayHeight;
+
+    float heightOfFrustrum = 2*getNearPlane()*tanf(Maths::toRadians(newVFOV/2));
+    float widthOfFrustrum = aspectRatio*heightOfFrustrum;
+
+    VFOV = newVFOV;
+    HFOV = Maths::toDegrees(2*(atan2f(widthOfFrustrum/2, getNearPlane())));
+}
+
 float MasterRenderer::getVFOV()
 {
-	return VFOV_BASE;
+	return VFOV;
+}
+
+float MasterRenderer::getHFOV()
+{
+    return HFOV;
 }
 
 float MasterRenderer::getNearPlane()

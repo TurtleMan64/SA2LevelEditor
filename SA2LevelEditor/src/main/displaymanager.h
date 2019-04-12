@@ -2,7 +2,7 @@
 #define DISPLAYMANAGER_H
 
 #include <GLFW/glfw3.h>
-
+#include "../toolbox/vector.h"
 
 class DisplayManager
 {
@@ -22,6 +22,8 @@ private:
 
     static void callbackMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
 
+    static void callbackMouseClick(GLFWwindow* window, int button, int action, int mods);
+
     static void loadDisplaySettings();
     static void loadGraphicsSettings();
 
@@ -31,6 +33,8 @@ public:
     static void closeDisplay();
     static int displayWantsToClose();
     static GLFWwindow* getWindow();
+
+    static Vector2f getResolution();
 };
 
 #endif

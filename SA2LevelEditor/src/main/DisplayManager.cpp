@@ -17,6 +17,10 @@
 #include "../entities/camera.h"
 #include "../toolbox/maths.h"
 #include "../toolbox/vector.h"
+#include "../collision/collisionchecker.h"
+#include "../entities/cursor3d.h"
+
+#include "../entities/GlobalObjects/ring.h"
 
 // default settings
 unsigned int DisplayManager::SCR_WIDTH = 1280;
@@ -73,6 +77,7 @@ int DisplayManager::createDisplay()
 	glfwSetWindowCloseCallback(globalWindow, DisplayManager::window_close_callback);
     glfwSetCursorPosCallback(globalWindow, DisplayManager::callbackCursorPosition);
     glfwSetScrollCallback(globalWindow, DisplayManager::callbackMouseScroll);
+    glfwSetMouseButtonCallback(globalWindow, DisplayManager::callbackMouseClick);
 
 	GLFWimage icons[3];
 	icons[0].pixels = SOIL_load_image("res/Images/Icon16.png", &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
@@ -173,7 +178,7 @@ void DisplayManager::framebuffer_size_callback(GLFWwindow* /*windowHandle*/, int
 	SCR_WIDTH = width;
 	SCR_HEIGHT = height;
 	MasterRenderer::makeProjectionMatrix();
-    Global::refreshWindow = true;
+    Global::redrawWindow = true;
 }
 
 double DisplayManager::prevXPos = 0;
@@ -190,9 +195,9 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
     {
         int stateShiftL = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
         int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
-        if (stateShiftL || stateShiftR)  //pan the camera if you hold middle click and shift
+        if (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS)  //pan the camera if you hold middle click and shift
         {
-            const float PAN_SPEED = 1.0f;
+            const float PAN_SPEED = 0.5f;
 
             Vector3f camRight = Global::gameCamera->calcRight();
             Vector3f camUp = Global::gameCamera->calcUp();
@@ -209,21 +214,64 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Global::gameCamera->pitch += yDiff*ROTATE_SPEED;
         }
 
-        Global::refreshWindow = true;
+        Global::redrawWindow = true;
     }
 }
 
-void DisplayManager::callbackMouseScroll(GLFWwindow* /*window*/, double /*xoffset*/, double yoffset)
+void DisplayManager::callbackMouseScroll(GLFWwindow* window, double /*xoffset*/, double yoffset)
 {
-    //move the camera forward or back
-    const float MOVE_SPEED = 40.0f;
-    Vector3f camDir = Global::gameCamera->calcForward();
-    camDir.normalize();
-    Vector3f moveOffset = camDir.scaleCopy(((float)yoffset)*MOVE_SPEED);
+    int stateShiftL = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
+    int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
+    if (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS)
+    {
+        //move the camera forward or back based on distance from 3d cursor
+        Vector3f camDiff = Global::gameCursor3D->position - Global::gameCamera->eye;
+        camDiff.scale(0.1f*(float)yoffset);
+        if (camDiff.length() > 0.16f || yoffset < 0)
+        {
+            Global::gameCamera->eye = Global::gameCamera->eye + camDiff;
+        }
+    }
+    else
+    {
+        //move the camera forward or back at constant rate
+        const float MOVE_SPEED = 40.0f;
+        Vector3f camDir = Global::gameCamera->calcForward();
+        camDir.normalize();
+        Vector3f moveOffset = camDir.scaleCopy(((float)yoffset)*MOVE_SPEED);
+        Global::gameCamera->eye = Global::gameCamera->eye + moveOffset;
+    }
 
-    Global::gameCamera->eye = Global::gameCamera->eye + moveOffset;
+    Global::redrawWindow = true;
+}
 
-    Global::refreshWindow = true;
+void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int action, int /*mods*/)
+{
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        double xpos, ypos;
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        Vector3f clickDir = Maths::calcWorldSpaceDirectionVectorFromScreenSpaceCoords((float)xpos, (float)ypos);
+        clickDir.setLength(100);
+
+        Vector3f checkEnd(&Global::gameCamera->eye);
+        checkEnd = checkEnd + clickDir.scaleCopy(10000);
+        if (CollisionChecker::checkCollision(&Global::gameCamera->eye, &checkEnd))
+        {
+            //Global::addEntity(new Ring(CollisionChecker::getCollidePosition()));
+            //TODO: place 3d cursor here
+            Global::gameCursor3D->setPosition(CollisionChecker::getCollidePosition());
+        }
+        else
+        {
+            Vector3f ringpos = Global::gameCamera->eye + clickDir;
+            //Global::addEntity(new Ring(&ringpos));
+            Global::gameCursor3D->setPosition(&ringpos);
+        }
+
+        Global::redrawWindow = true;
+    }
 }
 
 void DisplayManager::window_close_callback(GLFWwindow* /*windowHandle*/)
@@ -296,7 +344,7 @@ void DisplayManager::loadGraphicsSettings()
 			{
 				if (strcmp(lineSplit[0], "FOV") == 0)
 				{
-					MasterRenderer::VFOV_BASE = std::stof(lineSplit[1], nullptr);
+					MasterRenderer::setVFOV(std::stof(lineSplit[1], nullptr));
 				}
 				else if (strcmp(lineSplit[0], "Anti-Aliasing_Samples") == 0)
 				{
@@ -307,4 +355,9 @@ void DisplayManager::loadGraphicsSettings()
 		}
 		file.close();
 	}
+}
+
+Vector2f DisplayManager::getResolution()
+{
+    return Vector2f((float)SCR_WIDTH, (float)SCR_HEIGHT);
 }

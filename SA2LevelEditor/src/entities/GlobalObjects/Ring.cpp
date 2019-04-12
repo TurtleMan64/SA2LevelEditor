@@ -20,6 +20,15 @@ Ring::Ring()
 
 }
 
+Ring::Ring(Vector3f* p)
+{
+    position.set(p);
+    scale = 1;
+	visible = true;
+	baseColour.set(1,1,1);
+	updateTransformationMatrix();
+}
+
 Ring::Ring(char data[32])
 {
     //std::fprintf(stdout, "ring\n");
@@ -47,10 +56,10 @@ Ring::Ring(char data[32])
     z[0] = data[19];
 
 	rotationX = 0;
-	rotationY = (float)(((int)(this))%360);
+	rotationY = Maths::random()*360.0f;
 	rotationZ = 0; 
 	scale = 1;
-	visible = true;
+	visible = false;
 	baseColour.set(1,1,1);
 	updateTransformationMatrix();
 }

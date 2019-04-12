@@ -44,6 +44,9 @@ public:
 							  std::vector<float>* vertexColors, 
 							  std::vector<int>* indices);
 
+    //for gui
+	static RawModel loadToVAO(std::vector<float>* positions, int dimensions);
+
 	//Loads a texture into GPU memory, returns the GLuint id
 	static GLuint loadTexture(const char* filename);
 

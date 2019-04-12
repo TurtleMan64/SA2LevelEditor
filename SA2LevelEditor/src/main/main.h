@@ -5,6 +5,7 @@ class Entity;
 class Camera;
 class Stage;
 class SkySphere;
+class Cursor3D;
 
 #include <string>
 #include <vector>
@@ -16,7 +17,7 @@ class SkySphere;
 #define STATE_RUNNING 1
 #define STATE_EXITING 2
 
-//#define DEV_MODE
+#define DEV_MODE
 
 #ifdef DEV_MODE
 	#include <thread>
@@ -46,11 +47,12 @@ private:
 public:
     static int main();
 
-    static bool refreshWindow;
+    static bool redrawWindow;
 
 	static Camera* gameCamera;
 	static Stage* gameStage;
 	static SkySphere* gameSkySphere;
+    static Cursor3D* gameCursor3D;
 	static int countNew;
 	static int countDelete;
 	static int gameState;

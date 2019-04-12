@@ -35,8 +35,14 @@ void CollisionChecker::falseAlarm()
 {
 	for (CollisionModel* cm : CollisionChecker::collideModels)
 	{
-		cm->playerIsOn = false;
+		cm->wasCollidedWith = false;
 	}
+}
+
+bool CollisionChecker::checkCollision(
+	Vector3f* p1, Vector3f* p2)
+{
+    return CollisionChecker::checkCollision(p1->x, p1->y, p1->z, p2->x, p2->y, p2->z);
 }
 
 bool CollisionChecker::checkCollision(
@@ -57,11 +63,12 @@ bool CollisionChecker::checkCollision(
 
 	for (CollisionModel* cm : CollisionChecker::collideModels)
 	{
-		if (CollisionChecker::checkPlayer)
-		{
-			cm->playerIsOn = false;
-		}
+		//if (CollisionChecker::checkPlayer)
+		//{
+			cm->wasCollidedWith = false;
+		//}
 
+        if (cm->isVisible)
         //Bounds check on entire model
         //if any of these are true, we can skip the model
 		//if (!((px1 <= cm->minX && px2 <= cm->minX) || (px1 >= cm->maxX && px2 >= cm->maxX) ||
@@ -136,11 +143,11 @@ bool CollisionChecker::checkCollision(
 		}
 	}
 
-	if (CollisionChecker::checkPlayer && finalModel != nullptr)
+	if (/*CollisionChecker::checkPlayer && */finalModel != nullptr)
 	{
-		finalModel->playerIsOn = true;
+		finalModel->wasCollidedWith = true;
 	}
-	CollisionChecker::checkPlayer = false;
+	//CollisionChecker::checkPlayer = false;
 
 	return triangleCollide;
 }

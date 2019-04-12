@@ -40,6 +40,9 @@
     <Filter Include="Source Files\entities\GlobalObjects">
       <UniqueIdentifier>{cdbe8994-d2ce-400b-bbf8-151ce9808076}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\guis">
+      <UniqueIdentifier>{f0cb61ea-997c-4796-9029-41f00b67714d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c">
@@ -147,6 +150,27 @@
     <ClCompile Include="src\entities\Unknown.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\CollideableObject.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guis\GuiManager.cpp">
+      <Filter>Source Files\guis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guis\GuiRenderer.cpp">
+      <Filter>Source Files\guis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guis\GuiShader.cpp">
+      <Filter>Source Files\guis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guis\GuiTexture.cpp">
+      <Filter>Source Files\guis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\guis\GuiTextureResources.cpp">
+      <Filter>Source Files\guis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\Cursor3D.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -249,6 +273,27 @@
       <Filter>Source Files\toolbox</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\unknown.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\collideableobject.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\guis\guimanager.h">
+      <Filter>Source Files\guis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\guis\guirenderer.h">
+      <Filter>Source Files\guis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\guis\guishader.h">
+      <Filter>Source Files\guis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\guis\guitexture.h">
+      <Filter>Source Files\guis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\guis\guitextureresources.h">
+      <Filter>Source Files\guis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\cursor3d.h">
       <Filter>Source Files\entities</Filter>
     </ClInclude>
   </ItemGroup>

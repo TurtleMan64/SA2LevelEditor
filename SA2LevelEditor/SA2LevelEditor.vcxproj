@@ -152,6 +152,8 @@
     <ClCompile Include="src\collision\CollisionModel.cpp" />
     <ClCompile Include="src\collision\Triangle3D.cpp" />
     <ClCompile Include="src\entities\Camera.cpp" />
+    <ClCompile Include="src\entities\CollideableObject.cpp" />
+    <ClCompile Include="src\entities\Cursor3D.cpp" />
     <ClCompile Include="src\entities\Dummy.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\Ring.cpp" />
@@ -162,6 +164,11 @@
     <ClCompile Include="src\entities\StageTransparent.cpp" />
     <ClCompile Include="src\entities\Unknown.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\guis\GuiManager.cpp" />
+    <ClCompile Include="src\guis\GuiRenderer.cpp" />
+    <ClCompile Include="src\guis\GuiShader.cpp" />
+    <ClCompile Include="src\guis\GuiTexture.cpp" />
+    <ClCompile Include="src\guis\GuiTextureResources.cpp" />
     <ClCompile Include="src\loading\FakeTexture.cpp" />
     <ClCompile Include="src\loading\LevelLoader.cpp" />
     <ClCompile Include="src\loading\Loader.cpp" />
@@ -189,6 +196,8 @@
     <ClInclude Include="src\collision\collisionmodel.h" />
     <ClInclude Include="src\collision\triangle3d.h" />
     <ClInclude Include="src\entities\camera.h" />
+    <ClInclude Include="src\entities\collideableobject.h" />
+    <ClInclude Include="src\entities\cursor3d.h" />
     <ClInclude Include="src\entities\dummy.h" />
     <ClInclude Include="src\entities\entity.h" />
     <ClInclude Include="src\entities\GlobalObjects\ring.h" />
@@ -198,6 +207,11 @@
     <ClInclude Include="src\entities\stagepass3.h" />
     <ClInclude Include="src\entities\stagetransparent.h" />
     <ClInclude Include="src\entities\unknown.h" />
+    <ClInclude Include="src\guis\guimanager.h" />
+    <ClInclude Include="src\guis\guirenderer.h" />
+    <ClInclude Include="src\guis\guishader.h" />
+    <ClInclude Include="src\guis\guitexture.h" />
+    <ClInclude Include="src\guis\guitextureresources.h" />
     <ClInclude Include="src\loading\fakeTexture.h" />
     <ClInclude Include="src\loading\levelloader.h" />
     <ClInclude Include="src\loading\loader.h" />

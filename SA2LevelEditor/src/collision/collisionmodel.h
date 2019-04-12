@@ -13,7 +13,9 @@ class CollisionModel
 public:
 	std::list<Triangle3D*> triangles;
 
-	bool playerIsOn;
+	bool wasCollidedWith;
+
+    bool isVisible;
 
 	int treeMaxDepth;
     float leafNodeWidth;

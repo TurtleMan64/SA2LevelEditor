@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include <cmath>
 #include <random>
 #include <chrono>
@@ -7,6 +8,8 @@
 #include "vector.h"
 #include "maths.h"
 #include "../main/main.h"
+#include "../main/displaymanager.h"
+#include "../rendering/masterrenderer.h"
 
 std::mt19937* Maths::generatorUniform = new std::mt19937(0);
 std::uniform_real_distribution<float>* Maths::distributionUniform = new std::uniform_real_distribution<float>(0.0f, 1.0f);
@@ -621,4 +624,75 @@ Vector4f Maths::calcPlaneValues(Vector3f* point, Vector3f* normal)
 	p3 = p3 + perp2;
 
 	return Maths::calcPlaneValues(&p1, &p2, &p3);
+}
+
+Vector3f Maths::calcWorldSpaceDirectionVectorFromScreenSpaceCoords(float clickPosX, float clickPosY)
+{
+    int displayWidth;
+	int displayHeight;
+	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+    float aspectRatio = ((float)displayWidth)/displayHeight;
+
+    float normalizedX = (clickPosX-(displayWidth/2))/((displayWidth/2));
+    float normalizedY = (clickPosY-(displayHeight/2))/((displayHeight/2));
+
+    float frustrumLengthY = MasterRenderer::NEAR_PLANE*std::tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
+    float frustrumLengthX = aspectRatio*frustrumLengthY;
+
+    float cameraSpaceCoordX = normalizedX*frustrumLengthX;
+    float cameraSpaceCoordY = -normalizedY*frustrumLengthY;
+    float cameraSpaceCoordZ = -MasterRenderer::NEAR_PLANE;
+
+    Vector3f cameraSpaceDirection(
+            cameraSpaceCoordX,
+            cameraSpaceCoordY,
+            cameraSpaceCoordZ);
+    cameraSpaceDirection.normalize();
+
+    Vector3f xAxis(-1, 0, 0);
+    Vector3f yAxis(0, -1, 0);
+
+    Vector3f worldSpaceOffset = Maths::rotatePoint(&cameraSpaceDirection, &xAxis, Maths::toRadians(Global::gameCamera->pitch));
+
+    return Maths::rotatePoint(&worldSpaceOffset, &yAxis, Maths::toRadians(Global::gameCamera->yaw));
+}
+
+//coordinates are 0,0 for middle of screen, -1, -1 for top left
+Vector2f Maths::calcScreenCoordsOfWorldPoint(Vector3f* worldPoint)
+{
+    int displayWidth;
+	int displayHeight;
+	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+    float aspectRatio = ((float)displayWidth)/displayHeight;
+    float frustrumLengthY = 2*MasterRenderer::NEAR_PLANE*std::tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
+    float frustrumLengthX = aspectRatio*frustrumLengthY;
+
+    //first translate so that camera is in the origin
+    Vector3f cameraSpaceCoord(worldPoint);
+    cameraSpaceCoord = cameraSpaceCoord - Global::gameCamera->eye;
+
+    //then, rotate so that things are back to if no cam rotation
+    float yaw = Maths::toRadians(Global::gameCamera->yaw);
+    float pitch = Maths::toRadians(Global::gameCamera->pitch);
+
+    Vector3f xAxis(-1, 0, 0);
+    Vector3f yAxis(0, -1, 0);
+
+    cameraSpaceCoord = Maths::rotatePoint(&cameraSpaceCoord, &yAxis, -yaw);
+    cameraSpaceCoord = Maths::rotatePoint(&cameraSpaceCoord, &xAxis, -pitch);
+
+    //check if the point is not going to be visible
+    if (cameraSpaceCoord.z > -MasterRenderer::NEAR_PLANE)
+    {
+        return Vector2f(-100, -100);
+    }
+
+    //now do trig to figure coordinates on the frustrum plane, and normalize
+    float hangle = atan2f(cameraSpaceCoord.x, -cameraSpaceCoord.z);
+    float xoff = (tanf(hangle)*MasterRenderer::NEAR_PLANE)/(frustrumLengthX/2);
+
+    float vangle = atan2f(cameraSpaceCoord.y, -cameraSpaceCoord.z);
+    float yoff = (tanf(vangle)*MasterRenderer::NEAR_PLANE)/(frustrumLengthY/2);
+
+    return Vector2f(xoff, yoff);
 }

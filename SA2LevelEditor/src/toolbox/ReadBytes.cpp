@@ -4,24 +4,24 @@
 
 std::vector<char> readAllBytes(char const* filename)
 {
-    std::ifstream file;
-    file.open(filename, std::ios::binary);
-    
-    std::vector<char> result;
-    
-    if (file.is_open())
-    {
-        while (!file.eof())
-        {
-            char dat;
-            file.read(&dat, 1);
-            result.push_back(dat);
-        }
-    }
-    
-    return result;
+    //std::ifstream file;
+    //file.open(filename, std::ios::binary);
+    //
+    //std::vector<char> result;
+    //
+    //if (file.is_open())
+    //{
+    //    while (!file.eof())
+    //    {
+    //        char dat;
+    //        file.read(&dat, 1);
+    //        result.push_back(dat);
+    //    }
+    //}
+    //
+    //return result;
 
-    /*
+    
     std::ifstream fl(filename, std::ios::binary);
     fl.seekg( 0, std::ios::end );
     size_t len = fl.tellg();
@@ -37,5 +37,5 @@ std::vector<char> readAllBytes(char const* filename)
     }
     delete[] ret;
     return result;
-    */
+    
 }

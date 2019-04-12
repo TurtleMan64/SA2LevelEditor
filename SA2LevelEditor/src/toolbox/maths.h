@@ -153,6 +153,15 @@ public:
 	//Given a basis {v1, v2, v3}, computes the coordinate vector
 	// of a point a in the new basis
 	static Vector3f coordinatesRelativeToBasis(Vector3f* v1, Vector3f* v2, Vector3f* v3, Vector3f* a);
+
+    //When you click on the screen, you are given the x and y position of the click,
+    // in screen space. This function will take those coordinates and convert them into
+    // a 3D vector in world space that represents a line that goes directly from the
+    // camera's eye to the place you clicked. This can then be used to do things
+    // like place an object where the click happend, or do a collision check.
+    static Vector3f calcWorldSpaceDirectionVectorFromScreenSpaceCoords(float clickPosX, float clickPosY);
+
+    static Vector2f calcScreenCoordsOfWorldPoint(Vector3f* worldPoint);
 };
 
 #endif

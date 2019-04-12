@@ -10,8 +10,9 @@
 
 CollisionModel::CollisionModel()
 {
-	playerIsOn = false;
+	wasCollidedWith = false;
 	treeMaxDepth = -1;
+    isVisible = true;
 }
 
 void CollisionModel::generateMinMaxValues()

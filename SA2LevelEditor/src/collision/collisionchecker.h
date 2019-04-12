@@ -31,6 +31,9 @@ public:
 	// Sets all collision models to not have the player on them
 	static void falseAlarm();
 
+    static bool checkCollision(
+		Vector3f* p1, Vector3f* p2);
+
 	static bool checkCollision(
 		float px1, float py1, float pz1,
 		float px2, float py2, float pz2);

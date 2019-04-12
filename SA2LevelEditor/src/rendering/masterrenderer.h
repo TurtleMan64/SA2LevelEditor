@@ -24,9 +24,8 @@ private:
 
     static Matrix4f* projectionMatrix;
 
-    static float VFOV_ADDITION; //additional fov due to the vehicle going fast
-    static const float NEAR_PLANE; //0.5
-    static const float FAR_PLANE; //15000
+    static float VFOV; //Vertical fov
+    static float HFOV; //Horizontal fov
 
     static float RED;
     static float GREEN;
@@ -37,7 +36,8 @@ private:
     static void prepareTransparentRenderDepthOnly();
 
 public:
-    static float VFOV_BASE; //Vertical fov
+    static const float NEAR_PLANE; //0.5
+    static const float FAR_PLANE; //15000
 
     static void render(Camera* camera);
 
@@ -60,7 +60,9 @@ public:
     static void makeProjectionMatrix();
     static Matrix4f* getProjectionMatrix();
 
+    static void setVFOV(float newVFOV);
     static float getVFOV();
+    static float getHFOV();
 
     static float getNearPlane();
     static float getFarPlane();

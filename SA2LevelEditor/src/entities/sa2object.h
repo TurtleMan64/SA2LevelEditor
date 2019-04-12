@@ -2,9 +2,9 @@
 #define SA2OBJECT_H
 
 #include "entity.h"
+#include "collideableobject.h"
 
-
-class SA2Object : public Entity
+class SA2Object : public CollideableObject
 {
 public:
     char rawData[32];

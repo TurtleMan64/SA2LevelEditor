@@ -43,6 +43,19 @@ RawModel Loader::loadToVAO(std::vector<float>* positions,
 	return RawModel(vaoID, (int)indicies->size(), &vboIDs);
 }
 
+//for gui
+RawModel Loader::loadToVAO(std::vector<float>* positions, int dimensions)
+{
+	GLuint vaoID = createVAO();
+	std::list<GLuint> vboIDs;
+
+	vboIDs.push_back(storeDataInAttributeList(0, dimensions, positions));
+
+	unbindVAO();
+
+	return RawModel(vaoID, (int)positions->size() / dimensions, &vboIDs);
+}
+
 GLuint Loader::loadTexture(const char* fileName)
 {
 	if (Loader::textures.find(fileName) != Loader::textures.end())

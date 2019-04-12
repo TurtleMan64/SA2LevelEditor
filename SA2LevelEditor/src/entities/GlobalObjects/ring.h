@@ -15,6 +15,7 @@ private:
 public:
 	Ring();
 	Ring(char data[32]);
+    Ring(Vector3f* p);
 
 	void step();
 

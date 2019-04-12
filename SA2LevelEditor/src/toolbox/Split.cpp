@@ -1,5 +1,7 @@
 #include <stdlib.h> 
 #include <vector>
+#include <string>
+#include <cstring>
 
 #include "split.h"
 

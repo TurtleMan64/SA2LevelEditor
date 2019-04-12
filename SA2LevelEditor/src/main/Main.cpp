@@ -39,18 +39,20 @@
 #include "../loading/levelloader.h"
 #include "../collision/collisionchecker.h"
 //#include "../entities/skysphere.h"
-//#include "../guis/guimanager.h"
 //#include "../particles/particlemaster.h"
 //#include "../particles/particleresources.h"
 #include "../toolbox/split.h"
-//#include "../guis/guirenderer.h"
-//#include "../guis/guitextureresources.h"
 #include "../toolbox/level.h"
 //#include "../guis/guitexture.h"
 //#include "../particles/particle.h"
 //#include "../entities/skysphere.h"
 #include "../toolbox/getline.h"
 #include "../rendering/masterrenderer.h"
+#include "../guis/guimanager.h"
+#include "../guis/guirenderer.h"
+#include "../guis/guitextureresources.h"
+#include "../loading/loader.h"
+#include "../entities/cursor3d.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -78,15 +80,13 @@ std::list<Entity*> Global::gameTransparentEntitiesToDelete;
 float  dt = 0;
 double timeOld = 0;
 double timeNew = 0;
-bool Global::refreshWindow = true;
+bool Global::redrawWindow = true;
 Camera*    Global::gameCamera    = nullptr;
 Stage*     Global::gameStage     = nullptr;
 SkySphere* Global::gameSkySphere = nullptr;
+Cursor3D*  Global::gameCursor3D  = nullptr;
 
 std::string Global::dirSA2Root = "C:/Program Files (x86)/Steam/steamapps/common/Sonic Adventure 2";
-
-extern unsigned int SCR_WIDTH;
-extern unsigned int SCR_HEIGHT;
 
 int Global::countNew = 0;
 int Global::countDelete = 0;
@@ -128,8 +128,12 @@ int Global::main()
 
 	//TextMaster::init();
 
-	//GuiManager::init();
+	GuiManager::init();
+    GuiTextureResources::loadGuiTextures();
 
+    //this cursor never gets deleted
+    Cursor3D cursor;
+    Global::gameCursor3D = &cursor;
 
 	//if (Global::renderParticles)
 	{
@@ -156,7 +160,7 @@ int Global::main()
 	int frameCount = 0;
 	double previousTime = 0;
 
-    LevelLoader::loadLevel("Metal Harbor");
+    LevelLoader::loadLevel("Green Forest");
 
 	Global::gameState = STATE_RUNNING;
 
@@ -171,11 +175,11 @@ int Global::main()
 
 		Input::waitForInputs();
 
-        if (!Global::refreshWindow)
+        if (!Global::redrawWindow)
         {
             continue;
         }
-        Global::refreshWindow = false;
+        Global::redrawWindow = false;
 
 		GLenum err = glGetError();
 		if (err != GL_NO_ERROR)
@@ -271,6 +275,7 @@ int Global::main()
 				//skySphere.step();
                 //ModelTexture::updateAnimations(dt);
 				Global::gameCamera->refresh();
+                Global::gameCursor3D->step();
 				//if (Global::renderParticles)
 				{
 					//ParticleMaster::update(Global::gameCamera);
@@ -318,7 +323,7 @@ int Global::main()
 		MasterRenderer::clearEntitiesPass3();
 		MasterRenderer::clearTransparentEntities();
 
-		//GuiManager::refresh();
+		GuiManager::renderAll();
 		//TextMaster::render();
 
 		DisplayManager::updateDisplay();
@@ -338,9 +343,9 @@ int Global::main()
 	}
 
 	MasterRenderer::cleanUp();
-	//Loader::cleanUp();
+	Loader::cleanUp();
 	//TextMaster::cleanUp();
-	//GuiRenderer::cleanUp();
+	GuiRenderer::cleanUp();
 	DisplayManager::closeDisplay();
 
 	return 0;

@@ -7,12 +7,15 @@
 #include "../loading/objLoader.h"
 #include "../main/main.h"
 #include "../collision/collisionchecker.h"
+#include "../collision/collisionmodel.h"
 #include "../toolbox/maths.h"
 
 #include <list>
 
 
 std::vector<std::list<TexturedModel*>> Unknown::models;
+
+CollisionModel* Unknown::cmBase;
 
 
 Unknown::Unknown()
@@ -55,11 +58,25 @@ Unknown::Unknown(char data[32], int id)
 	updateTransformationMatrix();
 
     this->id = id;
+
+
+
+    collideModelOriginal = Unknown::cmBase;
+	collideModelTransformed = loadCollisionModel("Models/GlobalObjects/Unknown/", "Unknown");
+	CollisionChecker::addCollideModel(collideModelTransformed);
+	updateCollisionModelWithScale();
 }
 
 void Unknown::step()
 {
-
+    if (collideModelTransformed->wasCollidedWith)
+    {
+        baseColour.set(1.5f, 1.5f, 1.5f);
+    }
+    else
+    {
+        baseColour.set(1.0f, 1.0f, 1.0f);
+    }
 }
 
 std::list<TexturedModel*>* Unknown::getModels()
@@ -97,6 +114,11 @@ void Unknown::loadStaticModels()
         s = s + ".obj";
 	    loadObjModel(&Unknown::models[i], "res/Models/GlobalObjects/Unknown/", s);
     }
+
+    if (Unknown::cmBase == nullptr)
+	{
+		Unknown::cmBase = loadCollisionModel("Models/GlobalObjects/Unknown/", "Unknown");
+	}
 }
 
 void Unknown::deleteStaticModels()
@@ -105,7 +127,7 @@ void Unknown::deleteStaticModels()
 	std::fprintf(stdout, "Deleting Unknown static models...\n");
 	#endif
 
-    for (int i = 0; i < Unknown::models.size(); i++)
+    for (int i = 0; i < (int)Unknown::models.size(); i++)
     {
 	    Entity::deleteModels(&Unknown::models[i]);
     }
