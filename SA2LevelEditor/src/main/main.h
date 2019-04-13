@@ -6,6 +6,7 @@ class Camera;
 class Stage;
 class SkySphere;
 class Cursor3D;
+class StageCollision;
 
 #include <string>
 #include <vector>
@@ -51,6 +52,7 @@ public:
 
 	static Camera* gameCamera;
 	static Stage* gameStage;
+    static StageCollision* gameStageCollision;
 	static SkySphere* gameSkySphere;
     static Cursor3D* gameCursor3D;
 	static int countNew;
@@ -108,10 +110,12 @@ public:
     };
 
 	static int levelID;
+    static bool shouldLoadNewLevel;
 
 
 	static int gameMissionNumber;
     static std::string dirSA2Root;
+    static std::string dirProgRoot;
 
 	static std::unordered_map<std::string, std::string> levelFileMap;
 

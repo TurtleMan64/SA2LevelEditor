@@ -19,6 +19,15 @@
 #include "../toolbox/vector.h"
 #include "../collision/collisionchecker.h"
 #include "../entities/cursor3d.h"
+#include "../entities/stagecollision.h"
+#include "../entities/stage.h"
+#include "../loading/levelloader.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#include <commdlg.h>
+#include <tchar.h>
+#endif
 
 #include "../entities/GlobalObjects/ring.h"
 
@@ -78,6 +87,7 @@ int DisplayManager::createDisplay()
     glfwSetCursorPosCallback(globalWindow, DisplayManager::callbackCursorPosition);
     glfwSetScrollCallback(globalWindow, DisplayManager::callbackMouseScroll);
     glfwSetMouseButtonCallback(globalWindow, DisplayManager::callbackMouseClick);
+    glfwSetKeyCallback(globalWindow, DisplayManager::callbackKeyboard);
 
 	GLFWimage icons[3];
 	icons[0].pixels = SOIL_load_image("res/Images/Icon16.png", &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
@@ -195,6 +205,8 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
     {
         int stateShiftL = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
         int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
+        int stateAltL   = glfwGetKey(window, GLFW_KEY_LEFT_ALT);
+        int stateAltR   = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
         if (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS)  //pan the camera if you hold middle click and shift
         {
             const float PAN_SPEED = 0.5f;
@@ -207,11 +219,43 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Vector3f offset = camUp.scaleCopy(-yDiff*PAN_SPEED) + camRight.scaleCopy(-xDiff*PAN_SPEED);
             Global::gameCamera->eye = Global::gameCamera->eye + offset;
         }
+        else if (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS)  //rotate the camera around the 3d cursor
+        {
+            const float ROTATE_SPEED = 0.2f;
+            float rotateAmountRadiansYaw   = Maths::toRadians(xDiff*ROTATE_SPEED);
+            float rotateAmountRadiansPitch = Maths::toRadians(yDiff*ROTATE_SPEED);
+
+            float pitchBefore = Maths::toRadians(Global::gameCamera->pitch);
+            float pitchAfter = pitchBefore + rotateAmountRadiansPitch;
+            pitchAfter = fmaxf(pitchAfter, Maths::toRadians(-89.99f));
+            pitchAfter = fminf(pitchAfter, Maths::toRadians( 89.99f));
+            rotateAmountRadiansPitch = pitchAfter-pitchBefore;
+
+            Global::gameCamera->yaw   += Maths::toDegrees(rotateAmountRadiansYaw);
+            Global::gameCamera->pitch += Maths::toDegrees(rotateAmountRadiansPitch);
+
+            Vector3f diff = Global::gameCamera->eye - Global::gameCursor3D->position;
+
+            Vector3f yAxis(0, -1, 0); //rotate horizontally
+            diff = Maths::rotatePoint(&diff, &yAxis, rotateAmountRadiansYaw);
+
+            Vector3f perpen = yAxis.cross(&diff); //rotate vertically
+            diff = Maths::rotatePoint(&diff, &perpen, rotateAmountRadiansPitch);
+
+            Global::gameCamera->eye = Global::gameCursor3D->position + diff;
+        }
         else  //rotate the camera if you hold middle click
         {
             const float ROTATE_SPEED = 0.2f;
             Global::gameCamera->yaw   += xDiff*ROTATE_SPEED;
-            Global::gameCamera->pitch += yDiff*ROTATE_SPEED;
+
+            float pitchBefore = Global::gameCamera->pitch;
+            float pitchAfter = pitchBefore+yDiff*ROTATE_SPEED;
+
+            pitchAfter = fmaxf(pitchAfter, -89.99f);
+            pitchAfter = fminf(pitchAfter,  89.99f);
+
+            Global::gameCamera->pitch = pitchAfter;
         }
 
         Global::redrawWindow = true;
@@ -220,9 +264,9 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
 
 void DisplayManager::callbackMouseScroll(GLFWwindow* window, double /*xoffset*/, double yoffset)
 {
-    int stateShiftL = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
-    int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
-    if (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS)
+    int stateAltL = glfwGetKey(window, GLFW_KEY_LEFT_ALT);
+    int stateAltR = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
+    if (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS)
     {
         //move the camera forward or back based on distance from 3d cursor
         Vector3f camDiff = Global::gameCursor3D->position - Global::gameCamera->eye;
@@ -260,7 +304,6 @@ void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int acti
         if (CollisionChecker::checkCollision(&Global::gameCamera->eye, &checkEnd))
         {
             //Global::addEntity(new Ring(CollisionChecker::getCollidePosition()));
-            //TODO: place 3d cursor here
             Global::gameCursor3D->setPosition(CollisionChecker::getCollidePosition());
         }
         else
@@ -271,6 +314,40 @@ void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int acti
         }
 
         Global::redrawWindow = true;
+    }
+}
+
+void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/)
+{
+    switch (key)
+    {
+        case GLFW_KEY_V:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameStageCollision->visible = !Global::gameStageCollision->visible;
+                Global::redrawWindow = true;
+            }
+            break;
+
+        case GLFW_KEY_B:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameStage->visible = !Global::gameStage->visible;
+                Global::redrawWindow = true;
+            }
+            break;
+
+        case GLFW_KEY_L:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::shouldLoadNewLevel = true;
+            }
+            break;
+        }
+
+        default:
+            break;
     }
 }
 

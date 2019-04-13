@@ -24,7 +24,7 @@ std::vector<char> readAllBytes(char const* filename)
     
     std::ifstream fl(filename, std::ios::binary);
     fl.seekg( 0, std::ios::end );
-    size_t len = fl.tellg();
+    size_t len = (size_t)fl.tellg();
     char* ret = new char[len];
     fl.seekg(0, std::ios::beg);
     fl.read(ret, len);

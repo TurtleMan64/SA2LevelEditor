@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <cstring>
 
 #include "../entity.h"
 #include "../../toolbox/vector.h"
@@ -6,6 +7,7 @@
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
 #include "../../main/main.h"
+#include "../../collision/collisionmodel.h"
 #include "../../collision/collisionchecker.h"
 #include "../../toolbox/maths.h"
 
@@ -13,29 +15,25 @@
 
 
 std::list<TexturedModel*> Ring::models;
-
+CollisionModel* Ring::cmBase;
 
 Ring::Ring()
 {
 
 }
 
-Ring::Ring(Vector3f* p)
-{
-    position.set(p);
-    scale = 1;
-	visible = true;
-	baseColour.set(1,1,1);
-	updateTransformationMatrix();
-}
+//Ring::Ring(Vector3f* p)
+//{
+//    position.set(p);
+//    scale = 1;
+//	visible = true;
+//	baseColour.set(1,1,1);
+//	updateTransformationMatrix();
+//}
 
 Ring::Ring(char data[32])
 {
-    //std::fprintf(stdout, "ring\n");
-    //std::memcpy(rawData, data, 32);
-    //memcpy(&position.x, &data[8],  4);
-    //memcpy(&position.y, &data[12], 4);
-    //memcpy(&position.z, &data[16], 4);
+    std::memcpy(rawData, data, 32);
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -59,14 +57,28 @@ Ring::Ring(char data[32])
 	rotationY = Maths::random()*360.0f;
 	rotationZ = 0; 
 	scale = 1;
-	visible = false;
+	visible = true;
 	baseColour.set(1,1,1);
 	updateTransformationMatrix();
+
+    collideModelOriginal = Ring::cmBase;
+	collideModelTransformed = Ring::cmBase->duplicateMe();
+	CollisionChecker::addCollideModel(collideModelTransformed);
+	updateCollisionModelWithScale();
 }
 
 void Ring::step()
 {
+    collideModelTransformed->isVisible = visible;
 
+    if (collideModelTransformed->wasCollidedWith)
+    {
+        baseColour.set(1.75f, 1.75f, 1.75f);
+    }
+    else
+    {
+        baseColour.set(1.0f, 1.0f, 1.0f);
+    }
 }
 
 std::list<TexturedModel*>* Ring::getModels()
@@ -82,10 +94,15 @@ void Ring::loadStaticModels()
 	}
 
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading ring static models...\n");
+	std::fprintf(stdout, "Loading Ring static models...\n");
 	#endif
 
-	loadObjModel(&Ring::models, "res/Models/GlobalObjects/Ring/", "Ring.obj");
+	loadModel(&Ring::models, "res/Models/GlobalObjects/Ring/", "Ring");
+
+    if (Ring::cmBase == nullptr)
+	{
+		Ring::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
+	}
 }
 
 void Ring::deleteStaticModels()
@@ -95,4 +112,5 @@ void Ring::deleteStaticModels()
 	#endif
 
 	Entity::deleteModels(&Ring::models);
+    Entity::deleteCollisionModel(&Ring::cmBase);
 }

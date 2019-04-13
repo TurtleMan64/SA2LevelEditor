@@ -26,6 +26,7 @@
 #include "../toolbox/readbytes.h"
 #include "../entities/unknown.h"
 #include "loader.h"
+#include "../entities/stagecollision.h"
 
 int LevelLoader::numLevels = 0;
 
@@ -49,15 +50,24 @@ void LevelLoader::loadTitle()
 	//GuiManager::clearGuisToRender();
 }
 
-void LevelLoader::loadLevel(std::string levelName)
+void LevelLoader::loadLevel(std::string levelName, int type)
 {
-    if (Global::levelFileMap.find(levelName) == Global::levelFileMap.end())
-    {
-        std::fprintf(stderr, "Trying to load a non existing level.\n");
-        return;
-    }
+    std::string fname = "";
 
-	std::string fname = Global::levelFileMap[levelName];
+    if (type == 0)
+    {
+        if (Global::levelFileMap.find(levelName) == Global::levelFileMap.end())
+        {
+            std::fprintf(stderr, "Trying to load a non existing level.\n");
+            return;
+        }
+
+	    fname = "res/Levels/"+Global::levelFileMap[levelName];
+    }
+    else
+    {
+        fname = levelName;
+    }
 
 	freeAllStaticModels();
 
@@ -71,10 +81,16 @@ void LevelLoader::loadLevel(std::string levelName)
 	StagePass3::deleteStaticModels();
 	StageTransparent::deleteStaticModels();
 
-	std::ifstream file("res/Levels/"+fname);
+    StageCollision::deleteStaticModels();
+
+    CollisionChecker::deleteAllCollideModels();
+
+    Global::gameCamera->reset();
+
+	std::ifstream file(fname);
 	if (!file.is_open())
 	{
-		std::fprintf(stdout, "Error: Cannot load file '%s'\n", ("res/Levels/"+fname).c_str());
+		std::fprintf(stdout, "Error: Cannot load file '%s'\n", (fname).c_str());
 		file.close();
 		return;
 	}
@@ -115,23 +131,21 @@ void LevelLoader::loadLevel(std::string levelName)
     std::string colName;
 	getlineSafe(file, colName);
 
-    //load the new collision
-	CollisionChecker::deleteAllCollideModels();
-	CollisionModel* colModel = loadBinaryCollisionModel("Models/" + colDir + "/", colName);
-	CollisionChecker::addCollideModel(colModel);
+    //load the new collision model
+    StageCollision::loadModels(colDir.c_str(), colName.c_str());
 
 
-    // load all the models associated with a level
+    // load all the models associated with a specific level
     switch (Global::levelID)
     {
         case Global::Levels::Green_Forest:
-            Ring::loadStaticModels();
-            Unknown::loadStaticModels();
+            //Ring::loadStaticModels();
+            //Unknown::loadStaticModels();
             break;
 
         case Global::Levels::Metal_Harbor:
-            Ring::loadStaticModels();
-            Unknown::loadStaticModels();
+            //Ring::loadStaticModels();
+            //Unknown::loadStaticModels();
             break;
 
         default:
@@ -245,11 +259,11 @@ void LevelLoader::processObjectSET(char data[32])
             switch (objectType)
             {
                 case 0:
-                    Global::addEntity(new Ring(data));
+                    Global::addEntity(new Ring(data)); INCR_NEW("Entity")
                     break;
 
                 default:
-                    Global::addEntity(new Unknown(data, objectType));
+                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
                     break;
             }
             break;
@@ -258,11 +272,11 @@ void LevelLoader::processObjectSET(char data[32])
             switch (objectType)
             {
                 case 0:
-                    Global::addEntity(new Ring(data));
+                    Global::addEntity(new Ring(data)); INCR_NEW("Entity")
                     break;
 
                 default:
-                    Global::addEntity(new Unknown(data, objectType));
+                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
                     break;
             }
             break;
@@ -291,8 +305,8 @@ int LevelLoader::toInt(char* input)
 
 void LevelLoader::freeAllStaticModels()
 {
-    Ring::deleteStaticModels();
-    Unknown::deleteStaticModels();
+    //Ring::deleteStaticModels(); //dont delete these since theyll be in basically all levels
+    //Unknown::deleteStaticModels();
 }
 
 int LevelLoader::getNumLevels()

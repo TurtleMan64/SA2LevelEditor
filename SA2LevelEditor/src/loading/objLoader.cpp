@@ -53,34 +53,75 @@ std::vector<std::string> textureNamesList;
 
 int loadModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
 {
-	int attemptBinaryOBJ = loadBinaryModel(models, filePath, fileName+".binobj");
+	int attemptBinaryOBJ = loadBinaryObjModel(models, filePath, fileName+".binobj");
 	
 	if (attemptBinaryOBJ == -1)
 	{
-        int attemptVCL = loadVclModel(models, filePath, fileName+".binvcl");
+        int attemptBinaryVCL = loadBinaryVclModel(models, filePath, fileName+".binvcl");
 
-        if (attemptVCL == -1)
+        if (attemptBinaryVCL == -1)
         {
 		    int attemptOBJ = loadObjModel(models, filePath, fileName+".obj");
 
 		    if (attemptOBJ == -1)
 		    {
-			    std::fprintf(stderr, "Error: Cannot load file '%s' or '%s'\n", 
-				    ((filePath + fileName) + ".bin").c_str(), 
-				    ((filePath + fileName) + ".obj").c_str());
+			    std::fprintf(stderr, "Error: Cannot load model from file\n'%s' or\n'%s' or\n'%s'\n", 
+				    ((filePath + fileName) + ".binobj").c_str(), 
+				    ((filePath + fileName) + ".binvcl").c_str(),
+                    ((filePath + fileName) + ".obj").c_str());
 		    }
 
             return attemptOBJ;
         }
 
-		return attemptVCL;
+		return attemptBinaryVCL;
 	}
 
 	return attemptBinaryOBJ;
 }
 
+CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
+{
+    CollisionModel* attemptBinaryCol = loadBinaryColCollisionModel(filePath, fileName+".bincol");
+	
+	if (attemptBinaryCol == nullptr)
+	{
+        CollisionModel* attemptBinaryOBJ = loadBinaryObjCollisionModel(filePath, fileName+".binobj");
+
+        if (attemptBinaryOBJ == nullptr)
+        {
+		    CollisionModel* attemptBinaryVcl = loadBinaryVclCollisionModel(filePath, fileName+".binvcl");
+
+		    if (attemptBinaryVcl == nullptr)
+		    {
+			    CollisionModel* attemptObj = loadObjCollisionModel(filePath, fileName+".obj");
+
+		        if (attemptObj == nullptr)
+		        {
+			        std::fprintf(stderr, "Error: Cannot load collision from file \n'%s' or\n'%s' or\n'%s' or \n'%s'\n", 
+				        ((filePath + fileName) + ".bincol").c_str(), 
+				        ((filePath + fileName) + ".binobj").c_str(),
+                        ((filePath + fileName) + ".binvcl").c_str(),
+                        ((filePath + fileName) + ".obj").c_str());
+
+                    INCR_NEW("CollisionModel");
+                    return new CollisionModel;
+		        }
+
+                return attemptObj;
+		    }
+
+            return attemptBinaryVcl;
+        }
+
+		return attemptBinaryOBJ;
+	}
+
+	return attemptBinaryCol;
+}
+
 //Each TexturedModel contained within 'models' must be deleted later.
-int loadBinaryModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
+int loadBinaryObjModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
 {
 	if (models->size() > 0)
 	{
@@ -93,6 +134,10 @@ int loadBinaryModel(std::list<TexturedModel*>* models, std::string filePath, std
 	{
         //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
 		//std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
 		return -1;
     }
 
@@ -255,7 +300,7 @@ int loadBinaryModel(std::list<TexturedModel*>* models, std::string filePath, std
 }
 
 //Each TexturedModel contained within 'models' must be deleted later.
-int loadVclModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
+int loadBinaryVclModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
 {
 	if (models->size() > 0)
 	{
@@ -268,6 +313,10 @@ int loadVclModel(std::list<TexturedModel*>* models, std::string filePath, std::s
 	{
         //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
 		//std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
 		return -1;
     }
 
@@ -615,7 +664,7 @@ void parseMtl(std::string filePath, std::string fileName)
 	std::ifstream file(filePath+fileName);
 	if (!file.is_open())
 	{
-		std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
+		//std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
 		file.close();
 		return;
 	}
@@ -792,7 +841,7 @@ int loadObjModelWithMTL(std::list<TexturedModel*>* models, std::string filePath,
 	std::ifstream file(filePath + fileNameOBJ);
 	if (!file.is_open())
 	{
-		std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileNameOBJ).c_str());
+		//std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileNameOBJ).c_str());
 		file.close();
 		return -1;
 	}
@@ -954,7 +1003,7 @@ int loadObjModelWithMTL(std::list<TexturedModel*>* models, std::string filePath,
 	return 0;
 }
 
-int loadBinaryModelWithMTL(std::list<TexturedModel*>* models, std::string filePath, std::string fileNameBin, std::string fileNameMTL)
+int loadBinaryObjModelWithMTL(std::list<TexturedModel*>* models, std::string filePath, std::string fileNameBin, std::string fileNameMTL)
 {
 	if (models->size() > 0)
 	{
@@ -965,8 +1014,12 @@ int loadBinaryModelWithMTL(std::list<TexturedModel*>* models, std::string filePa
 	int err = fopen_s(&file, (filePath+fileNameBin).c_str(), "rb");
     if (file == nullptr || err != 0)
 	{
-        std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileNameBin).c_str());
+        //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileNameBin).c_str());
 		//std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
 		return -1;
     }
 
@@ -1243,29 +1296,22 @@ void removeUnusedVertices(std::vector<Vertex*>* vertices)
 	}
 }
 
-CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
+CollisionModel* loadObjCollisionModel(std::string filePath, std::string fileName)
 {
-	CollisionModel* collisionModel = new CollisionModel; INCR_NEW("CollisionModel");
-
 	std::list<FakeTexture> fakeTextures;
 
-	char currType = 0;
-	char currSound = 0;
-	char currParticle = 0;
-
-	std::ifstream file("res/" + filePath + fileName + ".obj");
+	std::ifstream file(filePath + fileName);
 	if (!file.is_open())
 	{
-		std::fprintf(stdout, "Error: Cannot load file '%s'\n", ("res/" + filePath + fileName + ".obj").c_str());
+		//std::fprintf(stdout, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
 		file.close();
-		return collisionModel;
+		return nullptr;
 	}
 
+    CollisionModel* collisionModel = new CollisionModel; INCR_NEW("CollisionModel");
+
 	std::string line;
-
 	std::vector<Vector3f> vertices;
-
-
 
 	while (!file.eof())
 	{
@@ -1308,26 +1354,14 @@ CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
 			}
 			else if (strcmp(lineSplit[0], "usemtl") == 0)
 			{
-				currType = 0;
-				currSound = -1;
-				currParticle = 0;
 
-				for (FakeTexture dummy : fakeTextures)
-				{
-					if (dummy.name == lineSplit[1])
-					{
-						currType = dummy.type;
-						currSound = dummy.sound;
-						currParticle = dummy.particle;
-					}
-				}
 			}
 			else if (strcmp(lineSplit[0], "mtllib") == 0)
 			{
-				std::ifstream fileMTL("res/" + filePath + lineSplit[1]);
+				std::ifstream fileMTL(filePath + lineSplit[1]);
 				if (!fileMTL.is_open())
 				{
-					std::fprintf(stdout, "Error: Cannot load file '%s'\n", ("res/" + filePath + lineSplit[1]).c_str());
+					std::fprintf(stdout, "Error: Cannot load file '%s'\n", (filePath + lineSplit[1]).c_str());
 					fileMTL.close();
 					file.close();
 					return collisionModel;
@@ -1403,23 +1437,22 @@ CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
 	return collisionModel;
 }
 
-CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileName)
+CollisionModel* loadBinaryColCollisionModel(std::string filePath, std::string fileName)
 {
-	CollisionModel* collisionModel = new CollisionModel; INCR_NEW("CollisionModel");
-
 	std::list<FakeTexture> fakeTextures;
 	std::vector<Vector3f> vertices;
 
-	char currType = 0;
-	char currSound = 0;
-	char currParticle = 0;
-
 	FILE* file = nullptr;
-	int err = fopen_s(&file, ("res/" + filePath+fileName+".bincol").c_str(), "rb");
+	int err = fopen_s(&file, (filePath+fileName).c_str(), "rb");
     if (file == nullptr || err != 0)
 	{
-		std::fprintf(stdout, "Error: Cannot load file '%s'\n", ("res/" + filePath+fileName+".bincol").c_str());
-		return collisionModel;
+		//std::fprintf(stdout, "Error: Cannot load file '%s'\n", (filePath+fileName).c_str());
+        //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
+		return nullptr;
     }
 
 	char fileType[4];
@@ -1429,9 +1462,11 @@ CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileN
 		fileType[2] != 'l' ||
 		fileType[3] != 0)
 	{
-		std::fprintf(stdout, "Error: File '%s' is not a valid .bincol file\n", ("res/" + filePath+fileName+".bincol").c_str());
-		return collisionModel;
+		std::fprintf(stdout, "Error: File '%s' is not a valid .bincol file\n", (filePath+fileName).c_str());
+		return nullptr;
 	}
+
+    CollisionModel* collisionModel = new CollisionModel; INCR_NEW("CollisionModel");
 
 	std::string mtlname = "";
 	int mtllibLength;
@@ -1444,10 +1479,10 @@ CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileN
 	}
 
 	{
-		std::ifstream fileMTL("res/" + filePath + mtlname);
+		std::ifstream fileMTL(filePath + mtlname);
 		if (!fileMTL.is_open())
 		{
-			std::fprintf(stdout, "Error: Cannot load file '%s'\n", ("res/" + filePath + mtlname).c_str());
+			std::fprintf(stdout, "Error: Cannot load file '%s'\n", (filePath + mtlname).c_str());
 			fileMTL.close();
 			fclose(file);
 			return collisionModel;
@@ -1543,20 +1578,6 @@ CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileN
 			matname = matname + nextChar;
 		}
 
-		currType = 0;
-		currSound = -1;
-		currParticle = 0;
-
-		for (FakeTexture dummy : fakeTextures)
-		{
-			if (dummy.name == matname)
-			{
-				currType = dummy.type;
-				currSound = dummy.sound;
-				currParticle = dummy.particle;
-			}
-		}
-
 		std::vector<int> indices;
 		int numFaces;
 		fread(&numFaces, sizeof(int), 1, file);
@@ -1590,4 +1611,200 @@ CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileN
 	collisionModel->generateMinMaxValues();
 
 	return collisionModel;
+}
+
+CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fileName)
+{
+	FILE* file = nullptr;
+	int err = fopen_s(&file, (filePath+fileName).c_str(), "rb");
+    if (file == nullptr || err != 0)
+	{
+        //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
+		//std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
+		return nullptr;
+    }
+
+	char fileType[4];
+	fread(fileType, sizeof(char), 4, file);
+	if (fileType[0] != 'v' || 
+		fileType[1] != 'c' ||
+		fileType[2] != 'l' ||
+		fileType[3] != 0)
+	{
+		std::fprintf(stdout, "Error: File '%s' is not a valid .binvcl file\n", (filePath+fileName).c_str());
+		return nullptr;
+	}
+
+    CollisionModel* model = new CollisionModel; INCR_NEW("CollisionModel")
+
+	std::string line;
+	std::vector<Vector3f> vertexList;
+
+	int mtllibLength;
+	fread(&mtllibLength, sizeof(int), 1, file);
+	for (int i = 0; i < mtllibLength; i++)
+	{
+		char nextChar;
+		fread(&nextChar, sizeof(char), 1, file);
+	}
+
+	int numVertices;
+	fread(&numVertices, sizeof(int), 1, file);
+	for (int i = 0; i < numVertices; i++)
+	{
+		float t[6];
+		fread(t, sizeof(float), 6, file);
+
+		Vector3f vertex(t[0], t[1], t[2]);
+		vertexList.push_back(vertex);
+	}
+
+	int numTexCoords;
+	fread(&numTexCoords, sizeof(int), 1, file);
+	for (int i = 0; i < numTexCoords; i++)
+	{
+		float t[2];
+		fread(t, sizeof(float), 2, file);
+	}
+
+	int numMaterials;
+	fread(&numMaterials, sizeof(int), 1, file);
+	for (int m = 0; m < numMaterials; m++)
+	{
+		int matnameLength;
+		fread(&matnameLength, sizeof(int), 1, file);
+        for (int c = 0; c < matnameLength; c++)
+		{
+			char nextChar;
+			fread(&nextChar, sizeof(char), 1, file);
+		}
+
+		int numFaces;
+		fread(&numFaces, sizeof(int), 1, file);
+		for (int i = 0; i < numFaces; i++)
+		{
+            int f[6];
+
+			fread(&f[0], sizeof(int), 6, file);
+
+            Vector3f v1 = vertexList[f[0]-1];
+            Vector3f v2 = vertexList[f[2]-1];
+            Vector3f v3 = vertexList[f[4]-1];
+
+			model->triangles.push_back(new Triangle3D(&v1, &v2, &v3)); INCR_NEW ("Triangle3D")
+		}
+	}
+
+	fclose(file);
+
+    model->generateMinMaxValues();
+
+	return model;
+}
+
+CollisionModel* loadBinaryObjCollisionModel(std::string filePath, std::string fileName)
+{
+	FILE* file = nullptr;
+	int err = fopen_s(&file, (filePath+fileName).c_str(), "rb");
+    if (file == nullptr || err != 0)
+	{
+        //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
+		//std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        //if (err != 2)
+        {
+            //std::fprintf(stderr, "fopen_s error code: '%d'\n", err);
+        }
+		return nullptr;
+    }
+
+	char fileType[4];
+	fread(fileType, sizeof(char), 4, file);
+	if (fileType[0] != 'o' || 
+		fileType[1] != 'b' ||
+		fileType[2] != 'j' ||
+		fileType[3] != 0)
+	{
+		std::fprintf(stdout, "Error: File '%s' is not a valid .binobj file\n", (filePath+fileName).c_str());
+		return nullptr;
+	}
+
+    CollisionModel* model = new CollisionModel; INCR_NEW("CollisionModel")
+
+	std::string line;
+
+    std::vector<Vector3f> vertexList;
+
+	int mtllibLength;
+	fread(&mtllibLength, sizeof(int), 1, file);
+	for (int i = 0; i < mtllibLength; i++)
+	{
+		char nextChar;
+		fread(&nextChar, sizeof(char), 1, file);
+	}
+
+	int numVertices;
+	fread(&numVertices, sizeof(int), 1, file);
+	for (int i = 0; i < numVertices; i++)
+	{
+		float t[3];
+		fread(t, sizeof(float), 3, file);
+
+		Vector3f vertex(t[0], t[1], t[2]);
+        vertexList.push_back(vertex);
+	}
+
+	int numTexCoords;
+	fread(&numTexCoords, sizeof(int), 1, file);
+	for (int i = 0; i < numTexCoords; i++)
+	{
+		float t[2];
+		fread(t, sizeof(float), 2, file);
+	}
+
+	int numNormals;
+	fread(&numNormals, sizeof(int), 1, file);
+	for (int i = 0; i < numNormals; i++)
+	{
+		float t[3];
+		fread(t, sizeof(float), 3, file);
+	}
+
+	int numMaterials;
+	fread(&numMaterials, sizeof(int), 1, file);
+	for (int m = 0; m < numMaterials; m++)
+	{
+		int matnameLength;
+		fread(&matnameLength, sizeof(int), 1, file);
+		for (int c = 0; c < matnameLength; c++)
+		{
+			char nextChar;
+			fread(&nextChar, sizeof(char), 1, file);
+		}
+
+		std::vector<int> indices;
+		int numFaces;
+		fread(&numFaces, sizeof(int), 1, file);
+		for (int i = 0; i < numFaces; i++)
+		{
+            int f[9];
+
+			fread(&f[0], sizeof(int), 9, file);
+
+            Vector3f v1 = vertexList[f[0]-1];
+            Vector3f v2 = vertexList[f[3]-1];
+            Vector3f v3 = vertexList[f[6]-1];
+
+			model->triangles.push_back(new Triangle3D(&v1, &v2, &v3)); INCR_NEW ("Triangle3D")
+		}
+	}
+
+	fclose(file);
+
+    model->generateMinMaxValues();
+
+	return model;
 }

@@ -636,7 +636,7 @@ Vector3f Maths::calcWorldSpaceDirectionVectorFromScreenSpaceCoords(float clickPo
     float normalizedX = (clickPosX-(displayWidth/2))/((displayWidth/2));
     float normalizedY = (clickPosY-(displayHeight/2))/((displayHeight/2));
 
-    float frustrumLengthY = MasterRenderer::NEAR_PLANE*std::tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
+    float frustrumLengthY = MasterRenderer::NEAR_PLANE*tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
     float frustrumLengthX = aspectRatio*frustrumLengthY;
 
     float cameraSpaceCoordX = normalizedX*frustrumLengthX;
@@ -664,7 +664,7 @@ Vector2f Maths::calcScreenCoordsOfWorldPoint(Vector3f* worldPoint)
 	int displayHeight;
 	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
     float aspectRatio = ((float)displayWidth)/displayHeight;
-    float frustrumLengthY = 2*MasterRenderer::NEAR_PLANE*std::tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
+    float frustrumLengthY = 2*MasterRenderer::NEAR_PLANE*tanf(Maths::toRadians(MasterRenderer::getVFOV()/2));
     float frustrumLengthX = aspectRatio*frustrumLengthY;
 
     //first translate so that camera is in the origin

@@ -5,6 +5,6 @@ set0010_hd_s
 set0010_hd_u
 res/Models/Levels/MetalHarbor/
 MetalHarbor
-Levels/MetalHarbor
+res/Models/Levels/MetalHarbor/
 Collision
 

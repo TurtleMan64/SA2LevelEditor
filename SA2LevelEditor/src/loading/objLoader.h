@@ -7,11 +7,14 @@ class CollisionModel;
 #include <list>
 #include <string>
 
-//Attempts to load a mode as either an OBJ or binary format.
+//Attempts to load a model as either an OBJ or binary format.
 //Checks for binary file first, then tries OBJ.
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
 int loadModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName);
+
+//attempts to load a collision model as either an OBJ or binary obj format or binary vcl format
+CollisionModel* loadCollisionModel(std::string filePath, std::string fileName);
 
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
@@ -19,11 +22,11 @@ int loadObjModel(std::list<TexturedModel*>* models, std::string filePath, std::s
 
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
-int loadBinaryModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName);
+int loadBinaryObjModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName);
 
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
-int loadVclModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName);
+int loadBinaryVclModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName);
 
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
@@ -31,11 +34,17 @@ int loadObjModelWithMTL(std::list<TexturedModel*>* models, std::string filePath,
 
 //Each TexturedModel contained within 'models' must be deleted later.
 //Returns 0 if successful, 1 if model is already loaded, -1 if file couldn't be loaded
-int loadBinaryModelWithMTL(std::list<TexturedModel*>* models, std::string filePath, std::string fileNameBin, std::string fileNameMTL);
+int loadBinaryObjModelWithMTL(std::list<TexturedModel*>* models, std::string filePath, std::string fileNameBin, std::string fileNameMTL);
 
 //The CollisionModel returned must be deleted later.
-CollisionModel* loadCollisionModel(std::string filePath, std::string fileName);
+CollisionModel* loadObjCollisionModel(std::string filePath, std::string fileName);
 
 //The CollisionModel returned must be deleted later.
-CollisionModel* loadBinaryCollisionModel(std::string filePath, std::string fileName);
+CollisionModel* loadBinaryColCollisionModel(std::string filePath, std::string fileName);
+
+//The CollisionModel returned must be deleted later.
+CollisionModel* loadBinaryObjCollisionModel(std::string filePath, std::string fileName);
+
+//The CollisionModel returned must be deleted later.
+CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fileName);
 #endif

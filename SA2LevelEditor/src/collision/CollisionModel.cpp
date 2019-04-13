@@ -254,3 +254,32 @@ void CollisionModel::deleteMe()
 
 	triangles.clear();
 }
+
+CollisionModel* CollisionModel::duplicateMe()
+{
+    CollisionModel* copy = new CollisionModel; INCR_NEW("CollisionModel");
+
+    copy->wasCollidedWith = this->wasCollidedWith;
+    copy->isVisible       = this->isVisible;
+	copy->treeMaxDepth    = this->treeMaxDepth;
+    copy->leafNodeWidth   = this->leafNodeWidth;
+    copy->leafNodeHeight  = this->leafNodeHeight;
+	copy->maxX            = this->maxX;
+	copy->minX            = this->minX;
+	copy->maxY            = this->maxY;
+	copy->minY            = this->minY;
+	copy->maxZ            = this->maxZ;
+	copy->minZ            = this->minZ;
+
+    for (Triangle3D* tri : triangles)
+    {
+        Vector3f v1(tri->p1X, tri->p1Y, tri->p1Z);
+        Vector3f v2(tri->p2X, tri->p2Y, tri->p2Z);
+        Vector3f v3(tri->p3X, tri->p3Y, tri->p3Z);
+        Triangle3D* newTri = new Triangle3D(&v1, &v2, &v3); INCR_NEW("Triangle3D");
+        newTri->generateValues();
+        copy->triangles.push_back(newTri);
+    }
+
+    return copy;
+}

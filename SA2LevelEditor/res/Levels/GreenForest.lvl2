@@ -5,7 +5,7 @@ set0003_hd_s
 set0003_hd_u
 res/Models/Levels/GreenForest/
 GreenForest
-Levels/GreenForest
+res/Models/Levels/GreenForest/
 Collision
 
 92 res/Models/Levels/GreenForest/Rails/Rail4.txt

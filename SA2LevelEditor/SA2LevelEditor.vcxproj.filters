@@ -171,6 +171,9 @@
     <ClCompile Include="src\entities\Cursor3D.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\StageCollision.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -294,6 +297,9 @@
       <Filter>Source Files\guis</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\cursor3d.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\stagecollision.h">
       <Filter>Source Files\entities</Filter>
     </ClInclude>
   </ItemGroup>

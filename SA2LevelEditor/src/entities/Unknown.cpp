@@ -62,16 +62,18 @@ Unknown::Unknown(char data[32], int id)
 
 
     collideModelOriginal = Unknown::cmBase;
-	collideModelTransformed = loadCollisionModel("Models/GlobalObjects/Unknown/", "Unknown");
+	collideModelTransformed = Unknown::cmBase->duplicateMe();
 	CollisionChecker::addCollideModel(collideModelTransformed);
 	updateCollisionModelWithScale();
 }
 
 void Unknown::step()
 {
+    collideModelTransformed->isVisible = visible;
+
     if (collideModelTransformed->wasCollidedWith)
     {
-        baseColour.set(1.5f, 1.5f, 1.5f);
+        baseColour.set(1.75f, 1.75f, 1.75f);
     }
     else
     {
@@ -117,7 +119,7 @@ void Unknown::loadStaticModels()
 
     if (Unknown::cmBase == nullptr)
 	{
-		Unknown::cmBase = loadCollisionModel("Models/GlobalObjects/Unknown/", "Unknown");
+		Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
 	}
 }
 
@@ -132,4 +134,5 @@ void Unknown::deleteStaticModels()
 	    Entity::deleteModels(&Unknown::models[i]);
     }
     Unknown::models.clear();
+    Entity::deleteCollisionModel(&Unknown::cmBase);
 }

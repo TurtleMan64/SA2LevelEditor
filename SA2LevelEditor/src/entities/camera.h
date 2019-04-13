@@ -18,6 +18,8 @@ public:
 	//Call this ONCE per frame, it calculates velocity and other things
 	void refresh();
 
+    void reset();
+
 	Vector3f* getFadePosition1();
 
 	Vector3f* getFadePosition2();

@@ -53,9 +53,13 @@
 #include "../guis/guitextureresources.h"
 #include "../loading/loader.h"
 #include "../entities/cursor3d.h"
+#include "../entities/stagecollision.h"
+#include "../entities/GlobalObjects/ring.h"
+#include "../entities/unknown.h"
 
 #ifdef _WIN32
 #include <windows.h>
+#include <commdlg.h>
 #include <tchar.h>
 #endif
 
@@ -81,23 +85,47 @@ float  dt = 0;
 double timeOld = 0;
 double timeNew = 0;
 bool Global::redrawWindow = true;
-Camera*    Global::gameCamera    = nullptr;
-Stage*     Global::gameStage     = nullptr;
-SkySphere* Global::gameSkySphere = nullptr;
-Cursor3D*  Global::gameCursor3D  = nullptr;
+Camera*         Global::gameCamera         = nullptr;
+Stage*          Global::gameStage          = nullptr;
+StageCollision* Global::gameStageCollision = nullptr;
+SkySphere*      Global::gameSkySphere      = nullptr;
+Cursor3D*       Global::gameCursor3D       = nullptr;
 
 std::string Global::dirSA2Root = "C:/Program Files (x86)/Steam/steamapps/common/Sonic Adventure 2";
+std::string Global::dirProgRoot = "";
 
 int Global::countNew = 0;
 int Global::countDelete = 0;
 int Global::gameState = 0;
 int Global::levelID = 0;
+bool Global::shouldLoadNewLevel = false;
 
 int Global::gameMissionNumber = 0;
 std::unordered_map<std::string, std::string> Global::levelFileMap;
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc >= 1)
+    {
+        std::string pathog = argv[0];
+        const char* path = pathog.c_str();
+        int lastFolderIdx = 0;
+        for (int i = (int)pathog.length()-1; i >= 0; i--)
+        {
+            if (path[i] == '\\')
+            {
+                lastFolderIdx = i;
+                break;
+            }
+        }
+
+        std::string realPath = "";
+        for (int i = 0; i < lastFolderIdx; i++)
+        {
+            realPath = realPath + path[i];
+        }
+        Global::dirProgRoot = realPath;
+    }
     return Global::main();
 }
 
@@ -148,11 +176,18 @@ int Global::main()
 	Stage stage;
 	Global::gameStage = &stage;
 
+    StageCollision stageCollision;
+    Global::gameStageCollision = &stageCollision;
+
 	//This sky sphere never gets deleted.
 	//SkySphere skySphere;
 	//Global::gameSkySphere = &skySphere;
 
 	//ParticleMaster::init(Master_getProjectionMatrix());
+
+    //load all global object models
+    Ring::loadStaticModels();
+    Unknown::loadStaticModels();
 
 
 	glfwSetTime(0);
@@ -160,7 +195,7 @@ int Global::main()
 	int frameCount = 0;
 	double previousTime = 0;
 
-    LevelLoader::loadLevel("Green Forest");
+    LevelLoader::loadLevel("Green Forest", 0);
 
 	Global::gameState = STATE_RUNNING;
 
@@ -174,6 +209,50 @@ int Global::main()
 		timeOld = timeNew;
 
 		Input::waitForInputs();
+
+        if (Global::shouldLoadNewLevel)
+        {
+            Global::shouldLoadNewLevel = false;
+            #if defined(_WIN32)
+            int response = MessageBox(NULL, 
+                                        "Load a new level? Unsaved progress will be lost!", 
+                                        "Load New Level", 
+                                        MB_YESNO);
+                
+            if (response == IDYES)
+            {
+                const int BUFSIZE = 1024;
+                char levelFile[BUFSIZE] = {0};
+                OPENFILENAME ofns = {0};
+                ofns.lStructSize = sizeof(ofns);
+                ofns.lpstrFile = levelFile;
+                ofns.nMaxFile = BUFSIZE;
+                ofns.lpstrInitialDir = (Global::dirProgRoot + "\\res\\Levels\\").c_str();
+                ofns.lpstrFilter = "(*.lvl2)";
+                ofns.nFilterIndex = 0;
+                ofns.lpstrTitle = "Select a .lvl2 file";
+                ofns.Flags = OFN_NOCHANGEDIR;
+                GetOpenFileName(&ofns);
+                std::string fname = levelFile;
+                int s = (int)fname.length();
+                if (s <= 6 ||
+                    fname[s-5] != '.' || 
+                    fname[s-4] != 'l' || 
+                    fname[s-3] != 'v' || 
+                    fname[s-2] != 'l' || 
+                    fname[s-1] != '2')
+                {
+                    MessageBox(NULL, "Not a .lvl2 file! Moron!", "u stupid", NULL);
+                }
+                else
+                {
+                    LevelLoader::loadLevel(levelFile, 1);
+
+                    Global::redrawWindow = true;
+                }
+            }
+            #endif
+        }
 
         if (!Global::redrawWindow)
         {
@@ -276,6 +355,8 @@ int Global::main()
                 //ModelTexture::updateAnimations(dt);
 				Global::gameCamera->refresh();
                 Global::gameCursor3D->step();
+                Global::gameStage->step();
+                Global::gameStageCollision->step();
 				//if (Global::renderParticles)
 				{
 					//ParticleMaster::update(Global::gameCamera);
@@ -306,7 +387,8 @@ int Global::main()
 			MasterRenderer::processTransparentEntity(e);
 		}
 		
-		MasterRenderer::processEntity(&stage);
+		MasterRenderer::processEntity(Global::gameStage);
+        MasterRenderer::processEntity(Global::gameStageCollision);
 		//MasterRenderer::processEntity(&skySphere);
 
 		glEnable(GL_CLIP_DISTANCE1);
@@ -476,12 +558,11 @@ void Global::deleteAllTransparentEntites()
 
 std::unordered_map<std::string, int> heapObjects;
 
+#ifdef DEV_MODE
 void Global::debugNew(const char* name)
 {
     Global::countNew++;
-    name;
 
-    #ifdef DEV_MODE
     if (heapObjects.find(name) == heapObjects.end())
     {
         heapObjects[name] = 1;
@@ -491,15 +572,12 @@ void Global::debugNew(const char* name)
         int num = heapObjects[name];
         heapObjects[name] = num+1;
     }
-    #endif
 }
 
 void Global::debugDel(const char* name)
 {
     Global::countDelete++;
-    name;
 
-    #ifdef DEV_MODE
     if (heapObjects.find(name) == heapObjects.end())
     {
         std::fprintf(stdout, "Warning: trying to delete '%s' when there are none.\n", name);
@@ -510,5 +588,15 @@ void Global::debugDel(const char* name)
         int num = heapObjects[name];
         heapObjects[name] = num-1;
     }
-    #endif
 }
+#else
+void Global::debugNew(const char* )
+{
+    Global::countNew++;
+}
+
+void Global::debugDel(const char* )
+{
+    Global::countDelete++;
+}
+#endif

@@ -55,6 +55,10 @@ public:
 	// this MUST be called before this object is deleted, or you memory leak
 	// the triangles in the list and the nodes!
 	void deleteMe();
+
+    //makes a new CollisionModel object on the heap and copies our values over to it.
+    // it is a completely new object, so you need to call deleteMe() and delete it later.
+    CollisionModel* duplicateMe();
 };
 
 #endif

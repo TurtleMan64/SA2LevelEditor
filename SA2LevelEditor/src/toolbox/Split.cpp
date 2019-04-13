@@ -66,7 +66,7 @@ char** split(char* line, char delim, int* length)
 // than 1023 characters long.
 std::vector<std::string> split(std::string line, char delim)
 {
-    if (delim == NULL)
+    if (delim == 0)
     {
         std::vector<std::string> list;
         std::fprintf(stderr, "Cannot split a string on null character.\n");
@@ -112,7 +112,7 @@ std::vector<std::string> split(std::string line, char delim)
     inToken = 0;
     int tokenNum = 0;
 
-    while (line[index] != NULL)
+    while (line[index] != 0)
     {
         if (line[index] != delim && inToken == 0)
         {
@@ -124,7 +124,7 @@ std::vector<std::string> split(std::string line, char delim)
         {
             if (inToken == 1)
             {
-                line[index] = NULL;
+                line[index] = 0;
             }
             inToken = 0;
         }

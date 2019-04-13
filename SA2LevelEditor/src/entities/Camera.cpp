@@ -7,13 +7,20 @@
 
 Camera::Camera()
 {
-	//eye.set(-80, 50, 80);
-    //yaw = 45;
-    //pitch = 25;
+	eye.set(-80, 50, 80);
+    yaw = 45;
+    pitch = 25;
 
-	eye.set(0, 0, 0);
-    yaw = 0;
-    pitch = 0;
+	//eye.set(0, 0, 0);
+    //yaw = 0;
+    //pitch = 0;
+}
+
+void Camera::reset()
+{
+    eye.set(-80, 50, 80);
+    yaw = 45;
+    pitch = 25;
 }
 
 void Camera::refresh()

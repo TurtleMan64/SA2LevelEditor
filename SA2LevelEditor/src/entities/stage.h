@@ -2,15 +2,16 @@
 #define STAGE_H
 
 class TexturedModel;
+class CollisionModel;
 
 #include <list>
 #include "entity.h"
-
 
 class Stage : public Entity
 {
 private:
 	static std::list<TexturedModel*> models;
+    static CollisionModel* collisionModel;
 
 public:
 	Stage();

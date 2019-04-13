@@ -6,10 +6,13 @@
 #include "stage.h"
 #include "../loading/loader.h"
 #include "../main/main.h"
+#include "../collision/collisionmodel.h"
+#include "../collision/collisionchecker.h"
 
 #include <list>
 
 std::list<TexturedModel*> Stage::models;
+CollisionModel* Stage::collisionModel;
 
 Stage::Stage()
 {
@@ -27,7 +30,10 @@ Stage::Stage()
 
 void Stage::step()
 {
-
+    if (Stage::collisionModel != nullptr)
+    {
+        Stage::collisionModel->isVisible = visible;
+    }
 }
 
 std::list<TexturedModel*>* Stage::getModels()
@@ -45,6 +51,9 @@ void Stage::loadModels(const char* objFolder, const char* objFilename)
 
 		loadModel(&Stage::models, objFolder, objFilename);
 	}
+
+	Stage::collisionModel = loadCollisionModel(objFolder, objFilename);
+    CollisionChecker::addCollideModel(Stage::collisionModel);
 }
 
 void Stage::deleteStaticModels()

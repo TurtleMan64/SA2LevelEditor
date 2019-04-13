@@ -56,6 +56,8 @@ public:
 
 	static void deleteCollideModel(CollisionModel* cm);
 
+    //The model added must be created with the new keyword, as it will be deleted
+    // here later, via deleteCollideModel or deleteAlmostAllCollideModels call
 	static void addCollideModel(CollisionModel* cm);
 
 	//based off of the last collision check
