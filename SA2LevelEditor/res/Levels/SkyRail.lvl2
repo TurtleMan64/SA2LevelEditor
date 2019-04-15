@@ -1,4 +1,4 @@
-10
+6
 set0006_s
 set0006_u
 set0006_hd_s
@@ -7,4 +7,6 @@ res/Models/Levels/SkyRail/
 SkyRail
 res/Models/Levels/SkyRail/
 Collision
+res/Models/Levels/FinalRush/
+Killplanes
 

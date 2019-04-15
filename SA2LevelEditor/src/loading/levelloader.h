@@ -24,7 +24,9 @@ private:
 public:
 	static void loadTitle();
 
-	static void loadLevel(std::string levelFilename, int type);
+	static void loadLevel(int levelID, std::string setDir);
+
+    static void promptUserForLevel();
 
 	static void loadLevelData();
 

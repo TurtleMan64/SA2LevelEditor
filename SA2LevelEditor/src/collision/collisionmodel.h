@@ -34,21 +34,8 @@ public:
 
 	bool hasQuadTree();
 
-	void offsetModel(Vector3f* offset);
-
-	void rotateModelY(float yRot, Vector3f* center);
-
 	//makes a collision model be the transformed version of this collision model
-	void transformModel(CollisionModel* targetModel, Vector3f* translate, float yRot, float zRot);
-
-	//makes a collision model be the transformed version of this collision model
-	void transformModel(CollisionModel* targetModel, Vector3f* translate, float yRot);
-
-	//makes a collision model be the transformed version of this collision model
-	void transformModelWithScale(CollisionModel* targetModel, Vector3f* translate, float yRot, float scale);
-
-	//makes a collision model be the transformed version of this collision model
-	void transformModel(CollisionModel* targetModel, Vector3f* translate);
+	void transformModel(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale);
 
 	//calls delete on every Triangle3D contained within triangles list, 
 	// and every QuadTreeNode in this quad tree. 

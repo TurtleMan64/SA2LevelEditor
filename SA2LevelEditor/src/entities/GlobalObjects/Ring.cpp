@@ -14,10 +14,10 @@
 #include <list>
 
 
-std::list<TexturedModel*> Ring::models;
-CollisionModel* Ring::cmBase;
+std::list<TexturedModel*> RING::models;
+CollisionModel* RING::cmBase;
 
-Ring::Ring()
+RING::RING()
 {
 
 }
@@ -31,7 +31,7 @@ Ring::Ring()
 //	updateTransformationMatrix();
 //}
 
-Ring::Ring(char data[32])
+RING::RING(char data[32])
 {
     std::memcpy(rawData, data, 32);
 
@@ -54,23 +54,23 @@ Ring::Ring(char data[32])
     z[0] = data[19];
 
 	rotationX = 0;
-	rotationY = Maths::random()*360.0f;
+	rotationY = (int)Maths::random()*65536;
 	rotationZ = 0; 
-	scale = 1;
+	scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
 	visible = true;
 	baseColour.set(1,1,1);
 	updateTransformationMatrix();
 
-    collideModelOriginal = Ring::cmBase;
-	collideModelTransformed = Ring::cmBase->duplicateMe();
+    collideModelOriginal = RING::cmBase;
+	collideModelTransformed = RING::cmBase->duplicateMe();
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelWithScale();
+	updateCollisionModel();
 }
 
-void Ring::step()
+void RING::step()
 {
-    collideModelTransformed->isVisible = visible;
-
     if (collideModelTransformed->wasCollidedWith)
     {
         baseColour.set(1.75f, 1.75f, 1.75f);
@@ -81,36 +81,36 @@ void Ring::step()
     }
 }
 
-std::list<TexturedModel*>* Ring::getModels()
+std::list<TexturedModel*>* RING::getModels()
 {
-	return &Ring::models;
+	return &RING::models;
 }
 
-void Ring::loadStaticModels()
+void RING::loadStaticModels()
 {
-	if (Ring::models.size() > 0)
+	if (RING::models.size() > 0)
 	{
 		return;
 	}
 
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading Ring static models...\n");
+	std::fprintf(stdout, "Loading RING static models...\n");
 	#endif
 
-	loadModel(&Ring::models, "res/Models/GlobalObjects/Ring/", "Ring");
+	loadModel(&RING::models, "res/Models/GlobalObjects/Ring/", "Ring");
 
-    if (Ring::cmBase == nullptr)
+    if (RING::cmBase == nullptr)
 	{
-		Ring::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
+		RING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
 	}
 }
 
-void Ring::deleteStaticModels()
+void RING::deleteStaticModels()
 {
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting ring static models...\n");
+	std::fprintf(stdout, "Deleting RING static models...\n");
 	#endif
 
-	Entity::deleteModels(&Ring::models);
-    Entity::deleteCollisionModel(&Ring::cmBase);
+	Entity::deleteModels(&RING::models);
+    Entity::deleteCollisionModel(&RING::cmBase);
 }

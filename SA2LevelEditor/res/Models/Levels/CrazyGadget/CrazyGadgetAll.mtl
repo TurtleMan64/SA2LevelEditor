@@ -1,0 +1,497 @@
+# Material Count: 55
+
+newmtl miu128_cg001.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg001.png
+
+newmtl miu64_cg012.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg012.png
+
+newmtl miu64_cg004.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg004.png
+
+newmtl miu64_cg021.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg021.png
+
+newmtl miu128_cg002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg002.png
+
+newmtl miu128_cg019.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg019.png
+
+newmtl miu64_cg005.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg005.png
+
+newmtl miu64_cg013.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg013.png
+
+newmtl miu128_cg011.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg011.png
+
+newmtl miu128_cg003.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg003.png
+
+newmtl miu64_fr012.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_fr012.png
+
+newmtl miu128_cg020.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg020.png
+
+newmtl miu64_cg006.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg006.png
+
+newmtl miu128_cg012.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg012.png
+
+newmtl miu128_cg008.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg008.png
+
+newmtl miu64_cg010.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg010.png
+
+newmtl miu128_cg013.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg013.png
+
+newmtl miu64_cg011.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg011.png
+
+newmtl miu256_cg003.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu256_cg003.png
+
+newmtl miu32_cg007.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu32_cg007.png
+
+newmtl miu64_cg007.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg007.png
+
+newmtl miu128_cg009.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg009.png
+
+newmtl miu64_cg017.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg017.png
+
+newmtl miu256_cg002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu256_cg002.png
+
+newmtl miu128_cg014.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg014.png
+
+newmtl miu128_cg023.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg023.png
+
+newmtl miu64_cg008.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg008.png
+
+newmtl miu32_cg003.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu32_cg003.png
+
+newmtl miu128_cg015.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg015.png
+
+newmtl miu64_cg025.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg025.png
+
+newmtl miu256_cg001.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu256_cg001.png
+
+newmtl miu128_cg007.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg007.png
+
+newmtl miu128_cg021.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg021.png
+
+newmtl miu128_cg016.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg016.png
+
+newmtl miu256_cg004.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu256_cg004.png
+
+newmtl miu64_cg026.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg026.png
+
+newmtl miu64_cg009.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg009.png
+
+newmtl miu512_cg001.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu512_cg001.png
+
+newmtl miu64_cg001.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg001.png
+
+newmtl miu64_cg015.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg015.png
+
+newmtl miu64_cg014.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg014.png
+
+newmtl miu64_cg027.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg027.png
+
+newmtl miu128_cg017.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg017.png
+
+newmtl miu512_cg002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu512_cg002.png
+
+newmtl miu128_cg004.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg004.png
+
+newmtl miu64_cg003.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg003.png
+
+newmtl miu128_cg010.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg010.png
+
+newmtl miu64_cg016.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg016.png
+
+newmtl miu64_cg002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_cg002.png
+
+newmtl miu512_cg003.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu512_cg003.png
+
+newmtl miu128_cg022.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg022.png
+
+newmtl miu32_cg002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu32_cg002.png
+
+newmtl miu128_cg005.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg005.png
+
+newmtl miu64_ee002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_ee002.png
+
+newmtl miu128_cg018.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_cg018.png
+

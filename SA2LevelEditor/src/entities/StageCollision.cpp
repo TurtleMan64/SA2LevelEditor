@@ -22,7 +22,9 @@ StageCollision::StageCollision()
 	rotationX = 0;
 	rotationY = 0;
 	rotationZ = 0;
-	scale = 1;
+	scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
 	visible = true;
     baseColour.set(0.70f, 0.70f, 0.70f);
 	

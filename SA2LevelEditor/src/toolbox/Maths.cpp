@@ -29,47 +29,58 @@ float Maths::toDegrees(float radians)
 	return (radians*57.2957795131f);
 }
 
+float Maths::toRadians(int bams)
+{
+	return toRadians(toDegrees(bams));
+}
+
+float Maths::toDegrees(int bams)
+{
+	return (bams/182.0f);
+}
+
 /*
 ** Blank Matrix4f should have already been created. This function does not allocate any memory to matrix.
 */
-void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, float rx, float ry, float rz, float scale)
-{
-	matrix->setIdentity();
-	matrix->translate(translation);
-	Vector3f vec;
+//void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, float rx, float ry, float rz, float scale)
+//{
+//	matrix->setIdentity();
+//	matrix->translate(translation);
+//	Vector3f vec;
+//
+//	vec.set(0, 1, 0);
+//	matrix->rotate(toRadians(ry), &vec);
+//
+//	vec.set(0, 0, 1);
+//	matrix->rotate(toRadians(rz), &vec);
+//
+//	vec.set(1, 0, 0);
+//	matrix->rotate(toRadians(rx), &vec);
+//
+//	vec.set(scale, scale, scale);
+//	matrix->scale(&vec);
+//}
 
-	vec.set(0, 1, 0);
-	matrix->rotate(toRadians(ry), &vec);
+//void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, float rx, float ry, float rz, float scaleX, float scaleY, float scaleZ)
+//{
+//	matrix->setIdentity();
+//	matrix->translate(translation);
+//	Vector3f vec;
+//
+//	vec.set(0, 1, 0);
+//	matrix->rotate(toRadians(ry), &vec);
+//
+//	vec.set(0, 0, 1);
+//	matrix->rotate(toRadians(rz), &vec);
+//
+//	vec.set(1, 0, 0);
+//	matrix->rotate(toRadians(rx), &vec);
+//
+//	vec.set(scaleX, scaleY, scaleZ);
+//	matrix->scale(&vec);
+//}
 
-	vec.set(0, 0, 1);
-	matrix->rotate(toRadians(rz), &vec);
-
-	vec.set(1, 0, 0);
-	matrix->rotate(toRadians(rx), &vec);
-
-	vec.set(scale, scale, scale);
-	matrix->scale(&vec);
-}
-
-void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, float rx, float ry, float rz, float scaleX, float scaleY, float scaleZ)
-{
-	matrix->setIdentity();
-	matrix->translate(translation);
-	Vector3f vec;
-
-	vec.set(0, 1, 0);
-	matrix->rotate(toRadians(ry), &vec);
-
-	vec.set(0, 0, 1);
-	matrix->rotate(toRadians(rz), &vec);
-
-	vec.set(1, 0, 0);
-	matrix->rotate(toRadians(rx), &vec);
-
-	vec.set(scaleX, scaleY, scaleZ);
-	matrix->scale(&vec);
-}
-
+//For 2D GUI Images
 void Maths::createTransformationMatrix(Matrix4f* result, Vector2f* translation, float rotation, Vector2f* scale)
 {
 	result->setIdentity();
@@ -79,8 +90,8 @@ void Maths::createTransformationMatrix(Matrix4f* result, Vector2f* translation, 
 	result->scale(scale);
 }
 
-//Based on how sadx calculates rotations
-void Maths::createTransformationMatrixSADX(Matrix4f* matrix, Vector3f* translation, float rx, float ry, float rz, float scale)
+//Based on how sa2 calculates rotations
+void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
 {
 	matrix->setIdentity();
 	matrix->translate(translation);
@@ -95,7 +106,7 @@ void Maths::createTransformationMatrixSADX(Matrix4f* matrix, Vector3f* translati
 	vec.set(0, 1, 0);
 	matrix->rotate(toRadians(ry), &vec);
 
-	vec.set(scale, scale, scale);
+	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);
 }
 

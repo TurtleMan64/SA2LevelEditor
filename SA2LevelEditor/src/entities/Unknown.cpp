@@ -52,7 +52,9 @@ Unknown::Unknown(char data[32], int id)
 	rotationX = 0;
 	rotationY = 0;
 	rotationZ = 0; 
-	scale = 12;
+	scaleX = 12;
+    scaleY = 12;
+    scaleZ = 12;
 	visible = true;
 	baseColour.set(1,1,1);
 	updateTransformationMatrix();
@@ -64,7 +66,7 @@ Unknown::Unknown(char data[32], int id)
     collideModelOriginal = Unknown::cmBase;
 	collideModelTransformed = Unknown::cmBase->duplicateMe();
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelWithScale();
+	updateCollisionModel();
 }
 
 void Unknown::step()

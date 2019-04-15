@@ -19,7 +19,9 @@ Entity::Entity()
 	this->rotationX = 0;
 	this->rotationY = 0;
 	this->rotationZ = 0; 
-	this->scale = 1;
+	this->scaleX = 1;
+    this->scaleY = 1;
+    this->scaleZ = 1;
 	this->visible = true;
 	this->baseColour.set(1,1,1);
 }
@@ -32,7 +34,9 @@ Entity::Entity(Vector3f* position)
 	this->rotationX = 0;
 	this->rotationY = 0;
 	this->rotationZ = 0;
-	this->scale = 1;
+	this->scaleX = 1;
+    this->scaleY = 1;
+    this->scaleZ = 1;
 	this->visible = true;
 	this->baseColour.set(1,1,1);
 }
@@ -54,7 +58,7 @@ void Entity::increasePosition(float dx, float dy, float dz)
 	position.z += dz;
 }
 
-void Entity::increaseRotation(float dx, float dy, float dz)
+void Entity::increaseRotation(int dx, int dy, int dz)
 {
 	rotationX += dx;
 	rotationY += dy;
@@ -87,17 +91,7 @@ void Entity::setBaseColour(float red, float green, float blue)
 
 void Entity::updateTransformationMatrix()
 {
-	Maths::createTransformationMatrix(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scale);
-}
-
-void Entity::updateTransformationMatrix(float scaleX, float scaleY, float scaleZ)
-{
 	Maths::createTransformationMatrix(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
-}
-
-void Entity::updateTransformationMatrixSADX()
-{
-	Maths::createTransformationMatrixSADX(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scale);
 }
 
 Matrix4f* Entity::getTransformationMatrix()

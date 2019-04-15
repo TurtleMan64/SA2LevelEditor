@@ -15,7 +15,7 @@ void Dummy::step()
 
 }
 
-void Dummy::setRotation(float xr, float yr, float zr)
+void Dummy::setRotation(int xr, int yr, int zr)
 {
 	rotationX = xr;
 	rotationY = yr;

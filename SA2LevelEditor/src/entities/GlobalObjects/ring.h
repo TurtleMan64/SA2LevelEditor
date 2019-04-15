@@ -8,17 +8,18 @@ class CollisionModel;
 #include "../entity.h"
 #include "../sa2object.h"
 
-
-class Ring : public SA2Object
+class RING : public SA2Object
 {
 private:
 	static std::list<TexturedModel*> models;
 
     static CollisionModel* cmBase;
 
+    friend class RING_LINEAR;
+
 public:
-	Ring();
-	Ring(char data[32]);
+	RING();
+	RING(char data[32]);
     //Ring(Vector3f* p);
 
 	void step();

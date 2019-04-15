@@ -141,9 +141,6 @@
     <ClCompile Include="src\entities\SA2Object.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
-    <ClCompile Include="src\entities\GlobalObjects\Ring.cpp">
-      <Filter>Source Files\entities\GlobalObjects</Filter>
-    </ClCompile>
     <ClCompile Include="src\toolbox\ReadBytes.cpp">
       <Filter>Source Files\toolbox</Filter>
     </ClCompile>
@@ -173,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="src\entities\StageCollision.cpp">
       <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\StageKillplanes.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\RING.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\RING_LINEAR.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +275,6 @@
     <ClInclude Include="src\entities\sa2object.h">
       <Filter>Source Files\entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\entities\GlobalObjects\ring.h">
-      <Filter>Source Files\entities\GlobalObjects</Filter>
-    </ClInclude>
     <ClInclude Include="src\toolbox\readbytes.h">
       <Filter>Source Files\toolbox</Filter>
     </ClInclude>
@@ -301,6 +304,15 @@
     </ClInclude>
     <ClInclude Include="src\entities\stagecollision.h">
       <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\stagekillplanes.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ring.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ringlinear.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

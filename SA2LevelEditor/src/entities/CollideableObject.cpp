@@ -8,37 +8,13 @@ CollideableObject::CollideableObject()
 
 }
 
-void CollideableObject::updateCMJustPosition()
-{
-	collideModelOriginal->transformModel(collideModelTransformed, &position);
-}
-
 void CollideableObject::updateCollisionModel()
 {
-	collideModelOriginal->transformModel(collideModelTransformed, &position, -rotationY);
-}
-
-void CollideableObject::updateCollisionModelWithScale()
-{
-	collideModelOriginal->transformModelWithScale(collideModelTransformed, &position, -rotationY, scale);
-}
-
-void CollideableObject::updateCollisionModelWithZ()
-{
-	collideModelOriginal->transformModel(collideModelTransformed, &position, -rotationY, rotationZ);
-}
-
-void CollideableObject::updateCMJustPosition(CollisionModel* cmBase, CollisionModel* cmToUpdate)
-{
-	cmBase->transformModel(cmToUpdate, &position);
+	collideModelOriginal->transformModel(collideModelTransformed, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
 void CollideableObject::updateCollisionModel(CollisionModel* cmBase, CollisionModel* cmToUpdate)
 {
-	cmBase->transformModel(cmToUpdate, &position, -rotationY);
+	cmBase->transformModel(cmToUpdate, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
-void CollideableObject::updateCollisionModelWithZ(CollisionModel* cmBase, CollisionModel* cmToUpdate)
-{
-	cmBase->transformModel(cmToUpdate, &position, -rotationY, rotationZ);
-}

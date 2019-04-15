@@ -22,7 +22,9 @@ Stage::Stage()
 	rotationX = 0;
 	rotationY = 0;
 	rotationZ = 0;
-	scale = 1;
+	scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
 	visible = true;
 	
 	updateTransformationMatrix();

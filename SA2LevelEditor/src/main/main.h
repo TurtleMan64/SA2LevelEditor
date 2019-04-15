@@ -7,6 +7,7 @@ class Stage;
 class SkySphere;
 class Cursor3D;
 class StageCollision;
+class StageKillplanes;
 
 #include <string>
 #include <vector>
@@ -53,6 +54,7 @@ public:
 	static Camera* gameCamera;
 	static Stage* gameStage;
     static StageCollision* gameStageCollision;
+    static StageKillplanes* gameStageKillplanes;
 	static SkySphere* gameSkySphere;
     static Cursor3D* gameCursor3D;
 	static int countNew;
@@ -118,6 +120,7 @@ public:
     static std::string dirProgRoot;
 
 	static std::unordered_map<std::string, std::string> levelFileMap;
+    static std::unordered_map<int, std::string> levelIDMap;
 
     static void debugNew(const char* name);
     static void debugDel(const char* name);

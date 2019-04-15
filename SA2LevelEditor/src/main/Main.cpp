@@ -54,6 +54,7 @@
 #include "../loading/loader.h"
 #include "../entities/cursor3d.h"
 #include "../entities/stagecollision.h"
+#include "../entities/stagekillplanes.h"
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/unknown.h"
 
@@ -85,11 +86,12 @@ float  dt = 0;
 double timeOld = 0;
 double timeNew = 0;
 bool Global::redrawWindow = true;
-Camera*         Global::gameCamera         = nullptr;
-Stage*          Global::gameStage          = nullptr;
-StageCollision* Global::gameStageCollision = nullptr;
-SkySphere*      Global::gameSkySphere      = nullptr;
-Cursor3D*       Global::gameCursor3D       = nullptr;
+Camera*          Global::gameCamera          = nullptr;
+Stage*           Global::gameStage           = nullptr;
+StageCollision*  Global::gameStageCollision  = nullptr;
+StageKillplanes* Global::gameStageKillplanes = nullptr;
+SkySphere*       Global::gameSkySphere       = nullptr;
+Cursor3D*        Global::gameCursor3D        = nullptr;
 
 std::string Global::dirSA2Root = "C:/Program Files (x86)/Steam/steamapps/common/Sonic Adventure 2";
 std::string Global::dirProgRoot = "";
@@ -102,6 +104,7 @@ bool Global::shouldLoadNewLevel = false;
 
 int Global::gameMissionNumber = 0;
 std::unordered_map<std::string, std::string> Global::levelFileMap;
+std::unordered_map<int, std::string> Global::levelIDMap;
 
 int main(int argc, char** argv)
 {
@@ -176,8 +179,13 @@ int Global::main()
 	Stage stage;
 	Global::gameStage = &stage;
 
+    //This stage collision never gets deleted.
     StageCollision stageCollision;
     Global::gameStageCollision = &stageCollision;
+
+    //This stage killplanes never gets deleted.
+    StageKillplanes stageKillplanes;
+    Global::gameStageKillplanes = &stageKillplanes;
 
 	//This sky sphere never gets deleted.
 	//SkySphere skySphere;
@@ -186,7 +194,7 @@ int Global::main()
 	//ParticleMaster::init(Master_getProjectionMatrix());
 
     //load all global object models
-    Ring::loadStaticModels();
+    RING::loadStaticModels();
     Unknown::loadStaticModels();
 
 
@@ -195,7 +203,7 @@ int Global::main()
 	int frameCount = 0;
 	double previousTime = 0;
 
-    LevelLoader::loadLevel("Green Forest", 0);
+    LevelLoader::loadLevel(3, "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Adventure 2\\resource\\gd_PC");
 
 	Global::gameState = STATE_RUNNING;
 
@@ -213,45 +221,7 @@ int Global::main()
         if (Global::shouldLoadNewLevel)
         {
             Global::shouldLoadNewLevel = false;
-            #if defined(_WIN32)
-            int response = MessageBox(NULL, 
-                                        "Load a new level? Unsaved progress will be lost!", 
-                                        "Load New Level", 
-                                        MB_YESNO);
-                
-            if (response == IDYES)
-            {
-                const int BUFSIZE = 1024;
-                char levelFile[BUFSIZE] = {0};
-                OPENFILENAME ofns = {0};
-                ofns.lStructSize = sizeof(ofns);
-                ofns.lpstrFile = levelFile;
-                ofns.nMaxFile = BUFSIZE;
-                ofns.lpstrInitialDir = (Global::dirProgRoot + "\\res\\Levels\\").c_str();
-                ofns.lpstrFilter = "(*.lvl2)";
-                ofns.nFilterIndex = 0;
-                ofns.lpstrTitle = "Select a .lvl2 file";
-                ofns.Flags = OFN_NOCHANGEDIR;
-                GetOpenFileName(&ofns);
-                std::string fname = levelFile;
-                int s = (int)fname.length();
-                if (s <= 6 ||
-                    fname[s-5] != '.' || 
-                    fname[s-4] != 'l' || 
-                    fname[s-3] != 'v' || 
-                    fname[s-2] != 'l' || 
-                    fname[s-1] != '2')
-                {
-                    MessageBox(NULL, "Not a .lvl2 file! Moron!", "u stupid", NULL);
-                }
-                else
-                {
-                    LevelLoader::loadLevel(levelFile, 1);
-
-                    Global::redrawWindow = true;
-                }
-            }
-            #endif
+            LevelLoader::promptUserForLevel();
         }
 
         if (!Global::redrawWindow)
@@ -357,6 +327,7 @@ int Global::main()
                 Global::gameCursor3D->step();
                 Global::gameStage->step();
                 Global::gameStageCollision->step();
+                Global::gameStageKillplanes->step();
 				//if (Global::renderParticles)
 				{
 					//ParticleMaster::update(Global::gameCamera);
@@ -389,6 +360,7 @@ int Global::main()
 		
 		MasterRenderer::processEntity(Global::gameStage);
         MasterRenderer::processEntity(Global::gameStageCollision);
+        MasterRenderer::processEntity(Global::gameStageKillplanes);
 		//MasterRenderer::processEntity(&skySphere);
 
 		glEnable(GL_CLIP_DISTANCE1);

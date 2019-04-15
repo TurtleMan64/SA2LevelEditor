@@ -18,7 +18,7 @@ public:
 
 	void step();
 
-	void setRotation(float xr, float yr, float zr);
+	void setRotation(int xr, int yr, int zr);
 
 	std::list<TexturedModel*>* getModels();
 

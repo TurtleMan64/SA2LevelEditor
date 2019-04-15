@@ -20,6 +20,7 @@
 #include "../collision/collisionchecker.h"
 #include "../entities/cursor3d.h"
 #include "../entities/stagecollision.h"
+#include "../entities/stagekillplanes.h"
 #include "../entities/stage.h"
 #include "../loading/levelloader.h"
 
@@ -207,7 +208,24 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
         int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
         int stateAltL   = glfwGetKey(window, GLFW_KEY_LEFT_ALT);
         int stateAltR   = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-        if (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS)  //pan the camera if you hold middle click and shift
+
+        bool holdingShift = (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS);
+        bool holdingAlt = (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS);
+
+        if (holdingShift && holdingAlt) //pan based on distance from 3d cursor
+        {
+            Vector3f distFromCursor = Global::gameCursor3D->position - Global::gameCamera->eye;
+            float PAN_SPEED = 0.005f*distFromCursor.length();
+
+            Vector3f camRight = Global::gameCamera->calcRight();
+            Vector3f camUp = Global::gameCamera->calcUp();
+            camRight.normalize();
+            camUp.normalize();
+
+            Vector3f offset = camUp.scaleCopy(-yDiff*PAN_SPEED) + camRight.scaleCopy(-xDiff*PAN_SPEED);
+            Global::gameCamera->eye = Global::gameCamera->eye + offset;
+        }
+        else if (holdingShift)  //pan the camera if you hold middle click and shift
         {
             const float PAN_SPEED = 0.5f;
 
@@ -219,7 +237,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Vector3f offset = camUp.scaleCopy(-yDiff*PAN_SPEED) + camRight.scaleCopy(-xDiff*PAN_SPEED);
             Global::gameCamera->eye = Global::gameCamera->eye + offset;
         }
-        else if (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS)  //rotate the camera around the 3d cursor
+        else if (holdingAlt)  //rotate the camera around the 3d cursor
         {
             const float ROTATE_SPEED = 0.2f;
             float rotateAmountRadiansYaw   = Maths::toRadians(xDiff*ROTATE_SPEED);
@@ -321,6 +339,14 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
 {
     switch (key)
     {
+        case GLFW_KEY_C:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameStageKillplanes->visible = !Global::gameStageKillplanes->visible;
+                Global::redrawWindow = true;
+            }
+            break;
+
         case GLFW_KEY_V:
             if (action == GLFW_PRESS)
             {

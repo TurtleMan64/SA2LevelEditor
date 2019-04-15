@@ -156,10 +156,12 @@
     <ClCompile Include="src\entities\Cursor3D.cpp" />
     <ClCompile Include="src\entities\Dummy.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
-    <ClCompile Include="src\entities\GlobalObjects\Ring.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\RING.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\RING_LINEAR.cpp" />
     <ClCompile Include="src\entities\SA2Object.cpp" />
     <ClCompile Include="src\entities\Stage.cpp" />
     <ClCompile Include="src\entities\StageCollision.cpp" />
+    <ClCompile Include="src\entities\StageKillplanes.cpp" />
     <ClCompile Include="src\entities\StagePass2.cpp" />
     <ClCompile Include="src\entities\StagePass3.cpp" />
     <ClCompile Include="src\entities\StageTransparent.cpp" />
@@ -202,9 +204,11 @@
     <ClInclude Include="src\entities\dummy.h" />
     <ClInclude Include="src\entities\entity.h" />
     <ClInclude Include="src\entities\GlobalObjects\ring.h" />
+    <ClInclude Include="src\entities\GlobalObjects\ringlinear.h" />
     <ClInclude Include="src\entities\sa2object.h" />
     <ClInclude Include="src\entities\stage.h" />
     <ClInclude Include="src\entities\stagecollision.h" />
+    <ClInclude Include="src\entities\stagekillplanes.h" />
     <ClInclude Include="src\entities\stagepass2.h" />
     <ClInclude Include="src\entities\stagepass3.h" />
     <ClInclude Include="src\entities\stagetransparent.h" />

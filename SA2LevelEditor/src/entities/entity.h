@@ -18,8 +18,8 @@ protected:
 
 public:
 	Vector3f position;
-	float rotationX, rotationY, rotationZ;
-	float scale;
+	int rotationX, rotationY, rotationZ;
+	float scaleX, scaleY, scaleZ;
 	bool visible;
 	Vector3f baseColour;
 	Matrix4f transformationMatrix;
@@ -32,7 +32,7 @@ public:
 
 	void increasePosition(float dx, float dy, float dz);
 
-	void increaseRotation(float dx, float dy, float dz);
+	void increaseRotation(int dx, int dy, int dz);
 
 	virtual std::list<TexturedModel*>* getModels();
 
@@ -45,8 +45,6 @@ public:
 
 	void updateTransformationMatrix();
 
-	void updateTransformationMatrix(float scaleX, float scaleY, float scaleZ);
-
-	void updateTransformationMatrixSADX();
+	//void updateTransformationMatrixSA2();
 };
 #endif

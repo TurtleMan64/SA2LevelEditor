@@ -24,7 +24,9 @@ StagePass2::StagePass2(const char* objFolder, const char* objFilename)
 	rotationX = 0;
 	rotationY = 0;
 	rotationZ = 0;
-	scale = 1;
+	scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
 	visible = true;
 	
 	if (StagePass2::models.size() == 0)

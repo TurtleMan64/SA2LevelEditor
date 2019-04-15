@@ -14,18 +14,8 @@ protected:
 public:
 	CollideableObject();
 
-	void updateCMJustPosition(CollisionModel* cmBase, CollisionModel* cmToUpdate);
-
 	void updateCollisionModel(CollisionModel* cmBase, CollisionModel* cmToUpdate);
 
-	void updateCollisionModelWithZ(CollisionModel* cmBase, CollisionModel* cmToUpdate);
-
-	void updateCMJustPosition();
-
 	void updateCollisionModel();
-
-	void updateCollisionModelWithScale();
-
-	void updateCollisionModelWithZ();
 };
 #endif
