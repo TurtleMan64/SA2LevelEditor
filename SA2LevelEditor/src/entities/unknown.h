@@ -14,13 +14,17 @@ class Unknown : public SA2Object
 private:
     int id;
 
+    float var1, var2, var3;
+
 	static std::vector<std::list<TexturedModel*>> models;
 
     static CollisionModel* cmBase;
 
 public:
 	Unknown();
-	Unknown(char data[32], int id);
+	Unknown(char data[32]);
+
+    void updateEditorWindows();
 
 	void step();
 

@@ -7,6 +7,7 @@
 #include "collisionmodel.h"
 #include "triangle3d.h"
 #include "../main/main.h"
+#include "../entities/sa2object.h"
 
 Vector3f CollisionChecker::collidePosition;
 Triangle3D* CollisionChecker::collideTriangle;
@@ -146,6 +147,12 @@ bool CollisionChecker::checkCollision(
 	if (/*CollisionChecker::checkPlayer && */finalModel != nullptr)
 	{
 		finalModel->wasCollidedWith = true;
+
+        SA2Object* parent = finalModel->parent;
+        if (parent != nullptr)
+        {
+            parent->updateEditorWindows();
+        }
 	}
 	//CollisionChecker::checkPlayer = false;
 

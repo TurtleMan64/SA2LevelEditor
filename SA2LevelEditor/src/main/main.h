@@ -9,6 +9,7 @@ class Cursor3D;
 class StageCollision;
 class StageKillplanes;
 
+#include <Windows.h>
 #include <string>
 #include <vector>
 #include <unordered_set>
@@ -22,7 +23,6 @@ class StageKillplanes;
 #define DEV_MODE
 
 #ifdef DEV_MODE
-	#include <thread>
 	#define INCR_NEW(NAME) Global::debugNew(NAME);
 	#define INCR_DEL(NAME) Global::debugDel(NAME);
 #else
@@ -48,6 +48,13 @@ private:
 
 public:
     static int main();
+
+    static int initWin32GUI(HINSTANCE hInstance);
+
+    static HWND mainWindow;
+    static std::vector<HWND> windowLabels;
+    static std::vector<HWND> windowValues;
+    static std::vector<HWND> windowDescriptions;
 
     static bool redrawWindow;
 

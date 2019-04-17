@@ -3,6 +3,7 @@
 
 class Vector3f;
 class Triangle3D;
+class SA2Object;
 
 #include <math.h>
 #include <list>
@@ -11,6 +12,8 @@ class Triangle3D;
 class CollisionModel
 {
 public:
+    SA2Object* parent;
+
 	std::list<Triangle3D*> triangles;
 
 	bool wasCollidedWith;

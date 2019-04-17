@@ -106,31 +106,186 @@ int Global::gameMissionNumber = 0;
 std::unordered_map<std::string, std::string> Global::levelFileMap;
 std::unordered_map<int, std::string> Global::levelIDMap;
 
-int main(int argc, char** argv)
-{
-    if (argc >= 1)
-    {
-        std::string pathog = argv[0];
-        const char* path = pathog.c_str();
-        int lastFolderIdx = 0;
-        for (int i = (int)pathog.length()-1; i >= 0; i--)
-        {
-            if (path[i] == '\\')
-            {
-                lastFolderIdx = i;
-                break;
-            }
-        }
+HWND Global::mainWindow = nullptr;
+std::vector<HWND> Global::windowLabels;
+std::vector<HWND> Global::windowValues;
+std::vector<HWND> Global::windowDescriptions;
 
-        std::string realPath = "";
-        for (int i = 0; i < lastFolderIdx; i++)
-        {
-            realPath = realPath + path[i];
-        }
-        Global::dirProgRoot = realPath;
+void addMenus(HWND window);
+void addControls(HWND window);
+
+//entry point of the program
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int /*nCmdShow*/)
+{
+    //remake the console, since it somehow becomes missing once we enter the program here
+#ifdef DEV_MODE
+    AllocConsole();
+    freopen("CONIN$", "r",stdin);
+    freopen("CONOUT$", "w",stdout);
+    freopen("CONOUT$", "w",stderr);
+#endif
+
+    if (Global::initWin32GUI(hInstance) < 0)
+    {
+        MessageBox(NULL, "RegisterClassW failed. Not sure why. Program can't start without that though, so I have to quit.", "Fatal Error", MB_OK);
+        return -1;
     }
+
     return Global::main();
 }
+
+void addMenus(HWND window)
+{
+    HMENU menu = CreateMenu();
+    HMENU menuFile = CreateMenu();
+
+    AppendMenu(menuFile, MF_STRING, 1, "Load Objects from SET Files");
+    AppendMenu(menuFile, MF_STRING, 2, "Export Objects to SET Files");
+    AppendMenu(menuFile, MF_SEPARATOR, 0, "");
+    AppendMenu(menuFile, MF_STRING, 3, "Exit");
+
+    AppendMenu(menu, MF_POPUP, (UINT_PTR)menuFile, "File");
+    AppendMenu(menu, MF_STRING, 4, "Help");
+
+    SetMenu(window, menu);
+}
+
+void addControls(HWND window)
+{
+    //CreateWindowW(L"static", L"Enter text here:", WS_VISIBLE | WS_CHILD | WS_BORDER | SS_CENTER, 200, 100, 100, 50, window, NULL, NULL, NULL);
+    //CreateWindowW(L"Edit", L"...", WS_VISIBLE | WS_CHILD | WS_BORDER | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL, 200, 152, 100, 50, window, NULL, NULL, NULL);
+    int entryHOffset = 60;
+    int pad = 2;
+
+    int entryHeight = 20;
+    int entryWidth = 80;
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"ID",        WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  0*entryHOffset+( 1*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"Name",      WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  1*entryHOffset+( 2*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"PositionX", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  2*entryHOffset+( 3*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"PositionY", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  3*entryHOffset+( 4*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"PositionZ", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  4*entryHOffset+( 5*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"RotationX", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  5*entryHOffset+( 6*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"RotationY", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  6*entryHOffset+( 7*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"RotationZ", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  7*entryHOffset+( 8*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"Variable1", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  8*entryHOffset+( 9*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"Variable2", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad,  9*entryHOffset+(10*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+    Global::windowLabels.push_back(CreateWindowW(L"STATIC", L"Variable3", WS_VISIBLE | WS_CHILD | WS_BORDER, 0+pad, 10*entryHOffset+(11*pad), entryWidth, entryHeight, window, NULL, NULL, NULL));
+
+    int entry2Height = 20;
+    int entry2Width = 156;
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  0*entryHOffset+( 1*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  1*entryHOffset+( 2*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  2*entryHOffset+( 3*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  3*entryHOffset+( 4*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  4*entryHOffset+( 5*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  5*entryHOffset+( 6*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  6*entryHOffset+( 7*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  7*entryHOffset+( 8*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  8*entryHOffset+( 9*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad,  9*entryHOffset+(10*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+    Global::windowValues.push_back(CreateWindowW(L"EDIT",   L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+2*pad, 10*entryHOffset+(11*pad), entry2Width, entry2Height, window, NULL, NULL, NULL));
+
+    int entry3Height = 60;
+    int entry3Width = 320;
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  0*entryHOffset+( 1*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  1*entryHOffset+( 2*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  2*entryHOffset+( 3*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  3*entryHOffset+( 4*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  4*entryHOffset+( 5*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  5*entryHOffset+( 6*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  6*entryHOffset+( 7*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  7*entryHOffset+( 8*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  8*entryHOffset+( 9*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad,  9*entryHOffset+(10*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+    Global::windowDescriptions.push_back(CreateWindowW(L"STATIC", L"", WS_VISIBLE | WS_CHILD | WS_BORDER, entryWidth+entry2Width+3*pad, 10*entryHOffset+(11*pad), entry3Width, entry3Height, window, NULL, NULL, NULL));
+}
+
+LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch (msg)
+    {
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+
+    case WM_COMMAND:
+        std::fprintf(stdout, "wp = %d\n", (int)wp);
+        switch (wp)
+        {
+        case 1: Global::shouldLoadNewLevel = true; break;
+        case 2: break;
+        case 3: break;
+        case 4: MessageBox(NULL, "Load the U and S setfile in and the rest of the stage models will load automatically. Use C, V, and B keys to toggle visibility of the killplanes/collision/stage.", "Help", MB_OK); break;
+        default: break;
+        }
+        break;
+
+    default:
+        return DefWindowProcW(hWnd, msg, wp, lp);
+    }
+
+    return 0;
+}
+
+int Global::initWin32GUI(HINSTANCE hInstance)
+{
+    WNDCLASSW wc = {0};
+
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
+    wc.hInstance     = hInstance;
+    wc.lpszClassName = L"SA2 Level Editor";
+    wc.lpfnWndProc   = win32WindowCallback;
+
+    if (!RegisterClassW(&wc))
+    {
+        return -1;
+    }
+
+    Global::mainWindow = CreateWindowW(L"SA2 Level Editor", L"SA2 Level Editor", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 580, 743, NULL, NULL, NULL, NULL);
+
+    addMenus(Global::mainWindow);
+    addControls(Global::mainWindow);
+
+    //MSG msg = {0};
+
+    //while (GetMessage(&msg, NULL, NULL, NULL))
+    //{
+    //    TranslateMessage(&msg);
+    //    DispatchMessage(&msg);
+    //}
+
+    return 0;
+}
+
+//int main2(int argc, char** argv)
+//{
+    //used to get the root directory. but now since the program
+    // doesnt start here its kind of useless.
+    //if (argc >= 1)
+    //{
+    //    std::string pathog = argv[0];
+    //    const char* path = pathog.c_str();
+    //    int lastFolderIdx = 0;
+    //    for (int i = (int)pathog.length()-1; i >= 0; i--)
+    //    {
+    //        if (path[i] == '\\')
+    //        {
+    //            lastFolderIdx = i;
+    //            break;
+    //        }
+    //    }
+    //
+    //    std::string realPath = "";
+    //    for (int i = 0; i < lastFolderIdx; i++)
+    //    {
+    //        realPath = realPath + path[i];
+    //    }
+    //    Global::dirProgRoot = realPath;
+    //}
+
+    //return Global::main();
+//}
 
 int Global::main()
 {
@@ -203,7 +358,10 @@ int Global::main()
 	int frameCount = 0;
 	double previousTime = 0;
 
-    LevelLoader::loadLevel(3, "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Adventure 2\\resource\\gd_PC");
+
+
+    //LevelLoader::loadLevel(3, "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Adventure 2\\resource\\gd_PC");
+    //Global::shouldLoadNewLevel = true;
 
 	Global::gameState = STATE_RUNNING;
 

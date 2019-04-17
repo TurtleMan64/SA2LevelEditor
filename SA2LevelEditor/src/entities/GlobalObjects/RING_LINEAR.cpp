@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <cstring>
+#include <Windows.h>
 
 #include "../entity.h"
 #include "../../toolbox/vector.h"
@@ -15,26 +16,16 @@
 #include <list>
 
 
-//std::list<TexturedModel*> RING_LINEAR::models;
-//CollisionModel* RING_LINEAR::cmBase;
-
 RING_LINEAR::RING_LINEAR()
 {
 
 }
 
-//Ring::Ring(Vector3f* p)
-//{
-//    position.set(p);
-//    scale = 1;
-//	visible = true;
-//	baseColour.set(1,1,1);
-//	updateTransformationMatrix();
-//}
-
 RING_LINEAR::RING_LINEAR(char data[32])
 {
     std::memcpy(rawData, data, 32);
+
+    ID = data[1];
 
     rotationX = data[3] + (data[2] << 8);
     rotationY = data[5] + (data[4] << 8);
@@ -77,12 +68,13 @@ RING_LINEAR::RING_LINEAR(char data[32])
 
     Vector3f ringDirection(0, 0, 1);
 
-    Vector3f xAxis(-1, 0, 0);
-    Vector3f yAxis(0, -1, 0);
+    Vector3f xAxis(1, 0, 0);
+    Vector3f yAxis(0, 1, 0);
     ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::toRadians(rotationX));
     ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::toRadians(rotationY));
 
     ringDirection.setLength(ringDelta);
+    ringDirection.neg();
 
     for (int i = 0; i < numRings; i++)
     {
@@ -96,6 +88,7 @@ RING_LINEAR::RING_LINEAR(char data[32])
         Global::addEntity(ring);
 
         CollisionModel* cm = RING::cmBase->duplicateMe();
+        cm->parent = this;
         RING::cmBase->transformModel(cm, &ring->position, 0, 0, 0, 1, 1, 1);
         CollisionChecker::addCollideModel(cm);
 
@@ -103,15 +96,7 @@ RING_LINEAR::RING_LINEAR(char data[32])
         cms.push_back(cm);
     }
 
-	rotationX = 0;
-	rotationY = (int)Maths::random()*65536;
-	rotationZ = 0; 
-	scaleX = 1;
-    scaleY = 1;
-    scaleZ = 1;
 	visible = false;
-	baseColour.set(1,1,1);
-	updateTransformationMatrix();
 }
 
 void RING_LINEAR::step()
@@ -149,29 +134,37 @@ std::list<TexturedModel*>* RING_LINEAR::getModels()
 
 void RING_LINEAR::loadStaticModels()
 {
-	//if (RING_LINEAR::models.size() > 0)
-	//{
-	//	return;
-	//}
-    //
-	//#ifdef DEV_MODE
-	//std::fprintf(stdout, "Loading RING_LINEAR static models...\n");
-	//#endif
-    //
-	//loadModel(&RING_LINEAR::models, "res/Models/GlobalObjects/Ring/", "Ring");
-    //
-    //if (RING_LINEAR::cmBase == nullptr)
-	//{
-	//	RING_LINEAR::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
-	//}
+	//we just use RING models
 }
 
 void RING_LINEAR::deleteStaticModels()
 {
-	//#ifdef DEV_MODE
-	//std::fprintf(stdout, "Deleting RING_LINEAR static models...\n");
-	//#endif
-    //
-	//Entity::deleteModels(&RING_LINEAR::models);
-    //Entity::deleteCollisionModel(&RING_LINEAR::cmBase);
+	
+}
+
+void RING_LINEAR::updateEditorWindows()
+{
+    SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
+    SetWindowTextA(Global::windowValues[ 1], "RING_LINEAR");
+    SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
+    SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
+    SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
+    SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
+    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
+    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 8], std::to_string(ringDelta).c_str());
+    SetWindowTextA(Global::windowValues[ 9], "");
+    SetWindowTextA(Global::windowValues[10], std::to_string(numRings).c_str());
+
+    SendMessageA(Global::windowValues[ 0], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 1], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[ 2], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 3], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 4], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 5], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 }

@@ -5,11 +5,11 @@
 #include <list>
 
 #include <chrono>
-#include <thread>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "levelloader.h"
+#include "../entities/unknown.h"
 #include "../main/main.h"
 #include "../entities/stage.h"
 #include "../entities/stagepass2.h"
@@ -23,12 +23,11 @@
 #include "../toolbox/input.h"
 #include "../entities/camera.h"
 #include "../entities/GlobalObjects/ring.h"
+#include "../entities/GlobalObjects/ringlinear.h"
 #include "../toolbox/readbytes.h"
-#include "../entities/unknown.h"
 #include "loader.h"
 #include "../entities/stagecollision.h"
 #include "../entities/stagekillplanes.h"
-#include "../entities/GlobalObjects/ringlinear.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -266,85 +265,45 @@ void LevelLoader::processObjectSET(char data[32])
         case Global::Levels::Green_Forest:
             switch (objectType)
             {
-                case 0:
-                    Global::addEntity(new RING(data)); INCR_NEW("Entity")
-                    break;
-
-                case 1:
-                    Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity")
-                    break;
-
-                default:
-                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
-                    break;
+                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
+                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
+                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
             }
             break;
 
         case Global::Levels::Metal_Harbor:
             switch (objectType)
             {
-                case 0:
-                    Global::addEntity(new RING(data)); INCR_NEW("Entity")
-                    break;
-
-                case 1:
-                    Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity")
-                    break;
-
-                default:
-                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
-                    break;
+                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
+                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
+                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
             }
             break;
 
         case Global::Levels::Sky_Rail:
             switch (objectType)
             {
-                case 0:
-                    Global::addEntity(new RING(data)); INCR_NEW("Entity")
-                    break;
-
-                case 1:
-                    Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity")
-                    break;
-
-                default:
-                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
-                    break;
+                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
+                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
+                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
             }
             break;
 
         case Global::Levels::Final_Rush:
             switch (objectType)
             {
-                case 0:
-                    Global::addEntity(new RING(data)); INCR_NEW("Entity")
-                    break;
-
-                case 1:
-                    Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity")
-                    break;
-
-                default:
-                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
-                    break;
+                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
+                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
+                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
             }
             break;
 
         case Global::Levels::Crazy_Gadget:
             switch (objectType)
             {
-                case 0:
-                    Global::addEntity(new RING(data)); INCR_NEW("Entity")
-                    break;
-
-                case 1:
-                    Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity")
-                    break;
-
-                default:
-                    Global::addEntity(new Unknown(data, objectType)); INCR_NEW("Entity")
-                    break;
+                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
+                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
+                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
             }
             break;
 
@@ -447,12 +406,12 @@ void LevelLoader::promptUserForLevel()
     const int BUFSIZE = 1024;
     char filePaths[BUFSIZE] = {0};
     OPENFILENAME ofns = {0};
-    ofns.lStructSize = sizeof(ofns);
+    ofns.lStructSize = sizeof(OPENFILENAME);
     ofns.lpstrFile = filePaths;
     ofns.nMaxFile = BUFSIZE;
     ofns.lpstrInitialDir = (Global::dirSA2Root + "\\resource\\gd_PC\\").c_str();
-    ofns.lpstrFilter = "*.bin";
-    ofns.nFilterIndex = 0;
+    ofns.lpstrFilter = "SET files (set*_*.bin)\0set*_*.bin\0";
+    ofns.nFilterIndex = 1; //default filter to show
     ofns.lpstrTitle = "Select BOTH setXXXX_s AND setXXXX_u for the level you want to edit";
     ofns.Flags = OFN_NOCHANGEDIR | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
 

@@ -6,6 +6,7 @@
 #include "collisionmodel.h"
 #include "../main/main.h"
 #include "../toolbox/maths.h"
+#include "../entities/sa2object.h"
 
 
 CollisionModel::CollisionModel()
@@ -13,6 +14,7 @@ CollisionModel::CollisionModel()
 	wasCollidedWith = false;
 	treeMaxDepth = -1;
     isVisible = true;
+    parent = nullptr;
 }
 
 void CollisionModel::generateMinMaxValues()

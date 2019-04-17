@@ -28,6 +28,8 @@ public:
 	RING_LINEAR();
 	RING_LINEAR(char data[32]);
 
+    void updateEditorWindows();
+
 	void step();
 
 	std::list<TexturedModel*>* getModels();

@@ -24,6 +24,8 @@ public:
 
 	void step();
 
+    void updateEditorWindows();
+
 	std::list<TexturedModel*>* getModels();
 
 	static void loadStaticModels();
