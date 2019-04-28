@@ -180,6 +180,18 @@
     <ClCompile Include="src\entities\GlobalObjects\RING_LINEAR.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\StageSky.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SPRB.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\RING_CIRCLE.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SPRA.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -312,6 +324,18 @@
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\ringlinear.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\stagesky.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\sprb.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ringcircle.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\spra.h">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>

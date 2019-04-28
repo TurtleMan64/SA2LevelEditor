@@ -10,8 +10,8 @@ public:
 	Vector3f fadePosition2;
 
 	Vector3f eye;
-    float yaw;
-    float pitch;
+    float yaw; //in degrees
+    float pitch; //in degrees
 
 	Camera();
 

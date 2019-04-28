@@ -1,11 +1,14 @@
+# Blender MTL File: 'None'
+# Material Count: 2
 
-newmtl _f6b0ad3_dds
-	Ns 20.0000
-	Ni 0.600
-	d 1.0000
-	Tr 0.0000
-	glow 0.95
-	scrollX 1
-	scrollY 0
-	map_Ka Ring.png
-	map_Kd Ring.png
+newmtl ring
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ring.png
+

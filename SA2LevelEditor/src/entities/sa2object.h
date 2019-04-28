@@ -29,6 +29,21 @@ public:
     // with this objects properties (like position, id, etc.)
     virtual void updateEditorWindows();
 
+    //when the user manually enters a new text value and clicks
+    // the update button, this function gets called. it is the duty of
+    // this function to parse the text from the corresponding button
+    // and determine if it is an ok value, then update the button text
+    // again and also update itself and redraw the screen.
+    virtual void updateValue(int btnIndex);
+
+    //fills the given data buffer with the data for this object.
+    // this is used when exporting the objects back out to a setfile,
+    // the exporter can just ask each SA2Object to fill out its
+    // 32 byte buffer and write those to the set file
+    virtual void fillData(char data[32]);
+
+    bool isSA2Object();
+
     virtual int getIntRotationX();
     virtual int getIntRotationY();
     virtual int getIntRotationZ();

@@ -24,12 +24,14 @@ private:
 public:
 	static void loadTitle();
 
-	static void loadLevel(int levelID, std::string setDir);
+    static void loadLevel(std::string setDir, std::string setS, std::string setU);
 
     static void promptUserForLevel();
 
 	static void loadLevelData();
 
 	static int getNumLevels();
+
+    static void exportLevel();
 };
 #endif

@@ -45,6 +45,8 @@ public:
 
 	void updateTransformationMatrix();
 
+    virtual bool isSA2Object();
+
 	//void updateTransformationMatrixSA2();
 };
 #endif

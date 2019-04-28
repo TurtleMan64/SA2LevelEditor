@@ -121,6 +121,9 @@ public:
 	*/
 	static Vector3f spherePositionFromAngles(float angH, float angV, float radius);
 
+    //gives the yaw and pitch (in radians) of a direction vector
+    static Vector2f anglesFromDirection(Vector3f* direction);
+
 	//Generates a uniformly distributed random position on a sphere of radius 1
 	static Vector3f randomPointOnSphere();
 

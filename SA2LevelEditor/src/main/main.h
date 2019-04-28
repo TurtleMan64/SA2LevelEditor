@@ -4,10 +4,12 @@
 class Entity;
 class Camera;
 class Stage;
-class SkySphere;
 class Cursor3D;
 class StageCollision;
 class StageKillplanes;
+class SA2Object;
+class StageSky;
+class Dummy;
 
 #include <Windows.h>
 #include <string>
@@ -32,7 +34,7 @@ class StageKillplanes;
 
 class Global
 {
-private:
+public:
     static std::unordered_set<Entity*> gameEntities;
     static std::list<Entity*> gameEntitiesToAdd;
     static std::list<Entity*> gameEntitiesToDelete;
@@ -46,27 +48,51 @@ private:
     static std::list<Entity*> gameTransparentEntitiesToAdd;
     static std::list<Entity*> gameTransparentEntitiesToDelete;
 
+    static void updateCamFromSA2();
+
+    static void teleportSA2PlayerToCursor3D();
+
 public:
     static int main();
 
     static int initWin32GUI(HINSTANCE hInstance);
 
+    //when there is no object selected, call this to
+    // reset the values to blank and make them not editable.
+    static void resetObjectWindow();
+
     static HWND mainWindow;
+    static HMENU mainMenu;
+    static HMENU mainMenuFile;
+    static HMENU mainMenuView;
+    static HMENU mainMenuSA2;
     static std::vector<HWND> windowLabels;
     static std::vector<HWND> windowValues;
+    static std::vector<HWND> windowButtons;
     static std::vector<HWND> windowDescriptions;
 
     static bool redrawWindow;
+
+    //The currently selected object
+    static SA2Object* selectedSA2Object;
+    static bool isMovingX;
+    static bool isMovingY;
+    static bool isMovingZ;
 
 	static Camera* gameCamera;
 	static Stage* gameStage;
     static StageCollision* gameStageCollision;
     static StageKillplanes* gameStageKillplanes;
-	static SkySphere* gameSkySphere;
+	static StageSky* gameStageSky;
     static Cursor3D* gameCursor3D;
+    static Dummy* gamePlayer;
 	static int countNew;
 	static int countDelete;
 	static int gameState;
+
+    //if this is true, the editor will try to attach to a running SA2 process
+    // and follow the camera
+    static bool gameIsFollowingSA2;
 
     enum Levels
     {
@@ -120,14 +146,14 @@ public:
 
 	static int levelID;
     static bool shouldLoadNewLevel;
-
+    static bool shouldExportLevel;
 
 	static int gameMissionNumber;
     static std::string dirSA2Root;
     static std::string dirProgRoot;
+    static std::string dirSet;
 
-	static std::unordered_map<std::string, std::string> levelFileMap;
-    static std::unordered_map<int, std::string> levelIDMap;
+    static std::unordered_map<std::string, std::string> levelSetToLVL2;
 
     static void debugNew(const char* name);
     static void debugDel(const char* name);

@@ -50,44 +50,73 @@ bool CollisionModel::hasQuadTree()
 //makes a collision model be the transformed version of this collision model
 void CollisionModel::transformModel(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
-	float offX = translate->x;
-	float offY = translate->y;
-	float offZ = translate->z;
+	//float offX = translate->x;
+	//float offY = translate->y;
+	//float offZ = translate->z;
 
-	float angleRad = Maths::toRadians(bamsYRot);
-	float cosAng = cosf(angleRad);
-	float sinAng = sinf(angleRad);
+    float angleRadX = Maths::toRadians(bamsXRot);
+	//float cosAngX = cosf(angleRadX);
+	//float sinAngX = sinf(angleRadX);
+
+	float angleRadY = Maths::toRadians(bamsYRot);
+	//float cosAngY = cosf(angleRadY);
+	//float sinAngY = sinf(angleRadY);
 
 	float angleRadZ = Maths::toRadians(bamsZRot);
-	float cosAngZ = cosf(angleRadZ);
-	float sinAngZ = sinf(angleRadZ);
+	//float cosAngZ = cosf(angleRadZ);
+	//float sinAngZ = sinf(angleRadZ);
 
 	targetModel->deleteMe();
 
 	for (Triangle3D* tri : triangles)
 	{
-		float xDiff = tri->p1X*xScale;
-		float zDiff = tri->p1Z*zScale;
-		float yDiff = tri->p1Y*yScale;
+		//float xDiff = tri->p1X*xScale;
+		//float zDiff = tri->p1Z*zScale;
+		//float yDiff = tri->p1Y*yScale;
+        //
+		//float newX = (xDiff*cosAngZ - yDiff*sinAngZ);
+		//float newY = (yDiff*cosAngZ + xDiff*sinAngZ);
+		//Vector3f newP1(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
+        //
+		//xDiff = tri->p2X*xScale;
+		//zDiff = tri->p2Z*zScale;
+		//yDiff = tri->p2Y*yScale;
+		//newX = (xDiff*cosAngZ - yDiff*sinAngZ);
+		//newY = (yDiff*cosAngZ + xDiff*sinAngZ);
+		//Vector3f newP2(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
+        //
+		//xDiff = tri->p3X*xScale;
+		//zDiff = tri->p3Z*zScale;
+		//yDiff = tri->p3Y*yScale;
+		//newX = (xDiff*cosAngZ - yDiff*sinAngZ);
+		//newY = (yDiff*cosAngZ + xDiff*sinAngZ);
+		//Vector3f newP3(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
 
-		float newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		float newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		Vector3f newP1(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
 
-		xDiff = tri->p2X*xScale;
-		zDiff = tri->p2Z*zScale;
-		yDiff = tri->p2Y*yScale;
-		newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		Vector3f newP2(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
+        Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
+        Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
+        Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
+        Vector3f axis;
 
-		xDiff = tri->p3X*xScale;
-		zDiff = tri->p3Z*zScale;
-		yDiff = tri->p3Y*yScale;
-		newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		Vector3f newP3(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
+        //order = y, x, z
+        axis.set(0, 1, 0);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadY);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadY);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadY);
 
+        axis.set(1, 0, 0);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadX);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadX);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadX);
+
+        axis.set(0, 0, 1);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadZ);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadZ);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadZ);
+
+        newP1 = newP1 + translate;
+        newP2 = newP2 + translate;
+        newP3 = newP3 + translate;
 
 		Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
 

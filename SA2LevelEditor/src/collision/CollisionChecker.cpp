@@ -144,6 +144,7 @@ bool CollisionChecker::checkCollision(
 		}
 	}
 
+    Global::selectedSA2Object = nullptr;
 	if (/*CollisionChecker::checkPlayer && */finalModel != nullptr)
 	{
 		finalModel->wasCollidedWith = true;
@@ -152,8 +153,15 @@ bool CollisionChecker::checkCollision(
         if (parent != nullptr)
         {
             parent->updateEditorWindows();
+            Global::selectedSA2Object = parent;
         }
 	}
+
+    if (Global::selectedSA2Object == nullptr)
+    {
+        Global::resetObjectWindow();
+    }
+
 	//CollisionChecker::checkPlayer = false;
 
 	return triangleCollide;

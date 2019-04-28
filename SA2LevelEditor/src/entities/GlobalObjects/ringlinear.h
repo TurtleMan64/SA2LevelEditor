@@ -2,33 +2,37 @@
 #define RINGLINEAR_H
 
 class TexturedModel;
-//class CollisionModel;
+class CollisionModel;
+class Dummy;
 
 #include <list>
 #include <vector>
 #include "../entity.h"
 #include "../sa2object.h"
-#include "../dummy.h"
 
 
 class RING_LINEAR : public SA2Object
 {
 private:
-	//static std::list<TexturedModel*> models;
-
-    //static CollisionModel* cmBase;
-
     std::vector<Dummy*> rings;
     std::vector<CollisionModel*> cms;
 
-    int numRings;
     float ringDelta;
+    int numRings;
+
+    void spawnChildren();
 
 public:
 	RING_LINEAR();
 	RING_LINEAR(char data[32]);
 
     void updateEditorWindows();
+
+    void updateValue(int btnIndex);
+
+    void fillData(char data[32]);
+
+    bool isSA2Object();
 
 	void step();
 

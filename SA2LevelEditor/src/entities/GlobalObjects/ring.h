@@ -16,6 +16,7 @@ private:
     static CollisionModel* cmBase;
 
     friend class RING_LINEAR;
+    friend class RING_CIRCLE;
 
 public:
 	RING();
@@ -25,6 +26,12 @@ public:
 	void step();
 
     void updateEditorWindows();
+
+    void updateValue(int btnIndex);
+
+    void fillData(char data[32]);
+
+    bool isSA2Object();
 
 	std::list<TexturedModel*>* getModels();
 

@@ -70,6 +70,10 @@ std::list<TexturedModel*>* Entity::getModels()
 	return nullptr;
 }
 
+bool Entity::isSA2Object()
+{
+    return false;
+}
 
 void Entity::setPosition(Vector3f* newPos)
 {

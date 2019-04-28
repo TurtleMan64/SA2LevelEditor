@@ -42,7 +42,7 @@ void MasterRenderer::init()
 	shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
 	projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
 	renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
-    MasterRenderer::setVFOV(70);
+    MasterRenderer::setVFOV(55.404052734375f);
 	MasterRenderer::makeProjectionMatrix();
 	MasterRenderer::disableCulling();
 }

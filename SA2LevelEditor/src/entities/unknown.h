@@ -12,8 +12,6 @@ class TexturedModel;
 class Unknown : public SA2Object
 {
 private:
-    int id;
-
     float var1, var2, var3;
 
 	static std::vector<std::list<TexturedModel*>> models;
@@ -25,6 +23,12 @@ public:
 	Unknown(char data[32]);
 
     void updateEditorWindows();
+
+    void updateValue(int btnIndex);
+
+    void fillData(char data[32]);
+
+    bool isSA2Object();
 
 	void step();
 

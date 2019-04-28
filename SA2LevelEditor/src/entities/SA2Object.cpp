@@ -33,6 +33,21 @@ void SA2Object::updateEditorWindows()
 
 }
 
+void SA2Object::updateValue(int)
+{
+
+}
+
+void SA2Object::fillData(char data[32])
+{
+    data;
+}
+
+bool SA2Object::isSA2Object()
+{
+    return true;
+}
+
 int SA2Object::getIntRotationX()
 {
     return 0;

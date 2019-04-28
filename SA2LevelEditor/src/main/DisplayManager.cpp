@@ -21,6 +21,7 @@
 #include "../entities/cursor3d.h"
 #include "../entities/stagecollision.h"
 #include "../entities/stagekillplanes.h"
+#include "../entities/stagesky.h"
 #include "../entities/stage.h"
 #include "../loading/levelloader.h"
 
@@ -210,7 +211,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
         int stateAltR   = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
 
         bool holdingShift = (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS);
-        bool holdingAlt = (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS);
+        bool holdingAlt   = (stateAltL   == GLFW_PRESS || stateAltR   == GLFW_PRESS);
 
         if (holdingShift && holdingAlt) //pan based on distance from 3d cursor
         {
@@ -265,7 +266,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
         else  //rotate the camera if you hold middle click
         {
             const float ROTATE_SPEED = 0.2f;
-            Global::gameCamera->yaw   += xDiff*ROTATE_SPEED;
+            Global::gameCamera->yaw += xDiff*ROTATE_SPEED;
 
             float pitchBefore = Global::gameCamera->pitch;
             float pitchAfter = pitchBefore+yDiff*ROTATE_SPEED;
@@ -276,6 +277,28 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Global::gameCamera->pitch = pitchAfter;
         }
 
+        Global::redrawWindow = true;
+    }
+
+    if ((Global::isMovingX || Global::isMovingY || Global::isMovingZ) && Global::selectedSA2Object != nullptr)
+    {
+        const float SLIDE_SPEED = 0.1f;
+        if (Global::isMovingX)
+        {
+            Global::selectedSA2Object->position.x -= (xDiff + yDiff)*SLIDE_SPEED;
+        }
+        if (Global::isMovingY)
+        {
+            Global::selectedSA2Object->position.y -= (xDiff + yDiff)*SLIDE_SPEED;
+        }
+        if (Global::isMovingZ)
+        {
+            Global::selectedSA2Object->position.z -= (xDiff + yDiff)*SLIDE_SPEED;
+        }
+
+        Global::selectedSA2Object->updateCollisionModel();
+        Global::selectedSA2Object->updateTransformationMatrix();
+        Global::selectedSA2Object->updateEditorWindows();
         Global::redrawWindow = true;
     }
 }
@@ -321,13 +344,11 @@ void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int acti
         checkEnd = checkEnd + clickDir.scaleCopy(10000);
         if (CollisionChecker::checkCollision(&Global::gameCamera->eye, &checkEnd))
         {
-            //Global::addEntity(new Ring(CollisionChecker::getCollidePosition()));
             Global::gameCursor3D->setPosition(CollisionChecker::getCollidePosition());
         }
         else
         {
             Vector3f ringpos = Global::gameCamera->eye + clickDir;
-            //Global::addEntity(new Ring(&ringpos));
             Global::gameCursor3D->setPosition(&ringpos);
         }
 
@@ -342,35 +363,81 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
         case GLFW_KEY_C:
             if (action == GLFW_PRESS)
             {
-                Global::gameStageKillplanes->visible = !Global::gameStageKillplanes->visible;
-                Global::redrawWindow = true;
+                //Global::gameStageKillplanes->visible = !Global::gameStageKillplanes->visible;
+                //Global::redrawWindow = true;
             }
             break;
 
         case GLFW_KEY_V:
             if (action == GLFW_PRESS)
             {
-                Global::gameStageCollision->visible = !Global::gameStageCollision->visible;
-                Global::redrawWindow = true;
+                //Global::gameStageCollision->visible = !Global::gameStageCollision->visible;
+                //Global::redrawWindow = true;
             }
             break;
 
         case GLFW_KEY_B:
             if (action == GLFW_PRESS)
             {
-                Global::gameStage->visible = !Global::gameStage->visible;
-                Global::redrawWindow = true;
+                //Global::gameStage->visible = !Global::gameStage->visible;
+                //Global::redrawWindow = true;
+            }
+            break;
+
+        case GLFW_KEY_N:
+            if (action == GLFW_PRESS)
+            {
+                //Global::gameStageSky->visible = !Global::gameStageSky->visible;
+                //Global::redrawWindow = true;
             }
             break;
 
         case GLFW_KEY_L:
-        {
             if (action == GLFW_PRESS)
             {
                 Global::shouldLoadNewLevel = true;
             }
             break;
-        }
+
+        case GLFW_KEY_E:
+            if (action == GLFW_PRESS)
+            {
+                Global::shouldExportLevel = true;
+            }
+            break;
+
+        case GLFW_KEY_X:
+            if (action == GLFW_PRESS)
+            {
+                Global::isMovingX = true;
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Global::isMovingX = false;
+            }
+            break;
+
+        case GLFW_KEY_Y:
+            if (action == GLFW_PRESS)
+            {
+                Global::isMovingY = true;
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Global::isMovingY = false;
+            }
+            break;
+
+        case GLFW_KEY_Z:
+            if (action == GLFW_PRESS)
+            {
+                Global::isMovingZ = true;
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Global::isMovingZ = false;
+            }
+            break;
 
         default:
             break;

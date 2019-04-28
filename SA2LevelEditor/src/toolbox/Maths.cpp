@@ -36,7 +36,7 @@ float Maths::toRadians(int bams)
 
 float Maths::toDegrees(int bams)
 {
-	return (bams/182.0f);
+	return (bams/182.044444444444444f);
 }
 
 /*
@@ -570,6 +570,16 @@ Vector3f Maths::spherePositionFromAngles(float angH, float angV, float radius)
 	float z = (hpt*sinf(angH));
 
 	return Vector3f(x, y, z);
+}
+
+Vector2f Maths::anglesFromDirection(Vector3f* dir)
+{
+    float yaw = atan2f(dir->z, dir->x);
+
+    float hdist = sqrtf(dir->z*dir->z + dir->x*dir->x);
+    float pitch = atan2f(dir->y, hdist);
+
+    return Vector2f(yaw, pitch);
 }
 
 Vector3f Maths::randomPointOnSphere()
