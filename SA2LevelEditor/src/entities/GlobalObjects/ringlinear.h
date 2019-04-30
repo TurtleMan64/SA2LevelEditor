@@ -24,7 +24,7 @@ private:
 
 public:
 	RING_LINEAR();
-	RING_LINEAR(char data[32]);
+	RING_LINEAR(char data[32], bool useDefaultValues);
 
     void updateEditorWindows();
 

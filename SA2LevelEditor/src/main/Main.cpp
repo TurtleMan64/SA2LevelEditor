@@ -59,6 +59,9 @@
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/GlobalObjects/sprb.h"
 #include "../entities/GlobalObjects/spra.h"
+#include "../entities/GlobalObjects/kasoku.h"
+#include "../entities/GlobalObjects/ccube.h"
+#include "../entities/GlobalObjects/sphere.h"
 #include "../entities/unknown.h"
 #include "../toolbox/maths.h"
 #include "../loading/objloader.h"
@@ -94,9 +97,12 @@ double timeOld = 0;
 double timeNew = 0;
 bool Global::redrawWindow = true;
 SA2Object* Global::selectedSA2Object = nullptr;
-bool Global::isMovingX = false;
-bool Global::isMovingY = false;
-bool Global::isMovingZ = false;
+
+bool Global::isHoldingX     = false;
+bool Global::isHoldingY     = false;
+bool Global::isHoldingZ     = false;
+bool Global::isHoldingAlt   = false;
+bool Global::isHoldingShift = false;
 
 Camera*          Global::gameCamera          = nullptr;
 Stage*           Global::gameStage           = nullptr;
@@ -331,7 +337,16 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         }
         case CMD_SA2_TELEPORT: Global::teleportSA2PlayerToCursor3D(); break;
         
-        case CMD_HELP: MessageBox(NULL, "Load the U and S setfile in and the rest of the stage models will load automatically. Use C, V, and B keys to toggle visibility of the killplanes/collision/stage.", "Help", MB_OK); break;
+        case CMD_HELP: MessageBox(NULL, 
+                "Load the U and S setfile in and the rest of the stage models will load automatically.\n" 
+                "Controls:\n"
+                "    Mouse scroll to move camera forward/backward\n"
+                "    Alt + Mouse scroll to move camera towards/away from the 3D Cursor\n"
+                "    Mouse middle click + mouse move to rotate camera\n"
+                "    Mouse middle click + mouse move + Shift to pan camera\n"
+                "    Mouse middle click + mouse move + Alt to rotate camera around 3D Cursor\n"
+                "    Mouse middle click + mouse move + Shift + Alt to pan camera relative to 3D Cursor\n"
+                , "Help", MB_OK); break;
         
         case CMD_BTN_1:  if (Global::selectedSA2Object != nullptr) { Global::selectedSA2Object->updateValue(CMD_BTN_1 -CMD_BTN_1); } break;
         case CMD_BTN_2:  if (Global::selectedSA2Object != nullptr) { Global::selectedSA2Object->updateValue(CMD_BTN_2 -CMD_BTN_1); } break;
@@ -498,7 +513,7 @@ int Global::main()
 	GuiManager::init();
     GuiTextureResources::loadGuiTextures();
 
-    //this cursor never gets deleted
+    //This cursor never gets deleted
     Cursor3D cursor;
     Global::gameCursor3D = &cursor;
 
@@ -520,17 +535,25 @@ int Global::main()
 	StageSky stageSky;
 	Global::gameStageSky = &stageSky;
 
-    //load all global object models
+    //Load all global object models
+    #ifndef OBS_MODE
+    loadModel(&playerModels, "res/Models/GlobalObjects/Sonic/", "Sonic");
     RING::loadStaticModels();
     Unknown::loadStaticModels();
     SPRB::loadStaticModels();
     SPRA::loadStaticModels();
-
-    loadModel(&playerModels, "res/Models/GlobalObjects/Sonic/", "Sonic");
+    KASOKU::loadStaticModels();
+    CCUBE::loadStaticModels();
+    SPHERE::loadStaticModels();
+    #endif
 
     //This dummy never gets deleted
     Dummy player(&playerModels);
     Global::gamePlayer = &player;
+
+    #ifdef OBS_MODE
+    Global::gamePlayer->visible = false;
+    #endif
 
 
 	glfwSetTime(0);

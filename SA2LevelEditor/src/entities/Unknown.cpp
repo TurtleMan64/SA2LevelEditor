@@ -5,6 +5,7 @@
 #include "unknown.h"
 #include "../models/texturedmodel.h"
 #include "../loading/objLoader.h"
+#include "../loading/levelloader.h"
 #include "../main/main.h"
 #include "../collision/collisionchecker.h"
 #include "../collision/collisionmodel.h"
@@ -24,18 +25,29 @@ Unknown::Unknown()
 
 }
 
-Unknown::Unknown(char data[32])
+Unknown::Unknown(char data[32], bool /*useDefaultValues*/)
 {
-    //std::fprintf(stdout, "ring\n");
-    //std::memcpy(rawData, data, 32);
-    //memcpy(&position.x, &data[8],  4);
-    //memcpy(&position.y, &data[12], 4);
-    //memcpy(&position.z, &data[16], 4);
     ID = data[1];
 
-    rotationX = data[3] + (data[2] << 8);
-    rotationY = data[5] + (data[4] << 8);
-    rotationZ = data[7] + (data[6] << 8);
+    signed short rX;
+    signed short rY;
+    signed short rZ;
+
+    char* ptr = (char*)(&rX);
+    memset(ptr, data[3], 1);
+    memset(ptr+1, data[2], 1);
+
+    ptr = (char*)(&rY);
+    memset(ptr, data[5], 1);
+    memset(ptr+1, data[4], 1);
+
+    ptr = (char*)(&rZ);
+    memset(ptr, data[7], 1);
+    memset(ptr+1, data[6], 1);
+
+    rotationX = (int)rX;
+    rotationY = (int)rY;
+    rotationZ = (int)rZ;
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -72,6 +84,7 @@ Unknown::Unknown(char data[32])
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
+
 
 	scaleX = 12;
     scaleY = 12;
@@ -223,13 +236,64 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            //we are going to change into a new object. deal with this later. TODO
+            //we are going to change into a new object.
             int newid = std::stoi(text);
-            ID = newid;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[0], std::to_string(ID).c_str());
+
+            if (newid != ID)
+            {
+                char data[32] = {0};
+                data[ 1] = (char)newid;
+
+                data[ 2] = *(((char*)&rotationX)+1);
+                data[ 3] = *(((char*)&rotationX)+0);
+                data[ 4] = *(((char*)&rotationY)+1);
+                data[ 5] = *(((char*)&rotationY)+0);
+                data[ 6] = *(((char*)&rotationZ)+1);
+                data[ 7] = *(((char*)&rotationZ)+0);
+
+                data[ 8] = *(((char*)&position.x)+3);
+                data[ 9] = *(((char*)&position.x)+2);
+                data[10] = *(((char*)&position.x)+1);
+                data[11] = *(((char*)&position.x)+0);
+                data[12] = *(((char*)&position.y)+3);
+                data[13] = *(((char*)&position.y)+2);
+                data[14] = *(((char*)&position.y)+1);
+                data[15] = *(((char*)&position.y)+0);
+                data[16] = *(((char*)&position.z)+3);
+                data[17] = *(((char*)&position.z)+2);
+                data[18] = *(((char*)&position.z)+1);
+                data[19] = *(((char*)&position.z)+0);
+
+                data[20] = *(((char*)&var1)+3);
+                data[21] = *(((char*)&var1)+2);
+                data[22] = *(((char*)&var1)+1);
+                data[23] = *(((char*)&var1)+0);
+                data[24] = *(((char*)&var2)+3);
+                data[25] = *(((char*)&var2)+2);
+                data[26] = *(((char*)&var2)+1);
+                data[27] = *(((char*)&var2)+0);
+                data[28] = *(((char*)&var3)+3);
+                data[29] = *(((char*)&var3)+2);
+                data[30] = *(((char*)&var3)+1);
+                data[31] = *(((char*)&var3)+0);
+
+                SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
+                if (newObject != nullptr)
+                {
+                    Global::addEntity(newObject);
+                    Global::selectedSA2Object = newObject;
+                    newObject->updateEditorWindows();
+                    Global::redrawWindow = true;
+                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    Global::deleteEntity(this);
+                }
+                else
+                {
+                    ID = newid;
+                    Global::redrawWindow = true;
+                    SetWindowTextA(Global::windowValues[0], std::to_string(ID).c_str());
+                }
+            }
             break;
         }
         catch (...) { break; }

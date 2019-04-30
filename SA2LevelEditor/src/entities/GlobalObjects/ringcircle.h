@@ -24,7 +24,7 @@ private:
 
 public:
 	RING_CIRCLE();
-	RING_CIRCLE(char data[32]);
+	RING_CIRCLE(char data[32], bool useDefaultValues);
 
     void updateEditorWindows();
 

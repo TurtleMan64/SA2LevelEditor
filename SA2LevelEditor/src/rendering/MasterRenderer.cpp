@@ -33,16 +33,28 @@ float MasterRenderer::HFOV = 0; //Horizontal fov
 const float MasterRenderer::NEAR_PLANE = 1.5f; //0.5 old value
 const float MasterRenderer::FAR_PLANE = 60000; //15000 old value
 
-float MasterRenderer::RED = 0.2f;
+#ifdef OBS_MODE
+float MasterRenderer::RED   = 0.0f;
+float MasterRenderer::GREEN = 1.0f;
+float MasterRenderer::BLUE  = 0.0f;
+#else
+float MasterRenderer::RED   = 0.2f;
 float MasterRenderer::GREEN = 0.2f;
-float MasterRenderer::BLUE = 0.2f;
+float MasterRenderer::BLUE  = 0.2f;
+#endif
 
 void MasterRenderer::init()
 {
 	shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
 	projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
 	renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
+
+    #ifdef OBS_MODE
     MasterRenderer::setVFOV(55.404052734375f);
+    #else
+    MasterRenderer::setVFOV(75.0f);
+    #endif
+
 	MasterRenderer::makeProjectionMatrix();
 	MasterRenderer::disableCulling();
 }
@@ -224,16 +236,8 @@ void MasterRenderer::makeProjectionMatrix()
 
 	float aspectRatio = (float)displayWidth / (float)displayHeight;
 
-
-	//FOV = 50;
 	float y_scale = 1.0f / tanf(Maths::toRadians((VFOV) / 2.0f));
 	float x_scale = y_scale / aspectRatio;
-
-
-	//FOV = 88.88888;
-	//float x_scale = (float)((1.0f / tan(toRadians(HFOV / 2.0f))));
-	//float y_scale = x_scale * aspectRatio;
-
 
 	float frustum_length = FAR_PLANE - NEAR_PLANE;
 

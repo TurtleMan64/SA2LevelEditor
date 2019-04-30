@@ -8,6 +8,7 @@
 #include "ring.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
+#include "../../loading/levelloader.h"
 #include "../../main/main.h"
 #include "../../collision/collisionmodel.h"
 #include "../../collision/collisionchecker.h"
@@ -22,15 +23,31 @@ RING_CIRCLE::RING_CIRCLE()
 
 }
 
-RING_CIRCLE::RING_CIRCLE(char data[32])
+RING_CIRCLE::RING_CIRCLE(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
 
     ID = data[1];
 
-    rotationX = data[3] + (data[2] << 8);
-    rotationY = data[5] + (data[4] << 8);
-    rotationZ = data[7] + (data[6] << 8);
+    signed short rX;
+    signed short rY;
+    signed short rZ;
+
+    char* ptr = (char*)(&rX);
+    memset(ptr, data[3], 1);
+    memset(ptr+1, data[2], 1);
+
+    ptr = (char*)(&rY);
+    memset(ptr, data[5], 1);
+    memset(ptr+1, data[4], 1);
+
+    ptr = (char*)(&rZ);
+    memset(ptr, data[7], 1);
+    memset(ptr+1, data[6], 1);
+
+    rotationX = (int)rX;
+    rotationY = (int)rY;
+    rotationZ = (int)rZ;
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -66,6 +83,15 @@ RING_CIRCLE::RING_CIRCLE(char data[32])
 
     numRings = (int)var3;
     ringRadius = var1 + 10.0f;
+
+    if (useDefaultValues)
+    {
+        rotationX = 0;
+        rotationY = 0;
+        rotationZ = 0;
+        numRings = 5;
+        ringRadius = 40.0f;
+    }
 
     spawnChildren();
 
@@ -161,8 +187,54 @@ void RING_CIRCLE::updateValue(int btnIndex)
     {
     case 0:
     {
-        //we are going to change into a new object. deal with this later.
-        break;
+        try
+        {
+            //we are going to change into a new object.
+            int newid = std::stoi(text);
+
+            if (newid != ID)
+            {
+                char data[32] = {0};
+                data[ 1] = (char)newid;
+
+                data[ 8] = *(((char*)&position.x)+3);
+                data[ 9] = *(((char*)&position.x)+2);
+                data[10] = *(((char*)&position.x)+1);
+                data[11] = *(((char*)&position.x)+0);
+                data[12] = *(((char*)&position.y)+3);
+                data[13] = *(((char*)&position.y)+2);
+                data[14] = *(((char*)&position.y)+1);
+                data[15] = *(((char*)&position.y)+0);
+                data[16] = *(((char*)&position.z)+3);
+                data[17] = *(((char*)&position.z)+2);
+                data[18] = *(((char*)&position.z)+1);
+                data[19] = *(((char*)&position.z)+0);
+
+                SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
+                if (newObject != nullptr)
+                {
+                    Global::addEntity(newObject);
+                    Global::selectedSA2Object = newObject;
+                    newObject->updateEditorWindows();
+                    Global::redrawWindow = true;
+                    
+                    for (Dummy* ring : rings)
+                    {
+                        Global::deleteEntity(ring);
+                    }
+                    for (CollisionModel* cm : cms)
+                    {
+                        CollisionChecker::deleteCollideModel(cm);
+                    }
+                    rings.clear();
+                    cms.clear();
+
+                    Global::deleteEntity(this);
+                }
+            }
+            break;
+        }
+        catch (...) { break; }
     }
 
     case 2:

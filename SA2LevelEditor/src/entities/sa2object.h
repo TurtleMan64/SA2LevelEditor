@@ -22,7 +22,7 @@ public:
     TypeInterpretation typeVars;
 
 	SA2Object();
-	SA2Object(char data[32]);
+	SA2Object(char data[32], bool useDefaultValues);
 
     //call this whenever a new object is selected via a user click.
     // this will reach in to the editor window and update the values

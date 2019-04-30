@@ -20,8 +20,7 @@ private:
 
 public:
 	RING();
-	RING(char data[32]);
-    //Ring(Vector3f* p);
+	RING(char data[32], bool useDefaultValues);
 
 	void step();
 

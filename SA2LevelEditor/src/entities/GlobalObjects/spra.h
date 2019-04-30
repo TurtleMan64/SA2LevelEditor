@@ -21,7 +21,7 @@ private:
 
 public:
 	SPRA();
-	SPRA(char data[32]);
+	SPRA(char data[32], bool useDefaultValues);
 
 	void step();
 

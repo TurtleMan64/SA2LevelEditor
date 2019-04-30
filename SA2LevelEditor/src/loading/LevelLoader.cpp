@@ -22,11 +22,15 @@
 #include "../toolbox/split.h"
 #include "../toolbox/input.h"
 #include "../entities/camera.h"
+#include "../entities/sa2object.h"
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/GlobalObjects/ringlinear.h"
 #include "../entities/GlobalObjects/ringcircle.h"
 #include "../entities/GlobalObjects/sprb.h"
 #include "../entities/GlobalObjects/spra.h"
+#include "../entities/GlobalObjects/kasoku.h"
+#include "../entities/GlobalObjects/ccube.h"
+#include "../entities/GlobalObjects/sphere.h"
 #include "../toolbox/readbytes.h"
 #include "loader.h"
 #include "../entities/stagecollision.h"
@@ -95,6 +99,8 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
 
     Global::gameCamera->reset();
     Global::selectedSA2Object = nullptr;
+    Global::resetObjectWindow();
+
 
 	std::ifstream file(fname);
 	if (!file.is_open())
@@ -270,90 +276,133 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
 
 void LevelLoader::processObjectSET(char data[32])
 {
-    int objectType = 0;
-    objectType += data[1];//data[1]+(data[0]<<8);
-    if (objectType >= 100 || objectType < 0)
+    #ifdef OBS_MODE
+    return;
+    #endif
+
+    SA2Object* newObject = newSA2Object(Global::levelID, data[1], data, false);
+    if (newObject != nullptr)
     {
-        std::fprintf(stdout, "objectType = %d\n", objectType);
+        Global::addEntity(newObject);
+    }
+}
+
+SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], bool useDefaultValues)
+{
+    if (objectID != (int)data[1] || objectID < 0)
+    {
+        return nullptr;
     }
 
-    switch (Global::levelID)
+    INCR_NEW("Entity");
+
+    switch (levelID)
     {
         case Global::Levels::Green_Forest:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                case 22: Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 56: Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new SPRA       (data, useDefaultValues);
+                case  2: return new SPRB       (data, useDefaultValues);
+                case  3: return new KASOKU     (data, useDefaultValues);
+                case 22: return new RING_LINEAR(data, useDefaultValues);
+                case 56: return new RING_CIRCLE(data, useDefaultValues);
+                case 66: return new SPHERE     (data, useDefaultValues);
+                case 68: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
 
         case Global::Levels::Metal_Harbor:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                case 3:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 4:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case 46: return new SPHERE     (data, useDefaultValues);
+                case 48: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
 
         case Global::Levels::Sky_Rail:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                case 17: Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 18: Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new SPRA       (data, useDefaultValues);
+                case  2: return new SPRB       (data, useDefaultValues);
+                case  3: return new KASOKU     (data, useDefaultValues);
+                case 17: return new RING_LINEAR(data, useDefaultValues);
+                case 18: return new RING_CIRCLE(data, useDefaultValues);
+                case 72: return new SPHERE     (data, useDefaultValues);
+                case 74: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
 
         case Global::Levels::Final_Rush:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                case 3:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 4:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case 46: return new SPHERE     (data, useDefaultValues);
+                case 48: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
 
         case Global::Levels::Crazy_Gadget:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                case 3:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 4:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case 44: return new SPHERE     (data, useDefaultValues);
+                case 46: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
+
+        case Global::Levels::Final_Chase:
+            switch (objectID)
+            {
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case 46: return new SPHERE     (data, useDefaultValues);
+                case 48: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
+            }
 
         case Global::Levels::Cosmic_Wall:
-            switch (objectType)
+            switch (objectID)
             {
-                case 0:  Global::addEntity(new RING       (data)); INCR_NEW("Entity"); break;
-                case 1:  Global::addEntity(new RING_LINEAR(data)); INCR_NEW("Entity"); break;
-                case 2:  Global::addEntity(new RING_CIRCLE(data)); INCR_NEW("Entity"); break;
-                case 3:  Global::addEntity(new SPRA       (data)); INCR_NEW("Entity"); break;
-                case 4:  Global::addEntity(new SPRB       (data)); INCR_NEW("Entity"); break;
-                default: Global::addEntity(new Unknown    (data)); INCR_NEW("Entity"); break;
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case 38: return new SPHERE     (data, useDefaultValues);
+                case 40: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
             }
-            break;
 
-        default: break;
+        default:
+            INCR_DEL("Entity");
+            std::fprintf(stdout, "Error: level not supported yet.\n");
+            break;
     }
 
+    return nullptr;
 }
 
 void LevelLoader::loadLevelData()
@@ -535,12 +584,12 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0038_u.bin"]        = "";
     Global::levelSetToLVL2["set0039_s.bin"]        = "";
     Global::levelSetToLVL2["SET0039_U.bin"]        = "";
-    Global::levelSetToLVL2["set0040_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0040_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0040_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0040_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0040_s.bin"]        = "";
-    Global::levelSetToLVL2["set0040_u.bin"]        = "";
+    Global::levelSetToLVL2["set0040_2p_s.bin"]     = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0040_2p_u.bin"]     = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0040_hd_s.bin"]     = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0040_hd_u.bin"]     = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0040_s.bin"]        = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0040_u.bin"]        = "FinalChase.lvl2";
     Global::levelSetToLVL2["SET0041_2P_S.bin"]     = "";
     Global::levelSetToLVL2["set0041_2p_u.bin"]     = "";
     Global::levelSetToLVL2["SET0042_S.bin"]        = "";
@@ -832,7 +881,7 @@ void LevelLoader::exportLevel()
         return;
     }
 
-    //write the U file as blank
+    //write the U file
     std::ofstream myfileU((folder+"\\")+fileU, std::ios::out | std::ios::binary);
     if (!myfileU.is_open())
     {
@@ -844,7 +893,7 @@ void LevelLoader::exportLevel()
     buf[3] = 1;
     myfileU.write(buf, 32);
     buf[3] = 0;
-    myfileU.write(buf, 32); //put a single ring, to avoid crashing
+    myfileU.write(buf, 32); //put a single ring, to avoid crashing TODO this creates a new ring every time you export
     myfileU.close();
 
     //write the S file as blank

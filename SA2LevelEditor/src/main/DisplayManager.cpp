@@ -37,7 +37,7 @@
 unsigned int DisplayManager::SCR_WIDTH = 1280;
 unsigned int DisplayManager::SCR_HEIGHT = 720;
 unsigned int DisplayManager::AA_SAMPLES = 0;
-GLFWwindow* DisplayManager::globalWindow = nullptr;
+GLFWwindow* DisplayManager::glfwWindow = nullptr;
 
 int DisplayManager::createDisplay()
 {
@@ -76,20 +76,20 @@ int DisplayManager::createDisplay()
 
 	// glfw window creation
 	// --------------------
-	globalWindow = glfwCreateWindow(screenWidth, screenHeight, "SA2 Level Editor", monitor, nullptr);
-	if (globalWindow == nullptr)
+	glfwWindow = glfwCreateWindow(screenWidth, screenHeight, "SA2 Level Editor", monitor, nullptr);
+	if (glfwWindow == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(globalWindow);
-	glfwSetFramebufferSizeCallback(globalWindow, DisplayManager::framebuffer_size_callback);
-	glfwSetWindowCloseCallback(globalWindow, DisplayManager::window_close_callback);
-    glfwSetCursorPosCallback(globalWindow, DisplayManager::callbackCursorPosition);
-    glfwSetScrollCallback(globalWindow, DisplayManager::callbackMouseScroll);
-    glfwSetMouseButtonCallback(globalWindow, DisplayManager::callbackMouseClick);
-    glfwSetKeyCallback(globalWindow, DisplayManager::callbackKeyboard);
+	glfwMakeContextCurrent(glfwWindow);
+	glfwSetFramebufferSizeCallback(glfwWindow, DisplayManager::framebuffer_size_callback);
+	glfwSetWindowCloseCallback(glfwWindow, DisplayManager::window_close_callback);
+    glfwSetCursorPosCallback(glfwWindow, DisplayManager::callbackCursorPosition);
+    glfwSetScrollCallback(glfwWindow, DisplayManager::callbackMouseScroll);
+    glfwSetMouseButtonCallback(glfwWindow, DisplayManager::callbackMouseClick);
+    glfwSetKeyCallback(glfwWindow, DisplayManager::callbackKeyboard);
 
 	GLFWimage icons[3];
 	icons[0].pixels = SOIL_load_image("res/Images/Icon16.png", &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
@@ -100,7 +100,7 @@ int DisplayManager::createDisplay()
         icons[1].pixels != nullptr &&
         icons[2].pixels != nullptr)
     {
-	    glfwSetWindowIcon(globalWindow, 3, icons);
+	    glfwSetWindowIcon(glfwWindow, 3, icons);
 	    SOIL_free_image_data(icons[0].pixels);
 	    SOIL_free_image_data(icons[1].pixels);
 	    SOIL_free_image_data(icons[2].pixels);
@@ -134,7 +134,7 @@ int DisplayManager::createDisplay()
 		int xpos = monitorWidth/2  - ((int)SCR_WIDTH)/2;
 		int ypos = monitorHeight/2 - ((int)SCR_HEIGHT)/2;
 
-		glfwSetWindowPos(globalWindow, xpos, ypos);
+		glfwSetWindowPos(glfwWindow, xpos, ypos);
 	}
 
 	//glfwGetWindowAttrib(window, GLFW_SAMPLES);
@@ -159,12 +159,12 @@ int DisplayManager::createDisplay()
 
 void DisplayManager::updateDisplay()
 {
-	glfwSwapBuffers(globalWindow);
+	glfwSwapBuffers(glfwWindow);
 }
 
 void DisplayManager::closeDisplay()
 {
-	glfwDestroyWindow(globalWindow);
+	glfwDestroyWindow(glfwWindow);
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
 	glfwTerminate();
@@ -172,12 +172,12 @@ void DisplayManager::closeDisplay()
 
 int DisplayManager::displayWantsToClose()
 {
-	return glfwWindowShouldClose(globalWindow);
+	return glfwWindowShouldClose(glfwWindow);
 }
 
 GLFWwindow* DisplayManager::getWindow()
 {
-	return globalWindow;
+	return glfwWindow;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -205,15 +205,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
     int stateMouse = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
     if (stateMouse == GLFW_PRESS) //rotate the camera if you hold middle click
     {
-        int stateShiftL = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
-        int stateShiftR = glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT);
-        int stateAltL   = glfwGetKey(window, GLFW_KEY_LEFT_ALT);
-        int stateAltR   = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-
-        bool holdingShift = (stateShiftL == GLFW_PRESS || stateShiftR == GLFW_PRESS);
-        bool holdingAlt   = (stateAltL   == GLFW_PRESS || stateAltR   == GLFW_PRESS);
-
-        if (holdingShift && holdingAlt) //pan based on distance from 3d cursor
+        if (Global::isHoldingShift && Global::isHoldingAlt) //pan based on distance from 3d cursor
         {
             Vector3f distFromCursor = Global::gameCursor3D->position - Global::gameCamera->eye;
             float PAN_SPEED = 0.005f*distFromCursor.length();
@@ -226,7 +218,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Vector3f offset = camUp.scaleCopy(-yDiff*PAN_SPEED) + camRight.scaleCopy(-xDiff*PAN_SPEED);
             Global::gameCamera->eye = Global::gameCamera->eye + offset;
         }
-        else if (holdingShift)  //pan the camera if you hold middle click and shift
+        else if (Global::isHoldingShift)  //pan the camera if you hold middle click and shift
         {
             const float PAN_SPEED = 0.5f;
 
@@ -238,7 +230,7 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             Vector3f offset = camUp.scaleCopy(-yDiff*PAN_SPEED) + camRight.scaleCopy(-xDiff*PAN_SPEED);
             Global::gameCamera->eye = Global::gameCamera->eye + offset;
         }
-        else if (holdingAlt)  //rotate the camera around the 3d cursor
+        else if (Global::isHoldingAlt)  //rotate the camera around the 3d cursor
         {
             const float ROTATE_SPEED = 0.2f;
             float rotateAmountRadiansYaw   = Maths::toRadians(xDiff*ROTATE_SPEED);
@@ -280,18 +272,18 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
         Global::redrawWindow = true;
     }
 
-    if ((Global::isMovingX || Global::isMovingY || Global::isMovingZ) && Global::selectedSA2Object != nullptr)
+    if ((Global::isHoldingX || Global::isHoldingY || Global::isHoldingZ) && Global::selectedSA2Object != nullptr)
     {
         const float SLIDE_SPEED = 0.1f;
-        if (Global::isMovingX)
+        if (Global::isHoldingX)
         {
             Global::selectedSA2Object->position.x -= (xDiff + yDiff)*SLIDE_SPEED;
         }
-        if (Global::isMovingY)
+        if (Global::isHoldingY)
         {
             Global::selectedSA2Object->position.y -= (xDiff + yDiff)*SLIDE_SPEED;
         }
-        if (Global::isMovingZ)
+        if (Global::isHoldingZ)
         {
             Global::selectedSA2Object->position.z -= (xDiff + yDiff)*SLIDE_SPEED;
         }
@@ -303,11 +295,9 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
     }
 }
 
-void DisplayManager::callbackMouseScroll(GLFWwindow* window, double /*xoffset*/, double yoffset)
+void DisplayManager::callbackMouseScroll(GLFWwindow* /*window*/, double /*xoffset*/, double yoffset)
 {
-    int stateAltL = glfwGetKey(window, GLFW_KEY_LEFT_ALT);
-    int stateAltR = glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-    if (stateAltL == GLFW_PRESS || stateAltR == GLFW_PRESS)
+    if (Global::isHoldingAlt)
     {
         //move the camera forward or back based on distance from 3d cursor
         Vector3f camDiff = Global::gameCursor3D->position - Global::gameCamera->eye;
@@ -360,38 +350,6 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
 {
     switch (key)
     {
-        case GLFW_KEY_C:
-            if (action == GLFW_PRESS)
-            {
-                //Global::gameStageKillplanes->visible = !Global::gameStageKillplanes->visible;
-                //Global::redrawWindow = true;
-            }
-            break;
-
-        case GLFW_KEY_V:
-            if (action == GLFW_PRESS)
-            {
-                //Global::gameStageCollision->visible = !Global::gameStageCollision->visible;
-                //Global::redrawWindow = true;
-            }
-            break;
-
-        case GLFW_KEY_B:
-            if (action == GLFW_PRESS)
-            {
-                //Global::gameStage->visible = !Global::gameStage->visible;
-                //Global::redrawWindow = true;
-            }
-            break;
-
-        case GLFW_KEY_N:
-            if (action == GLFW_PRESS)
-            {
-                //Global::gameStageSky->visible = !Global::gameStageSky->visible;
-                //Global::redrawWindow = true;
-            }
-            break;
-
         case GLFW_KEY_L:
             if (action == GLFW_PRESS)
             {
@@ -409,33 +367,63 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
         case GLFW_KEY_X:
             if (action == GLFW_PRESS)
             {
-                Global::isMovingX = true;
+                Global::isHoldingX = true;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
             else if (action == GLFW_RELEASE)
             {
-                Global::isMovingX = false;
+                Global::isHoldingX = false;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
             break;
 
         case GLFW_KEY_Y:
             if (action == GLFW_PRESS)
             {
-                Global::isMovingY = true;
+                Global::isHoldingY = true;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
             else if (action == GLFW_RELEASE)
             {
-                Global::isMovingY = false;
+                Global::isHoldingY = false;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
             break;
 
         case GLFW_KEY_Z:
             if (action == GLFW_PRESS)
             {
-                Global::isMovingZ = true;
+                Global::isHoldingZ = true;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             }
             else if (action == GLFW_RELEASE)
             {
-                Global::isMovingZ = false;
+                Global::isHoldingZ = false;
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+            break;
+
+        case GLFW_KEY_LEFT_SHIFT:
+        case GLFW_KEY_RIGHT_SHIFT:
+            if (action == GLFW_PRESS)
+            {
+                Global::isHoldingShift = true;
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Global::isHoldingShift = false;
+            }
+            break;
+
+        case GLFW_KEY_LEFT_ALT:
+        case GLFW_KEY_RIGHT_ALT:
+            if (action == GLFW_PRESS)
+            {
+                Global::isHoldingAlt = true;
+            }
+            else if (action == GLFW_RELEASE)
+            {
+                Global::isHoldingAlt = false;
             }
             break;
 

@@ -11,7 +11,7 @@ private:
     static unsigned int SCR_HEIGHT;
     static unsigned int AA_SAMPLES;
 
-    static GLFWwindow* globalWindow;
+    static GLFWwindow* glfwWindow;
 
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void window_close_callback(GLFWwindow* window);

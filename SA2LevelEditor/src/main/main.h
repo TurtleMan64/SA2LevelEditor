@@ -22,6 +22,7 @@ class Dummy;
 #define STATE_RUNNING 1
 #define STATE_EXITING 2
 
+//#define OBS_MODE
 #define DEV_MODE
 
 #ifdef DEV_MODE
@@ -75,9 +76,13 @@ public:
 
     //The currently selected object
     static SA2Object* selectedSA2Object;
-    static bool isMovingX;
-    static bool isMovingY;
-    static bool isMovingZ;
+
+    //keyboard inputs
+    static bool isHoldingX;
+    static bool isHoldingY;
+    static bool isHoldingZ;
+    static bool isHoldingAlt;
+    static bool isHoldingShift;
 
 	static Camera* gameCamera;
 	static Stage* gameStage;

@@ -20,7 +20,7 @@ private:
 
 public:
 	Unknown();
-	Unknown(char data[32]);
+	Unknown(char data[32], bool useDefaultValues);
 
     void updateEditorWindows();
 

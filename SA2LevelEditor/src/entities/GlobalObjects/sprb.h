@@ -21,7 +21,7 @@ private:
 
 public:
 	SPRB();
-	SPRB(char data[32]);
+	SPRB(char data[32], bool useDefaultValues);
 
 	void step();
 

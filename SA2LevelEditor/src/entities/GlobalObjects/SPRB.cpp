@@ -7,6 +7,7 @@
 #include "sprb.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
+#include "../../loading/levelloader.h"
 #include "../../main/main.h"
 #include "../../collision/collisionmodel.h"
 #include "../../collision/collisionchecker.h"
@@ -24,15 +25,31 @@ SPRB::SPRB()
 
 }
 
-SPRB::SPRB(char data[32])
+SPRB::SPRB(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
 
     ID = data[1];
 
-    rotationX = data[3] + (data[2] << 8);
-    rotationY = data[5] + (data[4] << 8);
-    rotationZ = data[7] + (data[6] << 8);
+    signed short rX;
+    signed short rY;
+    signed short rZ;
+
+    char* ptr = (char*)(&rX);
+    memset(ptr, data[3], 1);
+    memset(ptr+1, data[2], 1);
+
+    ptr = (char*)(&rY);
+    memset(ptr, data[5], 1);
+    memset(ptr+1, data[4], 1);
+
+    ptr = (char*)(&rZ);
+    memset(ptr, data[7], 1);
+    memset(ptr+1, data[6], 1);
+
+    rotationX = (int)rX;
+    rotationY = (int)rY;
+    rotationZ = (int)rZ;
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -71,6 +88,16 @@ SPRB::SPRB(char data[32])
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
+
+    if (useDefaultValues)
+    {
+        rotationX = 0;
+        rotationY = 0;
+        rotationZ = 0;
+        controlLockTime = 30;
+        power = 8.0f;
+        var3 = 0.0f;
+    }
 
 	scaleX = 1;
     scaleY = 1;
@@ -147,8 +174,43 @@ void SPRB::updateValue(int btnIndex)
     {
     case 0:
     {
-        //we are going to change into a new object. deal with this later.
-        break;
+        try
+        {
+            //we are going to change into a new object.
+            int newid = std::stoi(text);
+
+            if (newid != ID)
+            {
+                char data[32] = {0};
+                data[ 1] = (char)newid;
+
+                data[ 8] = *(((char*)&position.x)+3);
+                data[ 9] = *(((char*)&position.x)+2);
+                data[10] = *(((char*)&position.x)+1);
+                data[11] = *(((char*)&position.x)+0);
+                data[12] = *(((char*)&position.y)+3);
+                data[13] = *(((char*)&position.y)+2);
+                data[14] = *(((char*)&position.y)+1);
+                data[15] = *(((char*)&position.y)+0);
+                data[16] = *(((char*)&position.z)+3);
+                data[17] = *(((char*)&position.z)+2);
+                data[18] = *(((char*)&position.z)+1);
+                data[19] = *(((char*)&position.z)+0);
+
+                SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
+                if (newObject != nullptr)
+                {
+                    Global::addEntity(newObject);
+                    Global::selectedSA2Object = newObject;
+                    newObject->updateEditorWindows();
+                    Global::redrawWindow = true;
+                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    Global::deleteEntity(this);
+                }
+            }
+            break;
+        }
+        catch (...) { break; }
     }
 
     case 2:

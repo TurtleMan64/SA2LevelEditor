@@ -7,6 +7,7 @@
 #include "ring.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
+#include "../../loading/levelloader.h"
 #include "../../main/main.h"
 #include "../../collision/collisionmodel.h"
 #include "../../collision/collisionchecker.h"
@@ -24,16 +25,7 @@ RING::RING()
 
 }
 
-//Ring::Ring(Vector3f* p)
-//{
-//    position.set(p);
-//    scale = 1;
-//	visible = true;
-//	baseColour.set(1,1,1);
-//	updateTransformationMatrix();
-//}
-
-RING::RING(char data[32])
+RING::RING(char data[32], bool /*useDefaultValues*/)
 {
     std::memcpy(rawData, data, 32);
 
@@ -58,7 +50,7 @@ RING::RING(char data[32])
     z[0] = data[19];
 
 	rotationX = 0;
-	rotationY = (int)Maths::random()*65536;
+	rotationY = 0;
 	rotationZ = 0; 
 	scaleX = 1;
     scaleY = 1;
@@ -135,7 +127,42 @@ void RING::updateValue(int btnIndex)
     {
     case 0:
     {
-        //we are going to change into a new object. deal with this later.
+        try
+        {
+            //we are going to change into a new object.
+            int newid = std::stoi(text);
+
+            if (newid != ID)
+            {
+                char data[32] = {0};
+                data[ 1] = (char)newid;
+
+                data[ 8] = *(((char*)&position.x)+3);
+                data[ 9] = *(((char*)&position.x)+2);
+                data[10] = *(((char*)&position.x)+1);
+                data[11] = *(((char*)&position.x)+0);
+                data[12] = *(((char*)&position.y)+3);
+                data[13] = *(((char*)&position.y)+2);
+                data[14] = *(((char*)&position.y)+1);
+                data[15] = *(((char*)&position.y)+0);
+                data[16] = *(((char*)&position.z)+3);
+                data[17] = *(((char*)&position.z)+2);
+                data[18] = *(((char*)&position.z)+1);
+                data[19] = *(((char*)&position.z)+0);
+
+                SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
+                if (newObject != nullptr)
+                {
+                    Global::addEntity(newObject);
+                    Global::selectedSA2Object = newObject;
+                    newObject->updateEditorWindows();
+                    Global::redrawWindow = true;
+                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    Global::deleteEntity(this);
+                }
+            }
+        }
+        catch (...) { }
         break;
     }
 

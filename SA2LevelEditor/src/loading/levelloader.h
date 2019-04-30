@@ -5,6 +5,7 @@
 #include <list>
 
 class Entity;
+class SA2Object;
 
 class LevelLoader
 {
@@ -25,6 +26,8 @@ public:
 	static void loadTitle();
 
     static void loadLevel(std::string setDir, std::string setS, std::string setU);
+
+    static SA2Object* newSA2Object(int levelID, int objectID, char data[32], bool useDefaultValues);
 
     static void promptUserForLevel();
 
