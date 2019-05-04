@@ -274,18 +274,38 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
 
     if ((Global::isHoldingX || Global::isHoldingY || Global::isHoldingZ) && Global::selectedSA2Object != nullptr)
     {
-        const float SLIDE_SPEED = 0.1f;
-        if (Global::isHoldingX)
+        //rotate objects
+        if (Global::isHoldingClickRight)
         {
-            Global::selectedSA2Object->position.x -= (xDiff + yDiff)*SLIDE_SPEED;
+            const float SLIDE_SPEED = 1.0f;
+            if (Global::isHoldingX)
+            {
+                Global::selectedSA2Object->rotationX -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+            }
+            if (Global::isHoldingY)
+            {
+                Global::selectedSA2Object->rotationY -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+            }
+            if (Global::isHoldingZ)
+            {
+                Global::selectedSA2Object->rotationZ -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+            }
         }
-        if (Global::isHoldingY)
+        else //move objects
         {
-            Global::selectedSA2Object->position.y -= (xDiff + yDiff)*SLIDE_SPEED;
-        }
-        if (Global::isHoldingZ)
-        {
-            Global::selectedSA2Object->position.z -= (xDiff + yDiff)*SLIDE_SPEED;
+            const float SLIDE_SPEED = 0.1f;
+            if (Global::isHoldingX)
+            {
+                Global::selectedSA2Object->position.x -= (xDiff + yDiff)*SLIDE_SPEED;
+            }
+            if (Global::isHoldingY)
+            {
+                Global::selectedSA2Object->position.y -= (xDiff + yDiff)*SLIDE_SPEED;
+            }
+            if (Global::isHoldingZ)
+            {
+                Global::selectedSA2Object->position.z -= (xDiff + yDiff)*SLIDE_SPEED;
+            }
         }
 
         Global::selectedSA2Object->updateCollisionModel();
@@ -343,6 +363,18 @@ void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int acti
         }
 
         Global::redrawWindow = true;
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT)
+    {
+        if (action == GLFW_PRESS)
+        {
+            Global::isHoldingClickRight = true;
+        }
+        else if (action == GLFW_RELEASE)
+        {
+            Global::isHoldingClickRight = false;
+        }
     }
 }
 

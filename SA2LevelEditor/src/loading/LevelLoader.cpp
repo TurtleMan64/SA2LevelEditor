@@ -9,20 +9,25 @@
 #include <GLFW/glfw3.h>
 
 #include "levelloader.h"
-#include "../entities/unknown.h"
+#include "objLoader.h"
+#include "loader.h"
 #include "../main/main.h"
+#include "../collision/collisionchecker.h"
+#include "../collision/collisionmodel.h"
+#include "../toolbox/getline.h"
+#include "../toolbox/split.h"
+#include "../toolbox/input.h"
+#include "../toolbox/readbytes.h"
 #include "../entities/stage.h"
 #include "../entities/stagepass2.h"
 #include "../entities/stagepass3.h"
 #include "../entities/stagetransparent.h"
-#include "../collision/collisionchecker.h"
-#include "../collision/collisionmodel.h"
-#include "objLoader.h"
-#include "../toolbox/getline.h"
-#include "../toolbox/split.h"
-#include "../toolbox/input.h"
+#include "../entities/stagecollision.h"
+#include "../entities/stagekillplanes.h"
+#include "../entities/stagesky.h"
 #include "../entities/camera.h"
 #include "../entities/sa2object.h"
+#include "../entities/unknown.h"
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/GlobalObjects/ringlinear.h"
 #include "../entities/GlobalObjects/ringcircle.h"
@@ -30,12 +35,10 @@
 #include "../entities/GlobalObjects/spra.h"
 #include "../entities/GlobalObjects/kasoku.h"
 #include "../entities/GlobalObjects/ccube.h"
+#include "../entities/GlobalObjects/ccyl.h"
 #include "../entities/GlobalObjects/sphere.h"
-#include "../toolbox/readbytes.h"
-#include "loader.h"
-#include "../entities/stagecollision.h"
-#include "../entities/stagekillplanes.h"
-#include "../entities/stagesky.h"
+#include "../entities/GlobalObjects/emerald.h"
+#include "../entities/GlobalObjects/bigjump.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -298,20 +301,6 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
 
     switch (levelID)
     {
-        case Global::Levels::Green_Forest:
-            switch (objectID)
-            {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new SPRA       (data, useDefaultValues);
-                case  2: return new SPRB       (data, useDefaultValues);
-                case  3: return new KASOKU     (data, useDefaultValues);
-                case 22: return new RING_LINEAR(data, useDefaultValues);
-                case 56: return new RING_CIRCLE(data, useDefaultValues);
-                case 66: return new SPHERE     (data, useDefaultValues);
-                case 68: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
-            }
-
         case Global::Levels::Metal_Harbor:
             switch (objectID)
             {
@@ -319,38 +308,28 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case  1: return new RING_LINEAR(data, useDefaultValues);
                 case  2: return new RING_CIRCLE(data, useDefaultValues);
                 case  3: return new SPRA       (data, useDefaultValues);
+                case  6: return new BIGJUMP    (data, useDefaultValues);
                 case  7: return new KASOKU     (data, useDefaultValues);
                 case  4: return new SPRB       (data, useDefaultValues);
                 case 46: return new SPHERE     (data, useDefaultValues);
+                case 47: return new CCYL       (data, useDefaultValues);
                 case 48: return new CCUBE      (data, useDefaultValues);
                 default: return new Unknown    (data, useDefaultValues);
             }
 
-        case Global::Levels::Sky_Rail:
+        case Global::Levels::Green_Forest:
             switch (objectID)
             {
                 case  0: return new RING       (data, useDefaultValues);
                 case  1: return new SPRA       (data, useDefaultValues);
                 case  2: return new SPRB       (data, useDefaultValues);
                 case  3: return new KASOKU     (data, useDefaultValues);
-                case 17: return new RING_LINEAR(data, useDefaultValues);
-                case 18: return new RING_CIRCLE(data, useDefaultValues);
-                case 72: return new SPHERE     (data, useDefaultValues);
-                case 74: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
-            }
-
-        case Global::Levels::Final_Rush:
-            switch (objectID)
-            {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case 46: return new SPHERE     (data, useDefaultValues);
-                case 48: return new CCUBE      (data, useDefaultValues);
+                case 10: return new BIGJUMP    (data, useDefaultValues);
+                case 22: return new RING_LINEAR(data, useDefaultValues);
+                case 56: return new RING_CIRCLE(data, useDefaultValues);
+                case 66: return new SPHERE     (data, useDefaultValues);
+                case 67: return new CCYL       (data, useDefaultValues);
+                case 68: return new CCUBE      (data, useDefaultValues);
                 default: return new Unknown    (data, useDefaultValues);
             }
 
@@ -362,10 +341,61 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case  2: return new RING_CIRCLE(data, useDefaultValues);
                 case  3: return new SPRA       (data, useDefaultValues);
                 case  4: return new SPRB       (data, useDefaultValues);
+                case  6: return new BIGJUMP    (data, useDefaultValues);
                 case  7: return new KASOKU     (data, useDefaultValues);
                 case 44: return new SPHERE     (data, useDefaultValues);
+                case 45: return new CCYL       (data, useDefaultValues);
                 case 46: return new CCUBE      (data, useDefaultValues);
                 default: return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Final_Rush:
+            switch (objectID)
+            {
+                case  0: return new RING       (data, useDefaultValues);
+                case  1: return new RING_LINEAR(data, useDefaultValues);
+                case  2: return new RING_CIRCLE(data, useDefaultValues);
+                case  3: return new SPRA       (data, useDefaultValues);
+                case  4: return new SPRB       (data, useDefaultValues);
+                case  6: return new BIGJUMP    (data, useDefaultValues);
+                case  7: return new KASOKU     (data, useDefaultValues);
+                case 46: return new SPHERE     (data, useDefaultValues);
+                case 47: return new CCYL       (data, useDefaultValues);
+                case 48: return new CCUBE      (data, useDefaultValues);
+                default: return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Meteor_Herd:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Sky_Rail:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new SPRA       (data, useDefaultValues);
+                case    2: return new SPRB       (data, useDefaultValues);
+                case    3: return new KASOKU     (data, useDefaultValues);
+                case    9: return new BIGJUMP    (data, useDefaultValues);
+                case 0x11: return new RING_LINEAR(data, useDefaultValues);
+                case 0x12: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x4A: return new SPHERE     (data, useDefaultValues);
+                case 0x4B: return new CCYL       (data, useDefaultValues);
+                case 0x4C: return new CCUBE      (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Final_Chase:
@@ -376,8 +406,10 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case  2: return new RING_CIRCLE(data, useDefaultValues);
                 case  3: return new SPRA       (data, useDefaultValues);
                 case  4: return new SPRB       (data, useDefaultValues);
+                case  6: return new BIGJUMP    (data, useDefaultValues);
                 case  7: return new KASOKU     (data, useDefaultValues);
                 case 46: return new SPHERE     (data, useDefaultValues);
+                case 47: return new CCYL       (data, useDefaultValues);
                 case 48: return new CCUBE      (data, useDefaultValues);
                 default: return new Unknown    (data, useDefaultValues);
             }
@@ -390,8 +422,10 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case  2: return new RING_CIRCLE(data, useDefaultValues);
                 case  3: return new SPRA       (data, useDefaultValues);
                 case  4: return new SPRB       (data, useDefaultValues);
+                case  6: return new BIGJUMP    (data, useDefaultValues);
                 case  7: return new KASOKU     (data, useDefaultValues);
                 case 38: return new SPHERE     (data, useDefaultValues);
+                case 39: return new CCYL       (data, useDefaultValues);
                 case 40: return new CCUBE      (data, useDefaultValues);
                 default: return new Unknown    (data, useDefaultValues);
             }
@@ -559,12 +593,12 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0030_u.bin"]        = "FinalRush.lvl2";
     Global::levelSetToLVL2["set0031_s.bin"]        = "";
     Global::levelSetToLVL2["set0031_u.bin"]        = "";
-    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0032_s.bin"]        = "";
-    Global::levelSetToLVL2["set0032_u.bin"]        = "";
+    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_s.bin"]        = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_u.bin"]        = "MeteorHerd.lvl2";
     Global::levelSetToLVL2["set0033_s.bin"]        = "";
     Global::levelSetToLVL2["set0033_u.bin"]        = "";
     Global::levelSetToLVL2["set0034_hd_s.bin"]     = "";
@@ -849,18 +883,9 @@ void LevelLoader::exportLevel()
         }
     }
 
-    printf("'%s'\n", folder.c_str());
-    printf("'%s'\n", file1.c_str());
-    printf("'%s'\n", file2.c_str());
-    printf("\n");
-
     //find which one is u
     char lastChr1 = file1[file1.size() - 5];
     char lastChr2 = file2[file2.size() - 5];
-
-    printf("'%c'\n", lastChr1);
-    printf("'%c'\n", lastChr2);
-    printf("\n");
 
     std::string fileS = "";
     std::string fileU = "";
@@ -881,6 +906,37 @@ void LevelLoader::exportLevel()
         return;
     }
 
+    //figure out all of the sa2 objects we need to write to the files
+    std::vector<SA2Object*> sa2Objects;
+    for (Entity* e : Global::gameEntities)
+    {
+        if (e->isSA2Object())
+        {
+            if (SA2Object* o = dynamic_cast<SA2Object*>(e))
+            {
+                sa2Objects.push_back(o);
+            }
+            else
+            {
+                std::fprintf(stdout, "Warning: object lied about being an sa2object\n");
+            }
+        }
+    }
+
+    if (sa2Objects.size() < 2)
+    {
+        std::fprintf(stdout, "Error: Less than 2 objects to export. Each setfile needs to have at least 1\n");
+        MessageBox(NULL, "Error: Less than 2 objects to export. Each setfile needs to have at least 1", "silly", NULL);
+        return;
+    }
+
+    //buffer to hold data for each sa2 object
+    char buf[32] = {0};
+
+    //the number of objects we will write to each setfile
+    int countU = ((int)sa2Objects.size())/2;
+    int countS = ((int)sa2Objects.size()) - countU;
+
     //write the U file
     std::ofstream myfileU((folder+"\\")+fileU, std::ios::out | std::ios::binary);
     if (!myfileU.is_open())
@@ -889,12 +945,25 @@ void LevelLoader::exportLevel()
         MessageBox(NULL, (("Cannot open file '"+exp)+"' for writing.").c_str(), "silly", NULL);
         return;
     }
-    char buf[32] = {0};
-    buf[3] = 1;
+
+    //write the header to the U file
+    memset(buf, 0, 32);
+    buf[3] = (countU >>  0) & 0xFF;
+    buf[2] = (countU >>  8) & 0xFF;
+    buf[1] = (countU >> 16) & 0xFF;
+    buf[0] = (countU >> 24) & 0xFF;
     myfileU.write(buf, 32);
-    buf[3] = 0;
-    myfileU.write(buf, 32); //put a single ring, to avoid crashing TODO this creates a new ring every time you export
-    myfileU.close();
+
+    //write objects to the U file
+    for (int i = 0; i < countU; i++)
+    {
+        SA2Object* o = sa2Objects[i];
+        memset(buf, 0, 32);
+        o->fillData(buf);
+        buf[0] = (unsigned char)0x80; //first byte of U file is 0x80
+        myfileU.write(buf, 32);
+    }
+
 
     //write the S file as blank
     std::ofstream myfileS((folder+"\\")+fileS, std::ios::out | std::ios::binary);
@@ -905,38 +974,22 @@ void LevelLoader::exportLevel()
         return;
     }
 
+    //write the header to the S file
     memset(buf, 0, 32);
-    int count = 0;
-    for (Entity* e : Global::gameEntities)
-    {
-        printf("%d\n", (int)e->isSA2Object());
-        if (e->isSA2Object())
-        {
-            count++;
-        }
-    }
-    buf[3] = (count >>  0) & 0xFF;
-    buf[2] = (count >>  8) & 0xFF;
-    buf[1] = (count >> 16) & 0xFF;
-    buf[0] = (count >> 24) & 0xFF;
+    buf[3] = (countS >>  0) & 0xFF;
+    buf[2] = (countS >>  8) & 0xFF;
+    buf[1] = (countS >> 16) & 0xFF;
+    buf[0] = (countS >> 24) & 0xFF;
     myfileS.write(buf, 32);
 
-    memset(buf, 0, 32);
-    for (Entity* e : Global::gameEntities)
+    //write objects to the S file
+    for (int i = countU; i < sa2Objects.size(); i++)
     {
-        if (e->isSA2Object())
-        {
-            if (SA2Object* o = dynamic_cast<SA2Object*>(e))
-            {
-                memset(buf, 0, 32);
-                o->fillData(buf);
-                myfileS.write(buf, 32);
-            }
-            else
-            {
-                std::fprintf(stdout, "Warning: object lied about being an sa2object\n");
-            }
-        }
+        SA2Object* o = sa2Objects[i];
+        memset(buf, 0, 32);
+        o->fillData(buf);
+        buf[0] = 0x00; //first byte of S file is 0x00
+        myfileS.write(buf, 32);
     }
 
     myfileS.close();

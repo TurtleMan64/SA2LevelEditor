@@ -62,6 +62,9 @@
 #include "../entities/GlobalObjects/kasoku.h"
 #include "../entities/GlobalObjects/ccube.h"
 #include "../entities/GlobalObjects/sphere.h"
+#include "../entities/GlobalObjects/emerald.h"
+#include "../entities/GlobalObjects/ccyl.h"
+#include "../entities/GlobalObjects/bigjump.h"
 #include "../entities/unknown.h"
 #include "../toolbox/maths.h"
 #include "../loading/objloader.h"
@@ -98,11 +101,12 @@ double timeNew = 0;
 bool Global::redrawWindow = true;
 SA2Object* Global::selectedSA2Object = nullptr;
 
-bool Global::isHoldingX     = false;
-bool Global::isHoldingY     = false;
-bool Global::isHoldingZ     = false;
-bool Global::isHoldingAlt   = false;
-bool Global::isHoldingShift = false;
+bool Global::isHoldingX          = false;
+bool Global::isHoldingY          = false;
+bool Global::isHoldingZ          = false;
+bool Global::isHoldingAlt        = false;
+bool Global::isHoldingShift      = false;
+bool Global::isHoldingClickRight = false;
 
 Camera*          Global::gameCamera          = nullptr;
 Stage*           Global::gameStage           = nullptr;
@@ -125,6 +129,7 @@ int Global::levelID = 0;
 bool Global::shouldLoadNewLevel = false;
 bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
+int Global::sa2Type = Global::SA2Type::None;
 
 int Global::gameMissionNumber = 0;
 std::unordered_map<std::string, std::string> Global::levelSetToLVL2;
@@ -544,7 +549,10 @@ int Global::main()
     SPRA::loadStaticModels();
     KASOKU::loadStaticModels();
     CCUBE::loadStaticModels();
+    CCYL::loadStaticModels();
     SPHERE::loadStaticModels();
+    EMERALD::loadStaticModels();
+    BIGJUMP::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -605,6 +613,24 @@ int Global::main()
 			std::fprintf(stderr, "########  GL ERROR  ########\n");
 			std::fprintf(stderr, "%d\n", err);
 		}
+
+        if (Global::gameIsFollowingSA2)
+        {
+            //Camera prevCam(Global::gameCamera);
+            //Vector3f prevPos(&Global::gamePlayer->position);
+
+            Global::updateCamFromSA2();
+
+            //if (prevPos.x == Global::gamePlayer->position.x &&
+            //    prevPos.y == Global::gamePlayer->position.y &&
+            //    prevPos.z == Global::gamePlayer->position.z &&
+            //    Global::gameCamera->equals(&prevCam))
+            //{
+            //    //nothing has changed, so dont waste cpu+gpu redrawing the same screen
+            //    DisplayManager::updateDisplay();
+            //    continue;
+            //}
+        }
 
 		//long double thisTime = std::time(0);
 		//std::fprintf(stdout, "time: %f time\n", thisTime);
@@ -668,11 +694,6 @@ int Global::main()
 		}
 		gameTransparentEntitiesToDelete.clear();
 
-        if (Global::gameIsFollowingSA2)
-        {
-            Global::updateCamFromSA2();
-        }
-
 		switch (Global::gameState)
 		{
 			case STATE_RUNNING:
@@ -696,7 +717,6 @@ int Global::main()
 					e->step();
 				}
 
-				Global::gameCamera->refresh();
                 Global::gameCursor3D->step();
                 Global::gameStage->step();
                 Global::gameStageCollision->step();
@@ -957,19 +977,22 @@ DWORD getPIDByName(const char* processName)
 	pe32.dwSize = sizeof(PROCESSENTRY32);
 	hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
+    bool foundProcess = false;
+
 	if (Process32First(hSnapshot, &pe32))
 	{
 		do
         {
 			if (strcmp(pe32.szExeFile, processName) == 0)
             {
+                foundProcess = true;
 				break;
             }
 		}
         while (Process32Next(hSnapshot, &pe32));
 	}
 
-	if (hSnapshot != INVALID_HANDLE_VALUE)
+	if (foundProcess && hSnapshot != INVALID_HANDLE_VALUE)
     {
 	    CloseHandle(hSnapshot);
         return pe32.th32ProcessID;
@@ -980,21 +1003,41 @@ DWORD getPIDByName(const char* processName)
 
 void Global::updateCamFromSA2()
 {
-    if (sa2Handle == NULL)
+    if (sa2Handle == NULL || sa2PID == NULL)
     {
+        sa2PID = NULL;
+        sa2Handle = NULL;
+
         if (timeUntilNextProcessAttach <= 0.0f)
         {
+            Global::sa2Type = Global::SA2Type::None;
+
             sa2PID = getPIDByName("sonic2app.exe");
 
             if (sa2PID == NULL)
             {
-                timeUntilNextProcessAttach = ATTACH_DELAY;
+                sa2PID = getPIDByName("Dolphin.exe");
+
+                if (sa2PID == NULL)
+                {
+                    timeUntilNextProcessAttach = ATTACH_DELAY;
+                }
+                else
+                {
+                    Global::sa2Type = Global::SA2Type::Dolphin;
+                }
             }
             else
+            {
+                Global::sa2Type = Global::SA2Type::Steam;
+            }
+
+            if (sa2PID != NULL)
             {
                 sa2Handle = OpenProcess(PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, sa2PID);
                 if (sa2Handle == NULL)
                 {
+                    std::fprintf(stdout, "Error: Found the process, but couldn't open and get a handle.\n");
                     sa2PID = NULL;
                     timeUntilNextProcessAttach = ATTACH_DELAY;
                 }
@@ -1009,189 +1052,306 @@ void Global::updateCamFromSA2()
         return;
     }
 
-    SIZE_T bytesRead = 0;
-    char buffer[20] = {0};
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x1DCFF0C, (LPVOID)buffer, (SIZE_T)20, &bytesRead) || bytesRead != 20)
+    if (Global::sa2Type == Global::SA2Type::Steam)
     {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+        SIZE_T bytesRead = 0;
+        char buffer[20] = {0};
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x1DCFF0C, (LPVOID)buffer, (SIZE_T)20, &bytesRead) || bytesRead != 20)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
 
-    float camX;
-    char* xptr = (char*)&camX;
-    xptr[0] = buffer[0];
-    xptr[1] = buffer[1];
-    xptr[2] = buffer[2];
-    xptr[3] = buffer[3];
+        float camX;
+        char* xptr = (char*)&camX;
+        xptr[0] = buffer[0];
+        xptr[1] = buffer[1];
+        xptr[2] = buffer[2];
+        xptr[3] = buffer[3];
 
-    float camY;
-    char* yptr = (char*)&camY;
-    yptr[0] = buffer[4];
-    yptr[1] = buffer[5];
-    yptr[2] = buffer[6];
-    yptr[3] = buffer[7];
+        float camY;
+        char* yptr = (char*)&camY;
+        yptr[0] = buffer[4];
+        yptr[1] = buffer[5];
+        yptr[2] = buffer[6];
+        yptr[3] = buffer[7];
 
-    float camZ;
-    char* zptr = (char*)&camZ;
-    zptr[0] = buffer[8];
-    zptr[1] = buffer[9];
-    zptr[2] = buffer[10];
-    zptr[3] = buffer[11];
+        float camZ;
+        char* zptr = (char*)&camZ;
+        zptr[0] = buffer[8];
+        zptr[1] = buffer[9];
+        zptr[2] = buffer[10];
+        zptr[3] = buffer[11];
 
-    Global::gameCamera->eye.x = camX;
-    Global::gameCamera->eye.y = camY;
-    Global::gameCamera->eye.z = camZ;
+        Global::gameCamera->eye.x = camX;
+        Global::gameCamera->eye.y = camY;
+        Global::gameCamera->eye.z = camZ;
 
-    int pitch;
-    memcpy(&pitch, &buffer[12], 4);
+        int pitch;
+        memcpy(&pitch, &buffer[12], 4);
     
-    int yaw;
-    memcpy(&yaw, &buffer[16], 4);
+        int yaw;
+        memcpy(&yaw, &buffer[16], 4);
 
-    Global::gameCamera->yaw = -Maths::toDegrees(yaw);
-    Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+        Global::gameCamera->yaw = -Maths::toDegrees(yaw);
+        Global::gameCamera->pitch = -Maths::toDegrees(pitch);
 
-    //0x019ED3FC = global position copy
-    bytesRead = 0;
-    unsigned long long masterobjptr = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x01DEA6E0, (LPVOID)(&masterobjptr), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
+        //0x019ED3FC = global position copy
+        bytesRead = 0;
+        unsigned long long masterobjptr = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x01DEA6E0, (LPVOID)(&masterobjptr), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        unsigned long long chobj1 = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(masterobjptr+0x34), (LPVOID)(&chobj1), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float sonicX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x14), (LPVOID)(&sonicX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float sonicY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x18), (LPVOID)(&sonicY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float sonicZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x1C), (LPVOID)(&sonicZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int bamsX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x08), (LPVOID)(&bamsX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int bamsY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x0C), (LPVOID)(&bamsY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int bamsZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x10), (LPVOID)(&bamsZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        Global::gameCursor3D->setPosition(sonicX, sonicY, sonicZ);
+        Global::gamePlayer->setPosition(sonicX, sonicY, sonicZ);
+        Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
+        Global::gamePlayer->updateTransformationMatrix();
+
+        //make the score have a 1 at the end as a first
+        // line of defence against cheaters :)
+        char score;
+        bytesRead = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x0174B050, (LPVOID)(&score), (SIZE_T)1, &bytesRead) || bytesRead != 1)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        score = score | 0x1;
+        SIZE_T bytesWritten = 0;
+        if (!WriteProcessMemory(sa2Handle, (LPVOID)0x0174B050, (LPCVOID)(&score), (SIZE_T)1, &bytesWritten) || bytesWritten != 1)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
     }
-
-    bytesRead = 0;
-    unsigned long long chobj1 = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(masterobjptr+0x34), (LPVOID)(&chobj1), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+    else if (Global::sa2Type == Global::SA2Type::Dolphin)
     {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+        //address of where sa2's memory begins in Dolphin's memory space
+        const unsigned long long DOLPHIN_START_ADDR = 0x7FFF0000ULL;
 
-    bytesRead = 0;
-    float sonicX = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x14), (LPVOID)(&sonicX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+        //read in camera values
+        {
+            const unsigned long long CAMADDR = DOLPHIN_START_ADDR + 0x801FF5B8ULL;
 
-    bytesRead = 0;
-    float sonicY = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x18), (LPVOID)(&sonicY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            SIZE_T bytesRead = 0;
+            char buffer[20] = {0};
+            if (!ReadProcessMemory(sa2Handle, (LPCVOID)(CAMADDR), (LPVOID)buffer, (SIZE_T)20, &bytesRead) || bytesRead != 20)
+            {
+                CloseHandle(sa2Handle);
+                sa2Handle = NULL;
+                sa2PID = NULL;
+                timeUntilNextProcessAttach = ATTACH_DELAY;
+                return;
+            }
 
-    bytesRead = 0;
-    float sonicZ = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x1C), (LPVOID)(&sonicZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            float camX;
+            char* xptr = (char*)&camX;
+            xptr[3] = buffer[0];
+            xptr[2] = buffer[1];
+            xptr[1] = buffer[2];
+            xptr[0] = buffer[3];
 
-    bytesRead = 0;
-    int bamsX = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x08), (LPVOID)(&bamsX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            float camY;
+            char* yptr = (char*)&camY;
+            yptr[3] = buffer[4];
+            yptr[2] = buffer[5];
+            yptr[1] = buffer[6];
+            yptr[0] = buffer[7];
+        
+            float camZ;
+            char* zptr = (char*)&camZ;
+            zptr[3] = buffer[ 8];
+            zptr[2] = buffer[ 9];
+            zptr[1] = buffer[10];
+            zptr[0] = buffer[11];
 
-    bytesRead = 0;
-    int bamsY = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x0C), (LPVOID)(&bamsY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            Global::gameCamera->eye.x = camX;
+            Global::gameCamera->eye.y = camY;
+            Global::gameCamera->eye.z = camZ;
 
-    bytesRead = 0;
-    int bamsZ = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1+0x10), (LPVOID)(&bamsZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            int pitch = 0;
+            char* ptr = (char*)&pitch;
+            memcpy(ptr+1, &buffer[14], 1);
+            memcpy(ptr+0, &buffer[15], 1);
+    
+            int yaw = 0;
+            ptr = (char*)&yaw;
+            memcpy(ptr+1, &buffer[18], 1);
+            memcpy(ptr+0, &buffer[19], 1);
 
-    //float sonicX;
-    //char* sxptr = (char*)&sonicX;
-    //sxptr[0] = buffer[0];
-    //sxptr[1] = buffer[1];
-    //sxptr[2] = buffer[2];
-    //sxptr[3] = buffer[3];
-    //
-    //float sonicY;
-    //char* syptr = (char*)&sonicY;
-    //syptr[0] = buffer[4];
-    //syptr[1] = buffer[5];
-    //syptr[2] = buffer[6];
-    //syptr[3] = buffer[7];
-    //
-    //float sonicZ;
-    //char* szptr = (char*)&sonicZ;
-    //szptr[0] = buffer[8];
-    //szptr[1] = buffer[9];
-    //szptr[2] = buffer[10];
-    //szptr[3] = buffer[11];
+            Global::gameCamera->yaw = -Maths::toDegrees(yaw);
+            Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+        }
 
-    Global::gameCursor3D->setPosition(sonicX, sonicY, sonicZ);
-    Global::gamePlayer->setPosition(sonicX, sonicY, sonicZ);
-    Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
-    Global::gamePlayer->updateTransformationMatrix();
+        //read in character position and rotation
+        {
+            const unsigned long long PLAYERADDR = DOLPHIN_START_ADDR + 0x801E7768ULL;
 
+            SIZE_T bytesRead = 0;
+            char ptrbuf[4] = {0};
+            if (!ReadProcessMemory(sa2Handle, (LPCVOID)(PLAYERADDR), (LPVOID)ptrbuf, (SIZE_T)4, &bytesRead) || bytesRead != 4)
+            {
+                CloseHandle(sa2Handle);
+                sa2Handle = NULL;
+                sa2PID = NULL;
+                timeUntilNextProcessAttach = ATTACH_DELAY;
+                return;
+            }
 
-    //make the score have a 1 at the end as a first
-    // line of defence against cheaters :)
-    char score;
-    bytesRead = 0;
-    if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x0174B050, (LPVOID)(&score), (SIZE_T)1, &bytesRead) || bytesRead != 1)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
-    }
+            unsigned long long chobj1 = 0;
+            char* ptr = (char*)&chobj1;
+            memcpy(ptr+0, &ptrbuf[3], 1);
+            memcpy(ptr+1, &ptrbuf[2], 1);
+            memcpy(ptr+2, &ptrbuf[1], 1);
+            memcpy(ptr+3, &ptrbuf[0], 1);
 
-    score = score | 0x1;
-    SIZE_T bytesWritten = 0;
-    if (!WriteProcessMemory(sa2Handle, (LPVOID)0x0174B050, (LPCVOID)(&score), (SIZE_T)1, &bytesWritten) || bytesWritten != 1)
-    {
-        CloseHandle(sa2Handle);
-        sa2Handle = NULL;
-        sa2PID = NULL;
-        timeUntilNextProcessAttach = ATTACH_DELAY;
-        return;
+            chobj1 = DOLPHIN_START_ADDR + chobj1;
+            
+            bytesRead = 0;
+            char buffer[32] = {0};
+            if (!ReadProcessMemory(sa2Handle, (LPCVOID)(chobj1), (LPVOID)buffer, (SIZE_T)32, &bytesRead) || bytesRead != 32)
+            {
+                CloseHandle(sa2Handle);
+                sa2Handle = NULL;
+                sa2PID = NULL;
+                timeUntilNextProcessAttach = ATTACH_DELAY;
+                return;
+            }
+
+            int bamsX = 0;
+            ptr = (char*)&bamsX;
+            memcpy(ptr+1, &buffer[10], 1);
+            memcpy(ptr+0, &buffer[11], 1);
+    
+            int bamsY = 0;
+            ptr = (char*)&bamsY;
+            memcpy(ptr+1, &buffer[14], 1);
+            memcpy(ptr+0, &buffer[15], 1);
+
+            int bamsZ = 0;
+            ptr = (char*)&bamsZ;
+            memcpy(ptr+1, &buffer[18], 1);
+            memcpy(ptr+0, &buffer[19], 1);
+
+            float posX;
+            ptr = (char*)&posX;
+            ptr[3] = buffer[20];
+            ptr[2] = buffer[21];
+            ptr[1] = buffer[22];
+            ptr[0] = buffer[23];
+
+            float posY;
+            ptr = (char*)&posY;
+            ptr[3] = buffer[24];
+            ptr[2] = buffer[25];
+            ptr[1] = buffer[26];
+            ptr[0] = buffer[27];
+        
+            float posZ;
+            ptr = (char*)&posZ;
+            ptr[3] = buffer[28];
+            ptr[2] = buffer[29];
+            ptr[1] = buffer[30];
+            ptr[0] = buffer[31];
+
+            Global::gameCursor3D->setPosition(posX, posY, posZ);
+            Global::gamePlayer->setPosition(posX, posY, posZ);
+            Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
+            Global::gamePlayer->updateTransformationMatrix();
+        }
     }
 }
 

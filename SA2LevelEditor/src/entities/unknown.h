@@ -19,6 +19,8 @@ private:
     static CollisionModel* cmBase;
 
 public:
+    static std::list<TexturedModel*> modelsGuide;
+
 	Unknown();
 	Unknown(char data[32], bool useDefaultValues);
 

@@ -29,4 +29,5 @@ void main(void)
 	pass_textureCoords.y = textureCoords.y+texOffY;
 	
 	color = vertexColor;
+    color *= 0.75 + (normal.y/4);
 }

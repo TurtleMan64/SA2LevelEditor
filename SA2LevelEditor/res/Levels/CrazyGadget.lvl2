@@ -4,10 +4,10 @@ set0022_u
 set0022_hd_s
 set0022_hd_u
 res/Models/Levels/CrazyGadget/
-CrazyGadgetAll
+CrazyGadget
 res/Models/Levels/CrazyGadget/
 Collision
-res/Models/Levels/FinalRush/
+res/Models/Levels/CrazyGadget/
 Killplanes
 res/Models/Levels/FinalRush/Sky/
 Sky

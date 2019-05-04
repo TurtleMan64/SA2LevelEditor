@@ -268,15 +268,7 @@ void RING::updateEditorWindows()
 
 void RING::fillData(char data[32])
 {
-    data[0] = 0x00; //S has 0 as the second byte, U has 0x80. we will export every object to S file
     data[1] = (char)ID;
-
-    data[2] = 0;
-    data[3] = 0;
-    data[4] = 0;
-    data[5] = 0;
-    data[6] = 0;
-    data[7] = 0;
 
     char* ptr = (char*)(&position.x);
     data[ 8] = (char)(*(ptr + 3));
@@ -295,17 +287,4 @@ void RING::fillData(char data[32])
     data[17] = (char)(*(ptr + 2));
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
-
-    data[20] = 0;
-    data[21] = 0;
-    data[22] = 0;
-    data[23] = 0;
-    data[24] = 0;
-    data[25] = 0;
-    data[26] = 0;
-    data[27] = 0;
-    data[28] = 0;
-    data[29] = 0;
-    data[30] = 0;
-    data[31] = 0;
 }

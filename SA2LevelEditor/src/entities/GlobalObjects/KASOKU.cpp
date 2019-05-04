@@ -395,9 +395,9 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
-    SetWindowTextA(Global::windowDescriptions[ 5], "probably has no effect");
+    SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
-    SetWindowTextA(Global::windowDescriptions[ 7], "probably has no effect");
+    SetWindowTextA(Global::windowDescriptions[ 7], "");
     SetWindowTextA(Global::windowDescriptions[ 8], "Multiplier of speed. Defaults to 16 if set to 0.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Time (in frames) of cooldown after each use.");
     SetWindowTextA(Global::windowDescriptions[10], "");
@@ -405,7 +405,6 @@ void KASOKU::updateEditorWindows()
 
 void KASOKU::fillData(char data[32])
 {
-    data[0] = 0x00; //S has 0 as the second byte, U has 0x80. we will export every object to S file
     data[1] = (char)ID;
 
     data[2] = (char)((rotationX >> 8) & 0xFF);

@@ -16,6 +16,13 @@ Camera::Camera()
     //pitch = 0;
 }
 
+Camera::Camera(Camera* other)
+{
+    eye.set(&other->eye);
+    pitch = other->pitch;
+    yaw = other->yaw;
+}
+
 void Camera::reset()
 {
     eye.set(-80, 50, 80);
@@ -23,25 +30,13 @@ void Camera::reset()
     pitch = 25;
 }
 
-void Camera::refresh()
+bool Camera::equals(Camera* other)
 {
-    /*
-	Vector3f off;
-	off = target-eye;
-
-	off.normalize();
-	off.scale(1.7f);
-	fadePosition1.set(eye.x + off.x, eye.y + off.y, eye.z + off.z);
-
-	off.normalize();
-	off.scale(1.55f);
-	fadePosition2.set(eye.x + off.x, eye.y + off.y, eye.z + off.z);
-
-	extern float dt;
-	vel = (eye-eyePrevious);
-	vel.scale(1/dt);
-	eyePrevious.set(&eye);
-    */
+    return ((eye.x == other->eye.x) &&
+            (eye.y == other->eye.y) &&
+            (eye.z == other->eye.z) &&
+            (pitch == other->pitch) &&
+            (yaw   == other->yaw));
 }
 
 Vector3f Camera::calcForward()
@@ -70,20 +65,3 @@ Vector3f Camera::calcRight()
     Vector3f up = calcUp();
     return up.cross(&forward);
 }
-
-Vector3f* Camera::getFadePosition1()
-{
-	return &fadePosition1;
-}
-
-Vector3f* Camera::getFadePosition2()
-{
-	return &fadePosition2;
-}
-
-//void Camera::setViewMatrixValues(Vector3f* newEye, Vector3f* newTarget, Vector3f* newUp)
-//{
-//	eye.set(newEye);
-//	target.set(newTarget);
-//	up.set(newUp);
-//}

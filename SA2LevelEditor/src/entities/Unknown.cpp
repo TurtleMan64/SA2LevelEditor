@@ -16,6 +16,7 @@
 
 
 std::vector<std::list<TexturedModel*>> Unknown::models;
+std::list<TexturedModel*> Unknown::modelsGuide;
 
 CollisionModel* Unknown::cmBase;
 
@@ -116,7 +117,6 @@ void Unknown::step()
 
 void Unknown::fillData(char data[32])
 {
-    data[0] = 0x00; //S has 0 as the (second? (according to wiki)) byte, U has 0x80. we will export every object to S file
     data[1] = (char)ID;
 
     data[2] = (char)((rotationX >> 8) & 0xFF);
@@ -208,6 +208,9 @@ void Unknown::loadStaticModels()
 	{
 		Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
 	}
+
+    loadModel(&Unknown::modelsGuide, "res/Models/GlobalObjects/Guide/", "Guide");
+    loadModel(&Unknown::modelsGuide, "res/Models/GlobalObjects/Guide/", "Guide");
 }
 
 void Unknown::deleteStaticModels()

@@ -424,7 +424,6 @@ void RING_CIRCLE::updateEditorWindows()
 
 void RING_CIRCLE::fillData(char data[32])
 {
-    data[0] = 0x00; //S has 0 as the (second? (according to wiki)) byte, U has 0x80. we will export every object to S file
     data[1] = (char)ID;
 
     data[2] = (char)((rotationX >> 8) & 0xFF);

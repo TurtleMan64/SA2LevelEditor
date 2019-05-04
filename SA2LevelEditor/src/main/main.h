@@ -77,12 +77,13 @@ public:
     //The currently selected object
     static SA2Object* selectedSA2Object;
 
-    //keyboard inputs
+    //inputs
     static bool isHoldingX;
     static bool isHoldingY;
     static bool isHoldingZ;
     static bool isHoldingAlt;
     static bool isHoldingShift;
+    static bool isHoldingClickRight;
 
 	static Camera* gameCamera;
 	static Stage* gameStage;
@@ -98,6 +99,13 @@ public:
     //if this is true, the editor will try to attach to a running SA2 process
     // and follow the camera
     static bool gameIsFollowingSA2;
+    static int sa2Type;
+    enum SA2Type
+    {
+        None    = 0,
+        Steam   = 1,
+        Dolphin = 2
+    };
 
     enum Levels
     {

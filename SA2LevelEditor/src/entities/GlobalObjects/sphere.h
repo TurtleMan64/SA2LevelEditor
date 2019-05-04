@@ -15,6 +15,8 @@ private:
 
     static CollisionModel* cmBase;
 
+    float radius;
+
 public:
 	SPHERE();
 	SPHERE(char data[32], bool useDefaultValues);

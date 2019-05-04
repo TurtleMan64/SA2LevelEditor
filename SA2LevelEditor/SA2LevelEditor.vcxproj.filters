@@ -201,6 +201,18 @@
     <ClCompile Include="src\entities\GlobalObjects\SPHERE.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\EMERALD.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\Hex.cpp">
+      <Filter>Source Files\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\CCYL.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\BIGJUMP.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -354,6 +366,18 @@
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\sphere.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\emerald.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\hex.h">
+      <Filter>Source Files\toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ccyl.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\bigjump.h">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>

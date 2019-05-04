@@ -31,26 +31,6 @@ SPHERE::SPHERE(char data[32], bool useDefaultValues)
 
     ID = data[1];
 
-    signed short rX;
-    signed short rY;
-    signed short rZ;
-
-    char* ptr = (char*)(&rX);
-    memset(ptr, data[3], 1);
-    memset(ptr+1, data[2], 1);
-
-    ptr = (char*)(&rY);
-    memset(ptr, data[5], 1);
-    memset(ptr+1, data[4], 1);
-
-    ptr = (char*)(&rZ);
-    memset(ptr, data[7], 1);
-    memset(ptr+1, data[6], 1);
-
-    rotationX = (int)rX;
-    rotationY = (int)rY;
-    rotationZ = (int)rZ;
-
     char* x = (char*)&position.x;
     x[3] = data[8];
     x[2] = data[9];
@@ -69,38 +49,25 @@ SPHERE::SPHERE(char data[32], bool useDefaultValues)
     z[1] = data[18];
     z[0] = data[19];
 
-    char* v1 = (char*)&scaleX;
+    char* v1 = (char*)&radius;
     v1[3] = data[20];
     v1[2] = data[21];
     v1[1] = data[22];
     v1[0] = data[23];
-    scaleX += 10;
-
-    char* v2 = (char*)&scaleY;
-    v2[3] = data[24];
-    v2[2] = data[25];
-    v2[1] = data[26];
-    v2[0] = data[27];
-    scaleY += 10;
-
-    char* v3 = (char*)&scaleZ;
-    v3[3] = data[28];
-    v3[2] = data[29];
-    v3[1] = data[30];
-    v3[0] = data[31];
-    scaleZ += 10;
+    radius += 10;
 
     if (useDefaultValues)
     {
-        scaleX = 20.0f;
-        scaleY = 20.0f;
-        scaleZ = 20.0f;
-        rotationX = 0;
-        rotationY = 0;
-        rotationZ = 0;
+        radius = 20.0f;
     }
 
 	visible = true;
+    scaleX = radius;
+    scaleY = radius;
+    scaleZ = radius;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0;
 	baseColour.set(1, 1, 1);
 	updateTransformationMatrix();
 
@@ -255,104 +222,24 @@ void SPHERE::updateValue(int btnIndex)
         }
         catch (...) { break; }
     }
-    
-    case 5:
-    {
-        try
-        {
-            int newRotX = std::stoi(text);
-            rotationX = newRotX;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
-            break;
-        }
-        catch (...) { break; }
-    }
-
-    case 6:
-    {
-        try
-        {
-            int newRotY = std::stoi(text);
-            rotationY = newRotY;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
-            break;
-        }
-        catch (...) { break; }
-    }
-
-    case 7:
-    {
-        try
-        {
-            int newRotZ = std::stoi(text);
-            rotationZ = newRotZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
-            break;
-        }
-        catch (...) { break; }
-    }
 
     case 8:
     {
         try
         {
-            float newScaleX = std::stof(text);
-            if (sqrtf(newScaleX*newScaleX + scaleY*scaleY + scaleZ*scaleZ) > 390.0f)
+            float newRadius = std::stof(text);
+            if (newRadius > 390.0f)
             {
-                MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
+                MessageBox(NULL, "Warning: The size of the sphere is too large, object may not function properly in SA2.", "Warning", MB_OK);
             }
-            scaleX = fmaxf(10.0f, newScaleX);
+            radius = fmaxf(0.0f, newRadius);
+            scaleX = radius;
+            scaleY = radius;
+            scaleZ = radius;
             updateTransformationMatrix();
             updateCollisionModel();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[8], std::to_string(scaleX).c_str());
-            break;
-        }
-        catch (...) { break; }
-    }
-
-    case 9:
-    {
-        try
-        {
-            float newScaleY = std::stof(text);
-            if (sqrtf(newScaleY*newScaleY + scaleX*scaleX + scaleZ*scaleZ) > 390.0f)
-            {
-                MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
-            }
-            scaleY = fmaxf(10.0f, newScaleY);
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[9], std::to_string(scaleY).c_str());
-            break;
-        }
-        catch (...) { break; }
-    }
-
-    case 10:
-    {
-        try
-        {
-            float newScaleZ = std::stof(text);
-            if (sqrtf(newScaleZ*newScaleZ + scaleX*scaleX + scaleY*scaleY) > 390.0f)
-            {
-                MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
-            }
-            scaleZ = fmaxf(10.0f, newScaleZ);
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[10], std::to_string(scaleZ).c_str());
+            SetWindowTextA(Global::windowValues[8], std::to_string(radius).c_str());
             break;
         }
         catch (...) { break; }
@@ -369,61 +256,53 @@ void SPHERE::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[ 2], "Position X");
     SetWindowTextA(Global::windowLabels[ 3], "Position Y");
     SetWindowTextA(Global::windowLabels[ 4], "Position Z");
-    SetWindowTextA(Global::windowLabels[ 5], "Rotation X");
-    SetWindowTextA(Global::windowLabels[ 6], "Rotation Y");
-    SetWindowTextA(Global::windowLabels[ 7], "Rotation Z");
-    SetWindowTextA(Global::windowLabels[ 8], "Scale X");
-    SetWindowTextA(Global::windowLabels[ 9], "Scale Y");
-    SetWindowTextA(Global::windowLabels[10], "Scale Z");
+    SetWindowTextA(Global::windowLabels[ 5], "");
+    SetWindowTextA(Global::windowLabels[ 6], "");
+    SetWindowTextA(Global::windowLabels[ 7], "");
+    SetWindowTextA(Global::windowLabels[ 8], "Radius");
+    SetWindowTextA(Global::windowLabels[ 9], "");
+    SetWindowTextA(Global::windowLabels[10], "");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
     SetWindowTextA(Global::windowValues[ 1], "SPHERE");
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
-    SetWindowTextA(Global::windowValues[ 8], std::to_string(scaleX).c_str());
-    SetWindowTextA(Global::windowValues[ 9], std::to_string(scaleY).c_str());
-    SetWindowTextA(Global::windowValues[10], std::to_string(scaleZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], "");
+    SetWindowTextA(Global::windowValues[ 6], "");
+    SetWindowTextA(Global::windowValues[ 7], "");
+    SetWindowTextA(Global::windowValues[ 8], std::to_string(radius).c_str());
+    SetWindowTextA(Global::windowValues[ 9], "");
+    SetWindowTextA(Global::windowValues[10], "");
 
     SendMessageA(Global::windowValues[ 0], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 1], EM_SETREADONLY, 1, 0);
     SendMessageA(Global::windowValues[ 2], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 3], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 4], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 5], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 5], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 1, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
-    SetWindowTextA(Global::windowDescriptions[ 1], "Invisible Collision Sphere");
+    SetWindowTextA(Global::windowDescriptions[ 1], "Invisible Collision Sphere. Cannot be stood on.");
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
     SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
-    SetWindowTextA(Global::windowDescriptions[ 8], "");
+    SetWindowTextA(Global::windowDescriptions[ 8], "Radius of sphere");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
 }
 
 void SPHERE::fillData(char data[32])
 {
-    data[0] = 0x00; //S has 0 as the second byte, U has 0x80. we will export every object to S file
     data[1] = (char)ID;
-
-    data[2] = (char)((rotationX >> 8) & 0xFF);
-    data[3] = (char)((rotationX >> 0) & 0xFF);
-    data[4] = (char)((rotationY >> 8) & 0xFF);
-    data[5] = (char)((rotationY >> 0) & 0xFF);
-    data[6] = (char)((rotationZ >> 8) & 0xFF);
-    data[7] = (char)((rotationZ >> 0) & 0xFF);
 
     char* ptr = (char*)(&position.x);
     data[ 8] = (char)(*(ptr + 3));
@@ -443,24 +322,10 @@ void SPHERE::fillData(char data[32])
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
 
-    float var1 = scaleX-10.0f;
+    float var1 = radius-10.0f;
     ptr = (char*)(&var1);
     data[20] = (char)(*(ptr + 3));
     data[21] = (char)(*(ptr + 2));
     data[22] = (char)(*(ptr + 1));
     data[23] = (char)(*(ptr + 0));
-
-    float var2 = scaleY-10.0f;
-    ptr = (char*)(&var2);
-    data[24] = (char)(*(ptr + 3));
-    data[25] = (char)(*(ptr + 2));
-    data[26] = (char)(*(ptr + 1));
-    data[27] = (char)(*(ptr + 0));
-
-    float var3 = scaleZ-10.0f;
-    ptr = (char*)(&var3);
-    data[28] = (char)(*(ptr + 3));
-    data[29] = (char)(*(ptr + 2));
-    data[30] = (char)(*(ptr + 1));
-    data[31] = (char)(*(ptr + 0));
 }
