@@ -24,6 +24,7 @@ private:
     float powerV;
 
     void spawnGuides();
+    void despawnGuides();
 
 public:
 	BIGJUMP();

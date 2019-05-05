@@ -3,8 +3,10 @@
 
 class TexturedModel;
 class CollisionModel;
+class Dummy;
 
 #include <list>
+#include <vector>
 #include "../entity.h"
 #include "../sa2object.h"
 
@@ -15,9 +17,14 @@ private:
 
     static CollisionModel* cmBase;
 
+    std::vector<Dummy*> guides;
+
     int controlLockTime;
     float power;
     float var3;
+
+    void spawnGuides();
+    void despawnGuides();
 
 public:
 	SPRB();

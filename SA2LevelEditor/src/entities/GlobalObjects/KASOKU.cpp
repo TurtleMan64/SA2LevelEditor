@@ -401,6 +401,9 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Multiplier of speed. Defaults to 16 if set to 0.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Time (in frames) of cooldown after each use.");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }
 
 void KASOKU::fillData(char data[32])

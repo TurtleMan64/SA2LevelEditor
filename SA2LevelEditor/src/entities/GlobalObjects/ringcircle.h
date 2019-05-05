@@ -21,6 +21,7 @@ private:
     int numRings;
 
     void spawnChildren();
+    void despawnChildren();
 
 public:
 	RING_CIRCLE();

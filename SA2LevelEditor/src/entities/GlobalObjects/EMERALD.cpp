@@ -401,6 +401,9 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "On moving pieces, determines the movement pattern. Each integer has an assigned pattern by stage.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Probably y scale of diggable trigger");
     SetWindowTextA(Global::windowDescriptions[10], "On moving pieces, determines movement speed, with -3 serving as 0.");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }
 
 void EMERALD::fillData(char data[32])

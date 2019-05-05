@@ -114,8 +114,6 @@ BIGJUMP::BIGJUMP(char data[32], bool useDefaultValues)
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
 	updateCollisionModel();
-
-    spawnGuides();
 }
 
 bool BIGJUMP::isSA2Object()
@@ -132,6 +130,11 @@ void BIGJUMP::step()
     else
     {
         baseColour.set(1.0f, 1.0f, 1.0f);
+        if (guides.size() > 0)
+        {
+            despawnGuides();
+            Global::redrawWindow = true;
+        }
     }
 }
 
@@ -408,15 +411,24 @@ void BIGJUMP::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Horizontal speed of the player after being launched.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Unsure if this has any effect.");
     SetWindowTextA(Global::windowDescriptions[10], "Vertical speed of the player after being launched.");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
+    spawnGuides();
 }
 
-void BIGJUMP::spawnGuides()
+void BIGJUMP::despawnGuides()
 {
     for (Dummy* guide : guides)
     {
         Global::deleteEntity(guide);
     }
     guides.clear();
+}
+
+void BIGJUMP::spawnGuides()
+{
+    despawnGuides();
 
     const float GRAVITY = -0.08f; //TODO hard coded value of gravity
 

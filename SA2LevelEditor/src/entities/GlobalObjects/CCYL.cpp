@@ -325,6 +325,9 @@ void CCYL::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Radius of cylinder");
     SetWindowTextA(Global::windowDescriptions[ 9], "Height of cylinder (from center)");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }
 
 void CCYL::fillData(char data[32])

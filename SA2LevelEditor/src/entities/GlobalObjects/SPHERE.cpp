@@ -298,6 +298,9 @@ void SPHERE::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Radius of sphere");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }
 
 void SPHERE::fillData(char data[32])

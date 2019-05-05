@@ -98,6 +98,22 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
 	visible = false;
 }
 
+void RING_LINEAR::despawnChildren()
+{
+    for (Dummy* ring : rings)
+    {
+        Global::deleteEntity(ring);
+    }
+
+    for (CollisionModel* cm : cms)
+    {
+        CollisionChecker::deleteCollideModel(cm);
+    }
+
+    rings.clear();
+    cms.clear();
+}
+
 void RING_LINEAR::spawnChildren()
 {
     Vector3f ringDirection(0, 0, 1);
@@ -343,19 +359,7 @@ void RING_LINEAR::updateValue(int btnIndex)
 
     if (remakeRings)
     {
-        for (Dummy* ring : rings)
-        {
-            Global::deleteEntity(ring);
-        }
-
-        for (CollisionModel* cm : cms)
-        {
-            CollisionChecker::deleteCollideModel(cm);
-        }
-
-        rings.clear();
-        cms.clear();
-
+        despawnChildren();
         spawnChildren();
     }
 }
@@ -409,6 +413,9 @@ void RING_LINEAR::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Distance between each individual ring.");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "Total number of rings in the line.");
+
+    despawnChildren();
+    spawnChildren();
 }
 
 void RING_LINEAR::fillData(char data[32])

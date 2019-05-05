@@ -354,21 +354,25 @@ void RING_CIRCLE::updateValue(int btnIndex)
 
     if (remakeRings)
     {
-        for (Dummy* ring : rings)
-        {
-            Global::deleteEntity(ring);
-        }
-
-        for (CollisionModel* cm : cms)
-        {
-            CollisionChecker::deleteCollideModel(cm);
-        }
-
-        rings.clear();
-        cms.clear();
-
+        despawnChildren();
         spawnChildren();
     }
+}
+
+void RING_CIRCLE::despawnChildren()
+{
+    for (Dummy* ring : rings)
+    {
+        Global::deleteEntity(ring);
+    }
+
+    for (CollisionModel* cm : cms)
+    {
+        CollisionChecker::deleteCollideModel(cm);
+    }
+
+    rings.clear();
+    cms.clear();
 }
 
 void RING_CIRCLE::updateEditorWindows()
@@ -420,6 +424,9 @@ void RING_CIRCLE::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "Radius of the circle.");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "Total number of rings in the line.");
+
+    despawnChildren();
+    spawnChildren();
 }
 
 void RING_CIRCLE::fillData(char data[32])

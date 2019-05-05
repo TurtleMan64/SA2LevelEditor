@@ -308,8 +308,10 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
             }
         }
 
-        Global::selectedSA2Object->updateCollisionModel();
-        Global::selectedSA2Object->updateTransformationMatrix();
+        //not all objects have collision models, so we cant do this here. instead they should do it in the update editor window function
+        //Global::selectedSA2Object->updateCollisionModel();
+        //Global::selectedSA2Object->updateTransformationMatrix();
+
         Global::selectedSA2Object->updateEditorWindows();
         Global::redrawWindow = true;
     }

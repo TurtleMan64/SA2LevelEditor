@@ -492,4 +492,7 @@ void Unknown::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }

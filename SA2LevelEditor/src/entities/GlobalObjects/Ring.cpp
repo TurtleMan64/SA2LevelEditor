@@ -264,6 +264,9 @@ void RING::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 8], "");
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
 }
 
 void RING::fillData(char data[32])

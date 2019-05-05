@@ -12,6 +12,8 @@
 #include "../../collision/collisionmodel.h"
 #include "../../collision/collisionchecker.h"
 #include "../../toolbox/maths.h"
+#include "../dummy.h"
+#include "../unknown.h"
 
 #include <list>
 
@@ -82,6 +84,7 @@ SPRA::SPRA(char data[32], bool useDefaultValues)
     v2[2] = data[25];
     v2[1] = data[26];
     v2[0] = data[27];
+    power += 5.0f;
 
     char* v3 = (char*)&var3;
     v3[3] = data[28];
@@ -127,6 +130,11 @@ void SPRA::step()
     else
     {
         baseColour.set(1.0f, 1.0f, 1.0f);
+        if (guides.size() > 0)
+        {
+            despawnGuides();
+            Global::redrawWindow = true;
+        }
     }
 }
 
@@ -350,6 +358,8 @@ void SPRA::updateValue(int btnIndex)
 
     default: break;
     }
+
+    spawnGuides();
 }
 
 void SPRA::updateEditorWindows()
@@ -391,16 +401,54 @@ void SPRA::updateEditorWindows()
     SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
-    SetWindowTextA(Global::windowDescriptions[ 1], "");
+    SetWindowTextA(Global::windowDescriptions[ 1], "When the player touches this spring, the player's rotation is not changed.");
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
     SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
-    SetWindowTextA(Global::windowDescriptions[ 8], "Time (in frames) that controls are locked.");
-    SetWindowTextA(Global::windowDescriptions[ 9], "Multiplier of spring's power.");
+    SetWindowTextA(Global::windowDescriptions[ 8], "Does not seem to affect anything?");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Speed that the player goes once the touch this spring.");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    updateTransformationMatrix();
+    updateCollisionModel();
+    spawnGuides();
+}
+
+
+void SPRA::despawnGuides()
+{
+    for (Dummy* guide : guides)
+    {
+        Global::deleteEntity(guide);
+    }
+    guides.clear();
+}
+
+void SPRA::spawnGuides()
+{
+    despawnGuides();
+    
+    Vector3f pos(&position);
+    Vector3f dir(0, 10, 0);
+    Vector3f xAxis(1, 0, 0);
+    Vector3f zAxis(0, 0, 1);
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
+    
+    for (int i = 0; i < 30; i++)
+    {
+        Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
+        guide->setPosition(&pos);
+        guide->visible = true;
+        guide->updateTransformationMatrix();
+        Global::addEntity(guide);
+        guides.push_back(guide);
+    
+        pos = pos + dir;
+    }
 }
 
 void SPRA::fillData(char data[32])
@@ -439,7 +487,8 @@ void SPRA::fillData(char data[32])
     data[22] = (char)(*(ptr + 1));
     data[23] = (char)(*(ptr + 0));
 
-    ptr = (char*)(&power);
+    float var2 = (power - 5.0f);
+    ptr = (char*)(&var2);
     data[24] = (char)(*(ptr + 3));
     data[25] = (char)(*(ptr + 2));
     data[26] = (char)(*(ptr + 1));

@@ -50,49 +50,14 @@ bool CollisionModel::hasQuadTree()
 //makes a collision model be the transformed version of this collision model
 void CollisionModel::transformModel(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
-	//float offX = translate->x;
-	//float offY = translate->y;
-	//float offZ = translate->z;
-
     float angleRadX = Maths::toRadians(bamsXRot);
-	//float cosAngX = cosf(angleRadX);
-	//float sinAngX = sinf(angleRadX);
-
 	float angleRadY = Maths::toRadians(bamsYRot);
-	//float cosAngY = cosf(angleRadY);
-	//float sinAngY = sinf(angleRadY);
-
 	float angleRadZ = Maths::toRadians(bamsZRot);
-	//float cosAngZ = cosf(angleRadZ);
-	//float sinAngZ = sinf(angleRadZ);
 
 	targetModel->deleteMe();
 
 	for (Triangle3D* tri : triangles)
 	{
-		//float xDiff = tri->p1X*xScale;
-		//float zDiff = tri->p1Z*zScale;
-		//float yDiff = tri->p1Y*yScale;
-        //
-		//float newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		//float newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		//Vector3f newP1(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
-        //
-		//xDiff = tri->p2X*xScale;
-		//zDiff = tri->p2Z*zScale;
-		//yDiff = tri->p2Y*yScale;
-		//newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		//newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		//Vector3f newP2(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
-        //
-		//xDiff = tri->p3X*xScale;
-		//zDiff = tri->p3Z*zScale;
-		//yDiff = tri->p3Y*yScale;
-		//newX = (xDiff*cosAngZ - yDiff*sinAngZ);
-		//newY = (yDiff*cosAngZ + xDiff*sinAngZ);
-		//Vector3f newP3(offX + (newX*cosAng - zDiff*sinAng), offY + newY, offZ + (zDiff*cosAng + newX*sinAng));
-
-
         Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
         Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
         Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
