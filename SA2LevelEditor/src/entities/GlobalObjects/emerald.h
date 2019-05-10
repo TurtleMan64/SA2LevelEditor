@@ -3,6 +3,7 @@
 
 class TexturedModel;
 class CollisionModel;
+class Dummy;
 
 #include <list>
 #include "../entity.h"
@@ -15,10 +16,12 @@ private:
 
     static CollisionModel* cmBase;
 
+    Dummy* hitbox;
+
     int pieceID;
 
     float var1;
-    float var2;
+    float radius;
     float var3;
 
 public:

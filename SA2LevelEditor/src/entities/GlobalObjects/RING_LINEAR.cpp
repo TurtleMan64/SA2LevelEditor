@@ -84,6 +84,9 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
     numRings = (int)var3;
     ringDelta = var1 + 10.0f;
 
+    numRings = std::max(1, numRings);
+    numRings = std::min(8, numRings);
+
     if (useDefaultValues)
     {
         rotationX = 0;

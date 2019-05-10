@@ -88,6 +88,13 @@ void Entity::setPosition(float newX, float newY, float newZ)
 	this->position.z = newZ;
 }
 
+void Entity::setScale(float sclX, float sclY, float sclZ)
+{
+    this->scaleX = sclX;
+    this->scaleY = sclY;
+    this->scaleZ = sclZ;
+}
+
 void Entity::setBaseColour(float red, float green, float blue)
 {
 	baseColour.set(red, green, blue);

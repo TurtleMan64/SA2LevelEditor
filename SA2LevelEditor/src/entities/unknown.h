@@ -20,6 +20,8 @@ private:
 
 public:
     static std::list<TexturedModel*> modelsGuide;
+    static std::list<TexturedModel*> modelsTriggerCube;
+    static std::list<TexturedModel*> modelsTriggerSphere;
 
 	Unknown();
 	Unknown(char data[32], bool useDefaultValues);

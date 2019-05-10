@@ -84,6 +84,9 @@ RING_CIRCLE::RING_CIRCLE(char data[32], bool useDefaultValues)
     numRings = (int)var3;
     ringRadius = var1 + 10.0f;
 
+    numRings = std::max(1, numRings);
+    numRings = std::min(8, numRings);
+
     if (useDefaultValues)
     {
         rotationX = 0;

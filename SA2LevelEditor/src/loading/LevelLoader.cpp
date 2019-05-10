@@ -430,6 +430,57 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 default: return new Unknown    (data, useDefaultValues);
             }
 
+        case Global::Levels::Dry_Lagoon:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Security_Hall:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Mad_Space:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x2D: return new SPHERE     (data, useDefaultValues);
+                case 0x2E: return new CCYL       (data, useDefaultValues);
+                case 0x2F: return new CCUBE      (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
         default:
             INCR_DEL("Entity");
             std::fprintf(stdout, "Error: level not supported yet.\n");
@@ -441,13 +492,6 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
 
 void LevelLoader::loadLevelData()
 {
-    //Global::levelFileMap.clear();
-    //Global::levelFileMap["Green Forest"] = "GreenForest.lvl2";
-    //Global::levelFileMap["Metal Harbor"] = "MetalHarbor.lvl2";
-    //Global::levelFileMap["Sky Rail"]     = "SkyRail.lvl2";
-    //Global::levelFileMap["Final Rush"]   = "FinalRush.lvl2";
-    //Global::levelFileMap["Crazy Gadget"] = "CrazyGadget.lvl2";
-
     Global::levelSetToLVL2.clear();
 
     Global::levelSetToLVL2["set_b_bigbogy_s.bin"]  = "";
@@ -503,11 +547,11 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0007_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0007_s.bin"]        = "";
     Global::levelSetToLVL2["set0007_u.bin"]        = "";
-    Global::levelSetToLVL2["set0008_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0008_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0008_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0008_s.bin"]        = "";
-    Global::levelSetToLVL2["set0008_u.bin"]        = "";
+    Global::levelSetToLVL2["set0008_2p_s.bin"]     = "SecurityHall.lvl2";
+    Global::levelSetToLVL2["set0008_2p_u.bin"]     = "SecurityHall.lvl2";
+    Global::levelSetToLVL2["set0008_hd_s.bin"]     = "SecurityHall.lvl2";
+    Global::levelSetToLVL2["set0008_s.bin"]        = "SecurityHall.lvl2";
+    Global::levelSetToLVL2["set0008_u.bin"]        = "SecurityHall.lvl2";
     Global::levelSetToLVL2["set0009_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0009_s.bin"]        = "";
     Global::levelSetToLVL2["set0009_u.bin"]        = "";
@@ -544,10 +588,10 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0017_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0017_s.bin"]        = "";
     Global::levelSetToLVL2["set0017_u.bin"]        = "";
-    Global::levelSetToLVL2["set0018_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0018_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0018_s.bin"]        = "";
-    Global::levelSetToLVL2["set0018_u.bin"]        = "";
+    Global::levelSetToLVL2["set0018_hd_s.bin"]     = "DryLagoon.lvl2";
+    Global::levelSetToLVL2["set0018_hd_u.bin"]     = "DryLagoon.lvl2";
+    Global::levelSetToLVL2["set0018_s.bin"]        = "DryLagoon.lvl2";
+    Global::levelSetToLVL2["set0018_u.bin"]        = "DryLagoon.lvl2";
     Global::levelSetToLVL2["set0019_s.bin"]        = "";
     Global::levelSetToLVL2["SET0019_U.bin"]        = "";
     Global::levelSetToLVL2["SET0020_S.bin"]        = "";
@@ -632,12 +676,12 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0043_hd_u.bin"]     = "CosmicWall.lvl2";
     Global::levelSetToLVL2["set0043_s.bin"]        = "CosmicWall.lvl2";
     Global::levelSetToLVL2["set0043_u.bin"]        = "CosmicWall.lvl2";
-    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0044_s.bin"]        = "";
-    Global::levelSetToLVL2["set0044_u.bin"]        = "";
+    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_s.bin"]        = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_u.bin"]        = "MadSpace.lvl2";
     Global::levelSetToLVL2["set0045_s.bin"]        = "";
     Global::levelSetToLVL2["set0045_u.bin"]        = "";
     Global::levelSetToLVL2["SET0046_2P_S.bin"]     = "";

@@ -13,6 +13,8 @@
 #include "../../collision/collisionchecker.h"
 #include "../../toolbox/maths.h"
 #include "../../toolbox/hex.h"
+#include "../dummy.h"
+#include "../unknown.h"
 
 #include <list>
 
@@ -76,11 +78,12 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     v1[1] = data[22];
     v1[0] = data[23];
 
-    char* v2 = (char*)&var2;
+    char* v2 = (char*)&radius;
     v2[3] = data[24];
     v2[2] = data[25];
     v2[1] = data[26];
     v2[0] = data[27];
+    radius += 5;
 
     char* v3 = (char*)&var3;
     v3[3] = data[28];
@@ -92,7 +95,7 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     {
         pieceID = 0;
         var1 = 0.0f;
-        var2 = 0.0f;
+        radius = 10.0f;
         var3 = 0.0f;
         rotationY = 0;
 	    rotationZ = 0; 
@@ -111,6 +114,15 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
 	updateCollisionModel();
+
+    hitbox = nullptr;
+    hitbox = new Dummy(&Unknown::modelsTriggerSphere); INCR_NEW("Entity");
+    hitbox->setPosition(&position);
+    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setScale(radius, radius, radius);
+    hitbox->visible = true;
+    hitbox->updateTransformationMatrix();
+    Global::addTransparentEntity(hitbox);
 }
 
 bool EMERALD::isSA2Object()
@@ -206,6 +218,9 @@ void EMERALD::updateValue(int btnIndex)
                     Global::redrawWindow = true;
                     CollisionChecker::deleteCollideModel(collideModelTransformed);
                     Global::deleteEntity(this);
+                    Global::deleteTransparentEntity(hitbox);
+                    hitbox = nullptr;
+                    return;
                 }
             }
         }
@@ -219,9 +234,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
         }
@@ -234,9 +246,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
         }
@@ -249,9 +258,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
         }
@@ -264,9 +270,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             int newPieceID = Hex::stoh(text);
             pieceID = newPieceID;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[5], Hex::to_string(pieceID).c_str());
             break;
         }
@@ -279,9 +282,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             int newRotY = std::stoi(text);
             rotationY = newRotY;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
             break;
         }
@@ -294,9 +294,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             int newRotZ = std::stoi(text);
             rotationZ = newRotZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
             break;
         }
@@ -309,9 +306,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             float newVar1 = std::stof(text);
             var1 = newVar1;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(var1).c_str());
             break;
         }
@@ -322,12 +316,13 @@ void EMERALD::updateValue(int btnIndex)
     {
         try
         {
-            float newVar2 = std::stof(text);
-            var2 = newVar2;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[9], std::to_string(var2).c_str());
+            float newRadius = std::stof(text);
+            if (newRadius > 400.0f)
+            {
+                MessageBox(NULL, "Warning: The collision radius is too large, emerald won't be picked up any further than 400.", "Warning", MB_OK);
+            }
+            radius = newRadius;
+            SetWindowTextA(Global::windowValues[9], std::to_string(radius).c_str());
             break;
         }
         catch (...) { break; }
@@ -339,9 +334,6 @@ void EMERALD::updateValue(int btnIndex)
         {
             float newVar3 = std::stof(text);
             var3 = newVar3;
-            updateTransformationMatrix();
-            updateCollisionModel();
-            Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
             break;
         }
@@ -350,6 +342,14 @@ void EMERALD::updateValue(int btnIndex)
     
     default: break;
     }
+
+    updateTransformationMatrix();
+    updateCollisionModel();
+    Global::redrawWindow = true;
+    hitbox->setPosition(&position);
+    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setScale(radius, radius, radius);
+    hitbox->updateTransformationMatrix();
 }
 
 void EMERALD::updateEditorWindows()
@@ -363,7 +363,7 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[ 6], "");
     SetWindowTextA(Global::windowLabels[ 7], "");
     SetWindowTextA(Global::windowLabels[ 8], "Path");
-    SetWindowTextA(Global::windowLabels[ 9], "");
+    SetWindowTextA(Global::windowLabels[ 9], "Radius");
     SetWindowTextA(Global::windowLabels[10], "Speed");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
@@ -375,7 +375,7 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
     SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(var1).c_str());
-    SetWindowTextA(Global::windowValues[ 9], std::to_string(var2).c_str());
+    SetWindowTextA(Global::windowValues[ 9], std::to_string(radius).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
 
     SendMessageA(Global::windowValues[ 0], EM_SETREADONLY, 0, 0);
@@ -399,11 +399,15 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 6], "Unused? Maybe rotates diggable trigger?");
     SetWindowTextA(Global::windowDescriptions[ 7], "Unused?");
     SetWindowTextA(Global::windowDescriptions[ 8], "On moving pieces, determines the movement pattern. Each integer has an assigned pattern by stage.");
-    SetWindowTextA(Global::windowDescriptions[ 9], "Probably y scale of diggable trigger");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Radius of hit detection (calculated from centerpoint of character). In practice, has a max value of 400, (SA2 will not calculate the collision when the player is > 400 away).");
     SetWindowTextA(Global::windowDescriptions[10], "On moving pieces, determines movement speed, with -3 serving as 0.");
 
     updateTransformationMatrix();
     updateCollisionModel();
+    hitbox->setPosition(&position);
+    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setScale(radius, radius, radius);
+    hitbox->updateTransformationMatrix();
 }
 
 void EMERALD::fillData(char data[32])
@@ -441,6 +445,7 @@ void EMERALD::fillData(char data[32])
     data[22] = (char)(*(ptr + 1));
     data[23] = (char)(*(ptr + 0));
 
+    float var2 = radius - 5.0f;
     ptr = (char*)(&var2);
     data[24] = (char)(*(ptr + 3));
     data[25] = (char)(*(ptr + 2));

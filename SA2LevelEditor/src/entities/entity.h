@@ -39,6 +39,8 @@ public:
 	void setPosition(Vector3f* newPosition);
 	void setPosition(float newX, float newY, float newZ);
 
+    void setScale(float sclX, float sclY, float sclZ);
+
 	void setBaseColour(float red, float green, float blue);
 
 	Matrix4f* getTransformationMatrix();

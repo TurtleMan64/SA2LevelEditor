@@ -1,0 +1,461 @@
+# Material Count: 51
+
+newmtl space64_9.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_9.png
+
+newmtl meteo64_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo64_8.png
+
+newmtl space128_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space128_2.png
+
+newmtl space64_20.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_20.png
+
+newmtl space128_4.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space128_4.png
+
+newmtl miu64_mad001.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad001.png
+
+newmtl meteo128_4.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_4.png
+
+newmtl space256_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space256_2.png
+
+newmtl space64_10.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_10.png
+
+newmtl meteo256_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo256_1.png
+
+newmtl et64_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd et64_3.png
+
+newmtl space128_5.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space128_5.png
+
+newmtl space64_6.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_6.png
+
+newmtl miu64_mad002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad002.png
+
+newmtl miu128_meh010.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_meh010.png
+
+newmtl space256_7.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space256_7.png
+
+newmtl meteo256_7.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo256_7.png
+
+newmtl miu128_meh004.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_meh004.png
+
+newmtl miu64_mad013.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad013.png
+
+newmtl space128_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space128_8.png
+
+newmtl miu128_mad006.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_mad006.png
+
+newmtl mad128_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad128_1.png
+
+newmtl meteo256_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo256_8.png
+
+newmtl mad256_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad256_2.png
+
+newmtl mad128_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad128_2.png
+
+newmtl meteo32_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo32_1.png
+
+newmtl meteo128_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_8.png
+
+newmtl space64_15.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_15.png
+
+newmtl miu64_mad014.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad014.png
+
+newmtl meteo256_6.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo256_6.png
+
+newmtl mad64_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad64_2.png
+
+newmtl mad256_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad256_1.png
+
+newmtl meteo128_9.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_9.png
+
+newmtl space512_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space512_2.png
+
+newmtl miu128_meh002.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu128_meh002.png
+
+newmtl meteo128_5.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_5.png
+
+newmtl miu64_mad007.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad007.png
+
+newmtl space32_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space32_3.png
+
+newmtl mad64_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad64_1.png
+
+newmtl space64_14.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space64_14.png
+
+newmtl space256_5.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd space256_5.png
+
+newmtl meteo128_10.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_10.png
+
+newmtl mad128_4.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad128_4.png
+
+newmtl miu64_mad011.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad011.png
+
+newmtl meteo512_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo512_1.png
+
+newmtl miu64_mad012.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad012.png
+
+newmtl mad32_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad32_1.png
+
+newmtl meteo128_11.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo128_11.png
+
+newmtl mad128_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd mad128_3.png
+
+newmtl meteo256_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd meteo256_3.png
+
+newmtl miu64_mad008.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd miu64_mad008.png
+
