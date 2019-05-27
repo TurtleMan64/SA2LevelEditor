@@ -28,7 +28,7 @@ StageCollision::StageCollision()
 	visible = true;
     baseColour.set(0.70f, 0.70f, 0.70f);
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void StageCollision::step()

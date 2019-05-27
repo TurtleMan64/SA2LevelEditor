@@ -29,6 +29,10 @@ public:
 
     static float toDegrees(int bams);
 
+    static int radToBams(float rad);
+
+    static int degToBams(float deg);
+
 	//Blank Matrix4f should have already been created. This function does not allocate any memory to matrix.
 	//static void createTransformationMatrix(Matrix4f* result, Vector3f* translation, float rX, float rY, float rZ, float scale);
 
@@ -38,7 +42,9 @@ public:
 	static void createTransformationMatrix(Matrix4f* result, Vector2f* translation, float roation, Vector2f* scale);
 
 	//Based on how sa2 calculates rotations
-	static void createTransformationMatrix(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
+	static void createTransformationMatrixYXZ(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
+
+    static void createTransformationMatrixZY(Matrix4f* result, Vector3f* translation, int rY, int rZ, float sX, float sY, float sZ);
 
 	static void createViewMatrix(Matrix4f* result, Camera* cam);
 

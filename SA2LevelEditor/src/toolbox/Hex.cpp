@@ -27,3 +27,31 @@ std::string Hex::to_string(int num)
 
     return "0x"+result;
 }
+
+short Hex::stohshort(std::string s)
+{
+    return (short)std::stoi(s, nullptr, 16);
+}
+
+std::string Hex::to_string_short(short num)
+{
+    std::stringstream stream;
+    stream << std::hex << num;
+    std::string result = stream.str();
+    for (int i = 0; i < result.length(); i++)
+    {
+        result[i] = (char)toupper(result[i]);
+    }
+
+    if (result.length() % 2 == 1)
+    {
+        result = "0"+result;
+    }
+
+    if (result.length() > 4)
+    {
+        result = result.substr(result.length()-4);
+    }
+
+    return "0x"+result;
+}

@@ -28,24 +28,16 @@
 #include "displaymanager.h"
 #include "../toolbox/input.h"
 #include "../models/rawmodel.h"
-//#include "../shaders/shaderprogram.h"
 #include "../models/modeltexture.h"
 #include "../entities/entity.h"
 #include "../toolbox/vector.h"
 #include "../toolbox/matrix.h"
 #include "../entities/camera.h"
-//#include "../objLoader/objLoader.h"
 #include "../entities/stage.h"
 #include "../loading/levelloader.h"
 #include "../collision/collisionchecker.h"
-//#include "../entities/skysphere.h"
-//#include "../particles/particlemaster.h"
-//#include "../particles/particleresources.h"
 #include "../toolbox/split.h"
 #include "../toolbox/level.h"
-//#include "../guis/guitexture.h"
-//#include "../particles/particle.h"
-//#include "../entities/skysphere.h"
 #include "../toolbox/getline.h"
 #include "../rendering/masterrenderer.h"
 #include "../guis/guimanager.h"
@@ -56,6 +48,10 @@
 #include "../entities/stagecollision.h"
 #include "../entities/stagekillplanes.h"
 #include "../entities/stagesky.h"
+#include "../entities/unknown.h"
+#include "../toolbox/maths.h"
+#include "../loading/objloader.h"
+#include "../entities/dummy.h"
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/GlobalObjects/sprb.h"
 #include "../entities/GlobalObjects/spra.h"
@@ -65,10 +61,10 @@
 #include "../entities/GlobalObjects/emerald.h"
 #include "../entities/GlobalObjects/ccyl.h"
 #include "../entities/GlobalObjects/bigjump.h"
-#include "../entities/unknown.h"
-#include "../toolbox/maths.h"
-#include "../loading/objloader.h"
-#include "../entities/dummy.h"
+#include "../entities/GlobalObjects/lightsw.h"
+#include "../entities/GlobalObjects/rocket.h"
+#include "../entities/GlobalObjects/linklink.h"
+#include "../entities/GlobalObjects/stoplockon.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -129,6 +125,7 @@ int Global::levelID = 0;
 bool Global::shouldLoadNewLevel = false;
 bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
+bool Global::renderWithCulling = false;
 int Global::sa2Type = Global::SA2Type::None;
 
 int Global::gameMissionNumber = 0;
@@ -174,9 +171,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
 #define CMD_VIEW_COLLISION  5
 #define CMD_VIEW_KILLPLANES 6
 #define CMD_VIEW_BACKGROUND 7
-#define CMD_SA2_FOLLOW      8
-#define CMD_SA2_TELEPORT    9
-#define CMD_HELP           10
+#define CMD_VIEW_CULLING    8
+#define CMD_SA2_FOLLOW      9
+#define CMD_SA2_TELEPORT   10
+#define CMD_HELP           11
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -206,10 +204,12 @@ void addMenus(HWND window)
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION , "View Collision");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES, "View Killplanes");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND, "View Background");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING   , "Backface Culling");
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE     , MF_CHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION , MF_CHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_CHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING   , MF_UNCHECKED);
 
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,   "Follow SA2 in Real Time");
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT, "Teleport Playable Character to 3D Cursor");
@@ -329,6 +329,14 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             Global::gameStageSky->visible = !Global::gameStageSky->visible;
             if (Global::gameStageSky->visible) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED  ); }
             else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_UNCHECKED); }
+            Global::redrawWindow = true;
+            break;
+        }
+        case CMD_VIEW_CULLING:
+        {
+            Global::renderWithCulling = !Global::renderWithCulling;
+            if (Global::renderWithCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_CHECKED  ); }
+            else                           { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
@@ -499,19 +507,19 @@ int Global::main()
 
 	srand(0);
 
-	DisplayManager::createDisplay();
-
 	#if !defined(DEV_MODE) && defined(_WIN32)
-	FreeConsole();
+	//FreeConsole();
 	#endif
 
+    DisplayManager::createDisplay();
+
 	Input::init();
+
+    MasterRenderer::init();
 
 	//This camera is never deleted.
 	Camera cam;
 	Global::gameCamera = &cam;
-
-	MasterRenderer::init();
 
 	LevelLoader::loadLevelData();
 
@@ -553,6 +561,10 @@ int Global::main()
     SPHERE::loadStaticModels();
     EMERALD::loadStaticModels();
     BIGJUMP::loadStaticModels();
+    LIGHT_SW::loadStaticModels();
+    ROCKET::loadStaticModels();
+    LINKLINK::loadStaticModels();
+    STOPLOCKON::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -758,10 +770,6 @@ int Global::main()
 		MasterRenderer::render(&cam);
 		glDisable(GL_CLIP_DISTANCE1);
 
-		//if (Global::renderParticles)
-		//{
-			//ParticleMaster::renderParticles(&cam, SkyManager::getOverallBrightness(), 0);
-		//}
 
 		MasterRenderer::clearEntities();
 		MasterRenderer::clearEntitiesPass2();
@@ -769,7 +777,25 @@ int Global::main()
 		MasterRenderer::clearTransparentEntities();
 
 		GuiManager::renderAll();
-		//TextMaster::render();
+
+        //calculate the total number of sa2 objects there are
+        int totalSA2Objects = 0;
+        for (Entity* e : gameEntities)
+		{
+			if (e->isSA2Object())
+            {
+                if (SA2Object* o = dynamic_cast<SA2Object*>(e))
+                {
+                    totalSA2Objects+=1;
+                }
+                else
+                {
+                    std::fprintf(stdout, "Warning: object lied about being an sa2object\n");
+                }
+            }
+		}
+        std::string title = "SA2 Level Editor.  Level ID: "+std::to_string(Global::levelID)+"  Object Count: "+std::to_string(totalSA2Objects);
+        glfwSetWindowTitle(DisplayManager::getWindow(), title.c_str());
 
 		DisplayManager::updateDisplay();
 
@@ -1191,7 +1217,7 @@ void Global::updateCamFromSA2()
         Global::gameCursor3D->setPosition(sonicX, sonicY, sonicZ);
         Global::gamePlayer->setPosition(sonicX, sonicY, sonicZ);
         Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
-        Global::gamePlayer->updateTransformationMatrix();
+        Global::gamePlayer->updateTransformationMatrixYXZ();
 
         //make the score have a 1 at the end as a first
         // line of defence against cheaters :)
@@ -1350,7 +1376,7 @@ void Global::updateCamFromSA2()
             Global::gameCursor3D->setPosition(posX, posY, posZ);
             Global::gamePlayer->setPosition(posX, posY, posZ);
             Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
-            Global::gamePlayer->updateTransformationMatrix();
+            Global::gamePlayer->updateTransformationMatrixYXZ();
         }
     }
 }

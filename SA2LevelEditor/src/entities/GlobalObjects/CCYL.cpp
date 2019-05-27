@@ -77,13 +77,13 @@ CCYL::CCYL(char data[32], bool useDefaultValues)
     rotationZ = 0;
 	visible = true;
 	baseColour.set(1, 1, 1);
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 
     collideModelOriginal = CCYL::cmBase;
 	collideModelTransformed = CCYL::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModel();
+	updateCollisionModelYXZ();
 }
 
 bool CCYL::isSA2Object()
@@ -192,8 +192,8 @@ void CCYL::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
@@ -207,8 +207,8 @@ void CCYL::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
@@ -222,8 +222,8 @@ void CCYL::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
@@ -243,8 +243,8 @@ void CCYL::updateValue(int btnIndex)
             radius = fmaxf(0.0f, newRadius);
             scaleX = radius;
             scaleZ = radius;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(radius).c_str());
             break;
@@ -263,8 +263,8 @@ void CCYL::updateValue(int btnIndex)
             }
             height = fmaxf(0.0f, newHeight);
             scaleY = height;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[9], std::to_string(height).c_str());
             break;
@@ -326,8 +326,8 @@ void CCYL::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 9], "Height of cylinder (from center)");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
-    updateTransformationMatrix();
-    updateCollisionModel();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
 }
 
 void CCYL::fillData(char data[32])

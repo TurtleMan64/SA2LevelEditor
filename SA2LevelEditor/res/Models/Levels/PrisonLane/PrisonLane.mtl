@@ -1,0 +1,353 @@
+# Material Count: 39
+
+newmtl pr128_17.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_17.png
+
+newmtl pr128_12.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_12.png
+
+newmtl pr128_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_2.png
+
+newmtl pr128_7.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_7.png
+
+newmtl pr128_26.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_26.png
+
+newmtl pr256_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr256_1.png
+
+newmtl pr128_38.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_38.png
+
+newmtl pr64_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_3.png
+
+newmtl pr256_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr256_3.png
+
+newmtl pr128_3.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_3.png
+
+newmtl pr64_22.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_22.png
+
+newmtl pr128_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_8.png
+
+newmtl pr64_8.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_8.png
+
+newmtl pr128_27.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_27.png
+
+newmtl pr128_14.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_14.png
+
+newmtl pr128_18.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_18.png
+
+newmtl pr32_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr32_1.png
+
+newmtl neopr256_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd neopr256_1.png
+
+newmtl pr256_4.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr256_4.png
+
+newmtl pr128_9.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_9.png
+
+newmtl pr128_15.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_15.png
+
+newmtl pr128_4.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_4.png
+
+newmtl pr64_12.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_12.png
+
+newmtl pr128_32.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_32.png
+
+newmtl pr64_7.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_7.png
+
+newmtl pr128_36.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_36.png
+
+newmtl pr64_1.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_1.png
+
+newmtl pr256_5.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr256_5.png
+
+newmtl pr128_16.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_16.png
+
+newmtl pr128_11.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_11.png
+
+newmtl pr64_20.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_20.png
+
+newmtl pr64_19.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_19.png
+
+newmtl pr128_5.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_5.png
+
+newmtl pr128_6.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_6.png
+
+newmtl pr64_6.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_6.png
+
+newmtl pr128_37.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr128_37.png
+
+newmtl pr64_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_2.png
+
+newmtl pr256_2.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr256_2.png
+
+newmtl pr64_11.png
+Ns 20
+Ni 0.0
+Tr 1
+d 1
+scrollX 0
+scrollY 0
+map_Kd pr64_11.png
+

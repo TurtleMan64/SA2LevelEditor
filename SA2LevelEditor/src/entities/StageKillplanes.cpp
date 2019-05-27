@@ -28,7 +28,7 @@ StageKillplanes::StageKillplanes()
 	visible = true;
     baseColour.set(0.70f, 0.70f, 0.70f);
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void StageKillplanes::step()

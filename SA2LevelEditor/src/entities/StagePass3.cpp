@@ -38,7 +38,7 @@ StagePass3::StagePass3(const char* objFolder, const char* objFilename)
 		loadModel(&StagePass3::models, objFolder, objFilename);
 	}
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void StagePass3::step()

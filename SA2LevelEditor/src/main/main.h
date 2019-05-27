@@ -95,6 +95,7 @@ public:
 	static int countNew;
 	static int countDelete;
 	static int gameState;
+    static bool renderWithCulling;
 
     //if this is true, the editor will try to attach to a running SA2 process
     // and follow the camera

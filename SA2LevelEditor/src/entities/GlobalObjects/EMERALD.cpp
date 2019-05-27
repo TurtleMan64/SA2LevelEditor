@@ -107,21 +107,21 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     scaleZ = 1;
 	visible = true;
 	baseColour.set(1, 1, 1);
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 
     collideModelOriginal = EMERALD::cmBase;
 	collideModelTransformed = EMERALD::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModel();
+	updateCollisionModelYXZ();
 
     hitbox = nullptr;
     hitbox = new Dummy(&Unknown::modelsTriggerSphere); INCR_NEW("Entity");
     hitbox->setPosition(&position);
     hitbox->setRotation(rotationX, rotationY, rotationZ);
-    hitbox->setScale(radius, radius, radius);
+    hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
     hitbox->visible = true;
-    hitbox->updateTransformationMatrix();
+    hitbox->updateTransformationMatrixYXZ();
     Global::addTransparentEntity(hitbox);
 }
 
@@ -343,13 +343,13 @@ void EMERALD::updateValue(int btnIndex)
     default: break;
     }
 
-    updateTransformationMatrix();
-    updateCollisionModel();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
     Global::redrawWindow = true;
     hitbox->setPosition(&position);
     hitbox->setRotation(rotationX, rotationY, rotationZ);
-    hitbox->setScale(radius, radius, radius);
-    hitbox->updateTransformationMatrix();
+    hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
+    hitbox->updateTransformationMatrixYXZ();
 }
 
 void EMERALD::updateEditorWindows()
@@ -396,18 +396,18 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
     SetWindowTextA(Global::windowDescriptions[ 5], "The identifier for this specific piece");
-    SetWindowTextA(Global::windowDescriptions[ 6], "Unused? Maybe rotates diggable trigger?");
+    SetWindowTextA(Global::windowDescriptions[ 6], "Unused?");
     SetWindowTextA(Global::windowDescriptions[ 7], "Unused?");
     SetWindowTextA(Global::windowDescriptions[ 8], "On moving pieces, determines the movement pattern. Each integer has an assigned pattern by stage.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Radius of hit detection (calculated from centerpoint of character). In practice, has a max value of 400, (SA2 will not calculate the collision when the player is > 400 away).");
     SetWindowTextA(Global::windowDescriptions[10], "On moving pieces, determines movement speed, with -3 serving as 0.");
 
-    updateTransformationMatrix();
-    updateCollisionModel();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
     hitbox->setPosition(&position);
     hitbox->setRotation(rotationX, rotationY, rotationZ);
-    hitbox->setScale(radius, radius, radius);
-    hitbox->updateTransformationMatrix();
+    hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
+    hitbox->updateTransformationMatrixYXZ();
 }
 
 void EMERALD::fillData(char data[32])

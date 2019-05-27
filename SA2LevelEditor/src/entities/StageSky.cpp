@@ -26,7 +26,7 @@ StageSky::StageSky()
 	visible = true;
     baseColour.set(1.0f, 1.0f, 1.0f);
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void StageSky::step()
@@ -35,13 +35,17 @@ void StageSky::step()
 
     //some stages have ths sky not always be in the center of the camera.
     // example: green forest, metal harbor i think.
-    // TODO deal with this
-    //switch (Global::levelID)
-    //{
-    //    
-    //}
+    switch (Global::levelID)
+    {
+    case Global::Metal_Harbor:
+        position.y = -331.645f;
+        break;
 
-    updateTransformationMatrix();
+    default:
+        break;
+    }
+
+    updateTransformationMatrixYXZ();
 }
 
 std::list<TexturedModel*>* StageSky::getModels()

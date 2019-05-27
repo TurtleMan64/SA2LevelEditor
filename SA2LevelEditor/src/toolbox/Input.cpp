@@ -44,68 +44,9 @@ void Input::waitForInputs()
 	mousePreviousX = xpos;
 	mousePreviousY = ypos;
 
-
-
-
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_ACTION1 = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_ACTION2 = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_ACTION3 = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_ACTION4 = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_START = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_LB = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_TAB = true;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_Y = -1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_Y = 1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_X = -1;
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		//Input::inputs.INPUT_X = 1;
-	}
-
-
-	if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS)
-	{
-		//SkyManager::increaseTimeOfDay(0.5f);
-	}
-	if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS)
-	{
-		//SkyManager::increaseTimeOfDay(-0.5f);
 	}
 }
 
@@ -113,7 +54,7 @@ void Input::waitForInputs()
 void Input::init()
 {
 	//load sensitivity and button mappings from external file
-
+    /*
 	std::ifstream file("Settings/CameraSensitivity.ini");
 	if (!file.is_open())
 	{
@@ -162,4 +103,5 @@ void Input::init()
 		}
 		file.close();
 	}
+    */
 }

@@ -39,6 +39,10 @@
 #include "../entities/GlobalObjects/sphere.h"
 #include "../entities/GlobalObjects/emerald.h"
 #include "../entities/GlobalObjects/bigjump.h"
+#include "../entities/GlobalObjects/lightsw.h"
+#include "../entities/GlobalObjects/rocket.h"
+#include "../entities/GlobalObjects/linklink.h"
+#include "../entities/GlobalObjects/stoplockon.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -304,65 +308,118 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
         case Global::Levels::Metal_Harbor:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  6: return new BIGJUMP    (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case 46: return new SPHERE     (data, useDefaultValues);
-                case 47: return new CCYL       (data, useDefaultValues);
-                case 48: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x41: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x5A: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Green_Forest:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new SPRA       (data, useDefaultValues);
-                case  2: return new SPRB       (data, useDefaultValues);
-                case  3: return new KASOKU     (data, useDefaultValues);
-                case 10: return new BIGJUMP    (data, useDefaultValues);
-                case 22: return new RING_LINEAR(data, useDefaultValues);
-                case 56: return new RING_CIRCLE(data, useDefaultValues);
-                case 66: return new SPHERE     (data, useDefaultValues);
-                case 67: return new CCYL       (data, useDefaultValues);
-                case 68: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new SPRA       (data, useDefaultValues);
+                case    2: return new SPRB       (data, useDefaultValues);
+                case    3: return new KASOKU     (data, useDefaultValues);
+                case 0x0A: return new BIGJUMP    (data, useDefaultValues);
+                case 0x0B: return new ROCKET     (data, useDefaultValues);
+                case 0x19: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x22: return new RING_LINEAR(data, useDefaultValues);
+                case 0x23: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x42: return new SPHERE     (data, useDefaultValues);
+                case 0x43: return new CCYL       (data, useDefaultValues);
+                case 0x44: return new CCUBE      (data, useDefaultValues);
+                case 0x49: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Pyramid_Cave:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x5E: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Crazy_Gadget:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case  6: return new BIGJUMP    (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case 44: return new SPHERE     (data, useDefaultValues);
-                case 45: return new CCYL       (data, useDefaultValues);
-                case 46: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2C: return new SPHERE     (data, useDefaultValues);
+                case 0x2D: return new CCYL       (data, useDefaultValues);
+                case 0x2E: return new CCUBE      (data, useDefaultValues);
+                case 0x38: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x3C: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Final_Rush:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case  6: return new BIGJUMP    (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case 46: return new SPHERE     (data, useDefaultValues);
-                case 47: return new CCYL       (data, useDefaultValues);
-                case 48: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x3D: return new LINKLINK   (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x3F: return new STOPLOCKON (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Prison_Lane:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x5B: return new STOPLOCKON (data, useDefaultValues);
+                case 0x5D: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x60: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Meteor_Herd:
@@ -376,9 +433,13 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x3D: return new LINKLINK   (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x3F: return new STOPLOCKON (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -390,44 +451,75 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
+                case 0x0A: return new ROCKET     (data, useDefaultValues);
                 case 0x11: return new RING_LINEAR(data, useDefaultValues);
                 case 0x12: return new RING_CIRCLE(data, useDefaultValues);
                 case 0x4A: return new SPHERE     (data, useDefaultValues);
                 case 0x4B: return new CCYL       (data, useDefaultValues);
                 case 0x4C: return new CCUBE      (data, useDefaultValues);
+                case 0x50: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Final_Chase:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case  6: return new BIGJUMP    (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case 46: return new SPHERE     (data, useDefaultValues);
-                case 47: return new CCYL       (data, useDefaultValues);
-                case 48: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2E: return new SPHERE     (data, useDefaultValues);
+                case 0x2F: return new CCYL       (data, useDefaultValues);
+                case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x3D: return new LINKLINK   (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x3F: return new STOPLOCKON (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
+            }
+
+        case Global::Levels::Iron_Gate:
+            switch (objectID)
+            {
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new SPRA       (data, useDefaultValues);
+                case    2: return new SPRB       (data, useDefaultValues);
+                case    3: return new KASOKU     (data, useDefaultValues);
+                case    9: return new BIGJUMP    (data, useDefaultValues);
+                case 0x0A: return new ROCKET     (data, useDefaultValues);
+                case 0x0E: return new EMERALD    (data, useDefaultValues);
+                case 0x10: return new RING_LINEAR(data, useDefaultValues);
+                case 0x11: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x33: return new SPHERE     (data, useDefaultValues);
+                case 0x34: return new CCYL       (data, useDefaultValues);
+                case 0x35: return new CCUBE      (data, useDefaultValues);
+                case 0x54: return new STOPLOCKON (data, useDefaultValues);
+                case 0x55: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x57: return new LINKLINK   (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Cosmic_Wall:
             switch (objectID)
             {
-                case  0: return new RING       (data, useDefaultValues);
-                case  1: return new RING_LINEAR(data, useDefaultValues);
-                case  2: return new RING_CIRCLE(data, useDefaultValues);
-                case  3: return new SPRA       (data, useDefaultValues);
-                case  4: return new SPRB       (data, useDefaultValues);
-                case  6: return new BIGJUMP    (data, useDefaultValues);
-                case  7: return new KASOKU     (data, useDefaultValues);
-                case 38: return new SPHERE     (data, useDefaultValues);
-                case 39: return new CCYL       (data, useDefaultValues);
-                case 40: return new CCUBE      (data, useDefaultValues);
-                default: return new Unknown    (data, useDefaultValues);
+                case    0: return new RING       (data, useDefaultValues);
+                case    1: return new RING_LINEAR(data, useDefaultValues);
+                case    2: return new RING_CIRCLE(data, useDefaultValues);
+                case    3: return new SPRA       (data, useDefaultValues);
+                case    4: return new SPRB       (data, useDefaultValues);
+                case    6: return new BIGJUMP    (data, useDefaultValues);
+                case    7: return new KASOKU     (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x2C: return new SPHERE     (data, useDefaultValues);
+                case 0x2D: return new CCYL       (data, useDefaultValues);
+                case 0x2E: return new CCUBE      (data, useDefaultValues);
+                case 0x3B: return new LINKLINK   (data, useDefaultValues);
+                case 0x3C: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x49: return new STOPLOCKON (data, useDefaultValues);
+                default:   return new Unknown    (data, useDefaultValues);
             }
 
         case Global::Levels::Dry_Lagoon:
@@ -441,9 +533,11 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x53: return new LIGHT_SW   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -458,9 +552,11 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+                case 0x4A: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -475,9 +571,12 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
+                case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2D: return new SPHERE     (data, useDefaultValues);
                 case 0x2E: return new CCYL       (data, useDefaultValues);
                 case 0x2F: return new CCUBE      (data, useDefaultValues);
+                case 0x3C: return new LINKLINK   (data, useDefaultValues);
+                case 0x51: return new LIGHT_SW   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -553,18 +652,18 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0008_s.bin"]        = "SecurityHall.lvl2";
     Global::levelSetToLVL2["set0008_u.bin"]        = "SecurityHall.lvl2";
     Global::levelSetToLVL2["set0009_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0009_s.bin"]        = "";
-    Global::levelSetToLVL2["set0009_u.bin"]        = "";
+    Global::levelSetToLVL2["set0009_s.bin"]        = "PrisonLane.lvl2";
+    Global::levelSetToLVL2["set0009_u.bin"]        = "PrisonLane.lvl2";
     Global::levelSetToLVL2["set0010_2p_u.bin"]     = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0010_hd_s.bin"]     = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0010_hd_u.bin"]     = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0010_s.bin"]        = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0010_u.bin"]        = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0011_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0011_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0011_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0011_s.bin"]        = "";
-    Global::levelSetToLVL2["set0011_u.bin"]        = "";
+    Global::levelSetToLVL2["set0011_hd_s.bin"]     = "IronGate.lvl2";
+    Global::levelSetToLVL2["set0011_hd_u.bin"]     = "IronGate.lvl2";
+    Global::levelSetToLVL2["set0011_s.bin"]        = "IronGate.lvl2";
+    Global::levelSetToLVL2["set0011_u.bin"]        = "IronGate.lvl2";
     Global::levelSetToLVL2["set0012_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0012_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0012_s.bin"]        = "";
@@ -623,10 +722,10 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0027_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0027_s.bin"]        = "";
     Global::levelSetToLVL2["set0027_u.bin"]        = "";
-    Global::levelSetToLVL2["set0028_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0028_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0028_s.bin"]        = "";
-    Global::levelSetToLVL2["set0028_u.bin"]        = "";
+    Global::levelSetToLVL2["set0028_hd_s.bin"]     = "PyramidCave.lvl2";
+    Global::levelSetToLVL2["set0028_hd_u.bin"]     = "PyramidCave.lvl2";
+    Global::levelSetToLVL2["set0028_s.bin"]        = "PyramidCave.lvl2";
+    Global::levelSetToLVL2["set0028_u.bin"]        = "PyramidCave.lvl2";
     Global::levelSetToLVL2["set0029_s.bin"]        = "";
     Global::levelSetToLVL2["set0029_u.bin"]        = "";
     Global::levelSetToLVL2["set0030_2p_s.bin"]     = "FinalRush.lvl2";

@@ -10,6 +10,7 @@
 #include "../collision/collisionchecker.h"
 #include "../collision/collisionmodel.h"
 #include "../toolbox/maths.h"
+#include "../toolbox/hex.h"
 #include <Windows.h>
 
 #include <list>
@@ -89,18 +90,18 @@ Unknown::Unknown(char data[32], bool /*useDefaultValues*/)
     v3[0] = data[31];
 
 
-	scaleX = 12;
+    scaleX = 12;
     scaleY = 12;
     scaleZ = 12;
 	visible = true;
 	baseColour.set(1,1,1);
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 
     collideModelOriginal = Unknown::cmBase;
 	collideModelTransformed = Unknown::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModel();
+	updateCollisionModelYXZ();
 }
 
 void Unknown::step()
@@ -313,8 +314,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
@@ -328,8 +329,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
@@ -343,8 +344,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
@@ -356,12 +357,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotX = std::stoi(text);
+            int newRotX = Hex::stoh(text);
             rotationX = newRotX;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
+            SetWindowTextA(Global::windowValues[5], Hex::to_string(rotationX).c_str());
             break;
         }
         catch (...) { break; }
@@ -371,12 +372,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotY = std::stoi(text);
+            int newRotY = Hex::stoh(text);
             rotationY = newRotY;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
+            SetWindowTextA(Global::windowValues[6], Hex::to_string(rotationY).c_str());
             break;
         }
         catch (...) { break; }
@@ -386,12 +387,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotZ = std::stoi(text);
+            int newRotZ = Hex::stoh(text);
             rotationZ = newRotZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+            SetWindowTextA(Global::windowValues[7], Hex::to_string(rotationZ).c_str());
             break;
         }
         catch (...) { break; }
@@ -403,8 +404,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newVar1 = std::stof(text);
             var1 = newVar1;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(var1).c_str());
             break;
@@ -418,8 +419,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newVar2 = std::stof(text);
             var2 = newVar2;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[9], std::to_string(var2).c_str());
             break;
@@ -433,8 +434,8 @@ void Unknown::updateValue(int btnIndex)
         {
             float newVar3 = std::stof(text);
             var3 = newVar3;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
             break;
@@ -465,9 +466,9 @@ void Unknown::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], Hex::to_string(rotationX).c_str());
+    SetWindowTextA(Global::windowValues[ 6], Hex::to_string(rotationY).c_str());
+    SetWindowTextA(Global::windowValues[ 7], Hex::to_string(rotationZ).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(var1).c_str());
     SetWindowTextA(Global::windowValues[ 9], std::to_string(var2).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
@@ -496,6 +497,6 @@ void Unknown::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
-    updateTransformationMatrix();
-    updateCollisionModel();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
 }

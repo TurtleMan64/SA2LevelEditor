@@ -104,13 +104,13 @@ CCUBE::CCUBE(char data[32], bool useDefaultValues)
     rotationZ = 0;
 	visible = true;
 	baseColour.set(1, 1, 1);
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 
     collideModelOriginal = CCUBE::cmBase;
 	collideModelTransformed = CCUBE::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModel();
+	updateCollisionModelYXZ();
 }
 
 bool CCUBE::isSA2Object()
@@ -219,8 +219,8 @@ void CCUBE::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
@@ -234,8 +234,8 @@ void CCUBE::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
@@ -249,8 +249,8 @@ void CCUBE::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
@@ -264,8 +264,8 @@ void CCUBE::updateValue(int btnIndex)
         {
             int newRotY = std::stoi(text);
             rotationY = newRotY;
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
             break;
@@ -283,8 +283,8 @@ void CCUBE::updateValue(int btnIndex)
                 MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
             }
             scaleX = fmaxf(0.0f, newScaleX);
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(scaleX).c_str());
             break;
@@ -302,8 +302,8 @@ void CCUBE::updateValue(int btnIndex)
                 MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
             }
             scaleY = fmaxf(0.0f, newScaleY);
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[9], std::to_string(scaleY).c_str());
             break;
@@ -321,8 +321,8 @@ void CCUBE::updateValue(int btnIndex)
                 MessageBox(NULL, "Warning: The total size of the cube is too large, object may not function properly in SA2.", "Warning", MB_OK);
             }
             scaleZ = fmaxf(0.0f, newScaleZ);
-            updateTransformationMatrix();
-            updateCollisionModel();
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[10], std::to_string(scaleZ).c_str());
             break;
@@ -384,8 +384,8 @@ void CCUBE::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 9], "");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
-    updateTransformationMatrix();
-    updateCollisionModel();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
 }
 
 void CCUBE::fillData(char data[32])

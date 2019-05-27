@@ -36,6 +36,7 @@ private:
     static void prepareTransparentRenderDepthOnly();
 
 public:
+    static float DEFAULT_VFOV;
     static const float NEAR_PLANE; //0.5
     static const float FAR_PLANE; //15000
 

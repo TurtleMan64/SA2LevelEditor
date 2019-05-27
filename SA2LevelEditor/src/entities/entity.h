@@ -45,10 +45,12 @@ public:
 
 	Matrix4f* getTransformationMatrix();
 
-	void updateTransformationMatrix();
+	void updateTransformationMatrixYXZ();
+    void updateTransformationMatrixYXZ(float sclX, float sclY, float sclZ);
+
+    void updateTransformationMatrixZY();
+    void updateTransformationMatrixZY(float sclX, float sclY, float sclZ);
 
     virtual bool isSA2Object();
-
-	//void updateTransformationMatrixSA2();
 };
 #endif

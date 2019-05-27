@@ -14,8 +14,12 @@ protected:
 public:
 	CollideableObject();
 
-	void updateCollisionModel(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+	void updateCollisionModelYXZ(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+	void updateCollisionModelYXZ();
+    void updateCollisionModelYXZ(float sclX, float sclY, float sclZ);
 
-	void updateCollisionModel();
+    void updateCollisionModelZY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+	void updateCollisionModelZY();
+    void updateCollisionModelZY(float sclX, float sclY, float sclZ);
 };
 #endif

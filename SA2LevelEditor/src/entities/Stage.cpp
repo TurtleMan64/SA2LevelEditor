@@ -27,7 +27,7 @@ Stage::Stage()
     scaleZ = 1;
 	visible = true;
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void Stage::step()

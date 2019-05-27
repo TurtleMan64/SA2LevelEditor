@@ -28,6 +28,7 @@ std::unordered_map<TexturedModel*, std::list<Entity*>> MasterRenderer::entitiesT
 
 Matrix4f* MasterRenderer::projectionMatrix = nullptr;
 
+float MasterRenderer::DEFAULT_VFOV = 75.0f;
 float MasterRenderer::VFOV = 0; //Vertical fov
 float MasterRenderer::HFOV = 0; //Horizontal fov
 const float MasterRenderer::NEAR_PLANE = 1.5f; //0.5 old value
@@ -52,7 +53,7 @@ void MasterRenderer::init()
     #ifdef OBS_MODE
     MasterRenderer::setVFOV(55.404052734375f);
     #else
-    MasterRenderer::setVFOV(75.0f);
+    MasterRenderer::setVFOV(MasterRenderer::DEFAULT_VFOV);
     #endif
 
 	MasterRenderer::makeProjectionMatrix();
@@ -187,6 +188,15 @@ void MasterRenderer::prepare()
 	glDepthMask(true);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(RED, GREEN, BLUE, 1);
+
+    if (Global::renderWithCulling)
+    {
+        MasterRenderer::enableCulling();
+    }
+    else
+    {
+        MasterRenderer::disableCulling();
+    }
 }
 
 void MasterRenderer::prepareTransparentRender()
@@ -196,6 +206,15 @@ void MasterRenderer::prepareTransparentRender()
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(false);
+
+    if (Global::renderWithCulling)
+    {
+        MasterRenderer::enableCulling();
+    }
+    else
+    {
+        MasterRenderer::disableCulling();
+    }
 }
 
 void MasterRenderer::prepareTransparentRenderDepthOnly()
@@ -207,6 +226,15 @@ void MasterRenderer::prepareTransparentRenderDepthOnly()
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(true);
+
+    if (Global::renderWithCulling)
+    {
+        MasterRenderer::enableCulling();
+    }
+    else
+    {
+        MasterRenderer::disableCulling();
+    }
 }
 
 void MasterRenderer::cleanUp()

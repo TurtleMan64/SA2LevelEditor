@@ -100,9 +100,24 @@ void Entity::setBaseColour(float red, float green, float blue)
 	baseColour.set(red, green, blue);
 }
 
-void Entity::updateTransformationMatrix()
+void Entity::updateTransformationMatrixYXZ()
 {
-	Maths::createTransformationMatrix(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+	Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixYXZ(float sclX, float sclY, float sclZ)
+{
+	Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+}
+
+void Entity::updateTransformationMatrixZY()
+{
+	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixZY(float sclX, float sclY, float sclZ)
+{
+	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
 Matrix4f* Entity::getTransformationMatrix()

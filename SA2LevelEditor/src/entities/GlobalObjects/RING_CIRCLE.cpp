@@ -132,12 +132,12 @@ void RING_CIRCLE::spawnChildren()
         Dummy* ring = new Dummy(&RING::models); INCR_NEW("Entity");
         ring->setPosition(&ringPos);
         ring->visible = true;
-        ring->updateTransformationMatrix();
+        ring->updateTransformationMatrixYXZ();
         Global::addEntity(ring);
 
         CollisionModel* cm = RING::cmBase->duplicateMe();
         cm->parent = this;
-        RING::cmBase->transformModel(cm, &ring->position, 0, 0, 0, 1, 1, 1);
+        RING::cmBase->transformModelYXZ(cm, &ring->position, 0, 0, 0, 1, 1, 1);
         CollisionChecker::addCollideModel(cm);
 
         rings.push_back(ring);

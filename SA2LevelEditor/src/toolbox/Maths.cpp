@@ -39,6 +39,16 @@ float Maths::toDegrees(int bams)
 	return (bams/182.044444444444444f);
 }
 
+int Maths::radToBams(float rad)
+{
+    return degToBams(toDegrees(rad));
+}
+
+int Maths::degToBams(float deg)
+{
+    return (int)(deg*182.044444444444444f);
+}
+
 /*
 ** Blank Matrix4f should have already been created. This function does not allocate any memory to matrix.
 */
@@ -91,7 +101,7 @@ void Maths::createTransformationMatrix(Matrix4f* result, Vector2f* translation, 
 }
 
 //Based on how sa2 calculates rotations
-void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
+void Maths::createTransformationMatrixYXZ(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
 {
 	matrix->setIdentity();
 	matrix->translate(translation);
@@ -110,6 +120,23 @@ void Maths::createTransformationMatrix(Matrix4f* matrix, Vector3f* translation, 
 	matrix->scale(&vec);
 }
 
+void Maths::createTransformationMatrixZY(Matrix4f* matrix, Vector3f* translation, int ry, int rz,  float sX, float sY, float sZ)
+{
+    matrix->setIdentity();
+	matrix->translate(translation);
+	Vector3f vec;
+
+    //Z, then Y. No X
+
+    vec.set(0, 1, 0);
+	matrix->rotate(Maths::toRadians(ry), &vec);
+
+	vec.set(0, 0, 1);
+	matrix->rotate(Maths::toRadians(rz), &vec);
+
+	vec.set(sX, sY, sZ);
+	matrix->scale(&vec);
+}
 
 void Maths::createViewMatrix(Matrix4f* matrix, Camera* cam)
 {

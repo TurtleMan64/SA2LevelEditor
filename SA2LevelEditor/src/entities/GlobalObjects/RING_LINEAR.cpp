@@ -137,12 +137,12 @@ void RING_LINEAR::spawnChildren()
         Dummy* ring = new Dummy(&RING::models); INCR_NEW("Entity");
         ring->setPosition(&ringPos);
         ring->visible = true;
-        ring->updateTransformationMatrix();
+        ring->updateTransformationMatrixYXZ();
         Global::addEntity(ring);
 
         CollisionModel* cm = RING::cmBase->duplicateMe();
         cm->parent = this;
-        RING::cmBase->transformModel(cm, &ring->position, 0, 0, 0, 1, 1, 1);
+        RING::cmBase->transformModelYXZ(cm, &ring->position, 0, 0, 0, 1, 1, 1);
         CollisionChecker::addCollideModel(cm);
 
         rings.push_back(ring);
@@ -226,16 +226,7 @@ void RING_LINEAR::updateValue(int btnIndex)
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
 
-                    for (Dummy* ring : rings)
-                    {
-                        Global::deleteEntity(ring);
-                    }
-                    for (CollisionModel* cm : cms)
-                    {
-                        CollisionChecker::deleteCollideModel(cm);
-                    }
-                    rings.clear();
-                    cms.clear();
+                    despawnChildren();
 
                     Global::deleteEntity(this);
                 }

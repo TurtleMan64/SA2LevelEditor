@@ -536,7 +536,7 @@ void DisplayManager::loadGraphicsSettings()
 			{
 				if (strcmp(lineSplit[0], "FOV") == 0)
 				{
-					MasterRenderer::setVFOV(std::stof(lineSplit[1], nullptr));
+                    MasterRenderer::DEFAULT_VFOV = std::stof(lineSplit[1], nullptr);
 				}
 				else if (strcmp(lineSplit[0], "Anti-Aliasing_Samples") == 0)
 				{

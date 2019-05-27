@@ -38,7 +38,7 @@ StageTransparent::StageTransparent(const char* objFolder, const char* objFilenam
 		loadModel(&StageTransparent::models, objFolder, objFilename);
 	}
 	
-	updateTransformationMatrix();
+	updateTransformationMatrixYXZ();
 }
 
 void StageTransparent::step()
