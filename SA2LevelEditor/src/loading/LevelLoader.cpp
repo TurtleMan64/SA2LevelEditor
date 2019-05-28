@@ -43,6 +43,7 @@
 #include "../entities/GlobalObjects/rocket.h"
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
+#include "../entities/GlobalObjects/bunchin.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -319,6 +320,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x41: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x5A: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
@@ -334,6 +336,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x0A: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0B: return new ROCKET     (data, useDefaultValues);
                 case 0x19: return new LIGHT_SW   (data, useDefaultValues);
+				case 0x21: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x22: return new RING_LINEAR(data, useDefaultValues);
                 case 0x23: return new RING_CIRCLE(data, useDefaultValues);
                 case 0x42: return new SPHERE     (data, useDefaultValues);
@@ -357,6 +360,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x5E: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
@@ -376,6 +380,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
                 case 0x2E: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x38: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3C: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
@@ -395,6 +400,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
@@ -416,6 +422,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x5B: return new STOPLOCKON (data, useDefaultValues);
                 case 0x5D: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x60: return new LINKLINK   (data, useDefaultValues);
@@ -437,6 +444,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
@@ -452,6 +460,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    3: return new KASOKU     (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
+				case 0x10: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x11: return new RING_LINEAR(data, useDefaultValues);
                 case 0x12: return new RING_CIRCLE(data, useDefaultValues);
                 case 0x4A: return new SPHERE     (data, useDefaultValues);
@@ -475,6 +484,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
@@ -491,6 +501,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
                 case 0x0E: return new EMERALD    (data, useDefaultValues);
+				case 0x0F: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x10: return new RING_LINEAR(data, useDefaultValues);
                 case 0x11: return new RING_CIRCLE(data, useDefaultValues);
                 case 0x33: return new SPHERE     (data, useDefaultValues);
@@ -516,6 +527,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
                 case 0x2E: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3B: return new LINKLINK   (data, useDefaultValues);
                 case 0x3C: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x49: return new STOPLOCKON (data, useDefaultValues);
@@ -537,6 +549,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x53: return new LIGHT_SW   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
@@ -556,6 +569,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x4A: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
@@ -575,6 +589,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2D: return new SPHERE     (data, useDefaultValues);
                 case 0x2E: return new CCYL       (data, useDefaultValues);
                 case 0x2F: return new CCUBE      (data, useDefaultValues);
+				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x3C: return new LINKLINK   (data, useDefaultValues);
                 case 0x51: return new LIGHT_SW   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
