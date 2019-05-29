@@ -157,6 +157,7 @@
     <ClCompile Include="src\entities\Dummy.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\BIGJUMP.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\BUNCHIN.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\CCUBE.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\CCYL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\EMERALD.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="src\entities\dummy.h" />
     <ClInclude Include="src\entities\entity.h" />
     <ClInclude Include="src\entities\GlobalObjects\bigjump.h" />
+    <ClInclude Include="src\entities\GlobalObjects\bunchin.h" />
     <ClInclude Include="src\entities\GlobalObjects\ccube.h" />
     <ClInclude Include="src\entities\GlobalObjects\ccyl.h" />
     <ClInclude Include="src\entities\GlobalObjects\emerald.h" />

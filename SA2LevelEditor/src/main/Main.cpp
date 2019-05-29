@@ -65,6 +65,7 @@
 #include "../entities/GlobalObjects/rocket.h"
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
+#include "../entities/GlobalObjects/bunchin.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -565,6 +566,7 @@ int Global::main()
     ROCKET::loadStaticModels();
     LINKLINK::loadStaticModels();
     STOPLOCKON::loadStaticModels();
+	BUNCHIN::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
