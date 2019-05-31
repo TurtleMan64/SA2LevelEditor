@@ -32,6 +32,10 @@ void SA2Object::fillData(char data[32])
     data;
 }
 
+int SA2Object::getSwitchID() {
+	return -1;
+}
+
 bool SA2Object::isSA2Object()
 {
     return true;

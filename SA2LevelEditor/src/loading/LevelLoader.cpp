@@ -44,6 +44,7 @@
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
 #include "../entities/GlobalObjects/bunchin.h"
+#include "../entities/GlobalObjects/switch.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -316,6 +317,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
@@ -333,6 +335,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
                 case 0x0A: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0B: return new ROCKET     (data, useDefaultValues);
                 case 0x19: return new LIGHT_SW   (data, useDefaultValues);
@@ -356,6 +359,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
@@ -376,6 +380,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
@@ -396,6 +401,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
@@ -417,6 +423,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
@@ -439,6 +446,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
@@ -458,6 +466,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
 				case 0x10: return new BUNCHIN	 (data, useDefaultValues);
@@ -480,6 +489,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
@@ -498,6 +508,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
                 case 0x0E: return new EMERALD    (data, useDefaultValues);
@@ -523,6 +534,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
@@ -544,6 +556,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
@@ -564,6 +577,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
@@ -584,6 +598,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
                 case 0x2D: return new SPHERE     (data, useDefaultValues);

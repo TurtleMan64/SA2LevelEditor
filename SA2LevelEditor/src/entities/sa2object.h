@@ -42,6 +42,9 @@ public:
     // 32 byte buffer and write those to the set file
     virtual void fillData(char data[32]);
 
+	//returns ID of switch linked to the object, or -1 otherwise
+	virtual int getSwitchID();
+
     bool isSA2Object();
 
     virtual int getIntRotationX();

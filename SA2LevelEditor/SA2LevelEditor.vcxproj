@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{A6F69EA1-ED67-48F7-8E23-CFAFC6297DE2}</ProjectGuid>
     <RootNamespace>SA2LevelEditor</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -161,6 +161,7 @@
     <ClCompile Include="src\entities\GlobalObjects\CCUBE.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\CCYL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\EMERALD.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SWITCH.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KASOKU.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LIGHT_SW.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LINKLINK.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="src\entities\GlobalObjects\ccube.h" />
     <ClInclude Include="src\entities\GlobalObjects\ccyl.h" />
     <ClInclude Include="src\entities\GlobalObjects\emerald.h" />
+    <ClInclude Include="src\entities\GlobalObjects\switch.h" />
     <ClInclude Include="src\entities\GlobalObjects\kasoku.h" />
     <ClInclude Include="src\entities\GlobalObjects\lightsw.h" />
     <ClInclude Include="src\entities\GlobalObjects\linklink.h" />
