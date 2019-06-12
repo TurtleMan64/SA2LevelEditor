@@ -161,6 +161,7 @@
     <ClCompile Include="src\entities\GlobalObjects\CCUBE.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\CCYL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\EMERALD.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\EMERALD_F.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KASOKU.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LIGHT_SW.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LINKLINK.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="src\entities\GlobalObjects\ccube.h" />
     <ClInclude Include="src\entities\GlobalObjects\ccyl.h" />
     <ClInclude Include="src\entities\GlobalObjects\emerald.h" />
+    <ClInclude Include="src\entities\GlobalObjects\emeraldf.h" />
     <ClInclude Include="src\entities\GlobalObjects\kasoku.h" />
     <ClInclude Include="src\entities\GlobalObjects\lightsw.h" />
     <ClInclude Include="src\entities\GlobalObjects\linklink.h" />

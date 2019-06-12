@@ -4,6 +4,7 @@
 class TexturedModel;
 class CollisionModel;
 class Dummy;
+class EMERALD_F;
 
 #include <list>
 #include "../entity.h"
@@ -18,7 +19,9 @@ private:
 
     Dummy* hitbox;
 
-    int pieceID;
+    short pieceID;
+    short rotY;
+    short rotZ;
 
     float var1;
     float radius;
@@ -27,6 +30,7 @@ private:
 public:
 	EMERALD();
 	EMERALD(char data[32], bool useDefaultValues);
+    friend class EMERALD_F;
 
 	void step();
 

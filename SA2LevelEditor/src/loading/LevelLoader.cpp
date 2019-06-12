@@ -44,6 +44,7 @@
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
 #include "../entities/GlobalObjects/bunchin.h"
+#include "../entities/GlobalObjects/emeraldf.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -551,6 +552,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE      (data, useDefaultValues);
 				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x53: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x5E: return new EMERALD_F  (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 

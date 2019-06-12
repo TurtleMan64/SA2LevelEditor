@@ -467,9 +467,16 @@ void BIGJUMP::spawnGuides()
 
         count++;
 
-        Vector3f diffH = pos-position;
-        diffH.y = 0;
-        if (diffH.length() > 50.0f || count > cooldown/2)
+        //Vector3f diffH = pos-position;
+        //diffH.y = 0;
+        //if (diffH.length() > 50.0f || count > cooldown/2)
+        //{
+        //    speedV += GRAVITY;
+        //}
+
+        Vector3f diff = pos-position;
+        //33 might be variable. 20 is hard coded
+        if (diff.length() > 33.0f || count > 20)
         {
             speedV += GRAVITY;
         }

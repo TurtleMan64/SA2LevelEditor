@@ -566,7 +566,7 @@ int Global::main()
     ROCKET::loadStaticModels();
     LINKLINK::loadStaticModels();
     STOPLOCKON::loadStaticModels();
-	BUNCHIN::loadStaticModels();
+    BUNCHIN::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

@@ -357,12 +357,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotX = Hex::stoh(text);
-            rotationX = newRotX;
+            short newRotX = Hex::stohshort(text);
+            rotationX = (int)newRotX;
             updateTransformationMatrixYXZ();
             updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], Hex::to_string(rotationX).c_str());
+            SetWindowTextA(Global::windowValues[5], Hex::to_string_short((short)rotationX).c_str());
             break;
         }
         catch (...) { break; }
@@ -372,12 +372,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotY = Hex::stoh(text);
-            rotationY = newRotY;
+            short newRotY = Hex::stohshort(text);
+            rotationY = (int)newRotY;
             updateTransformationMatrixYXZ();
             updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], Hex::to_string(rotationY).c_str());
+            SetWindowTextA(Global::windowValues[6], Hex::to_string_short((short)rotationY).c_str());
             break;
         }
         catch (...) { break; }
@@ -387,12 +387,12 @@ void Unknown::updateValue(int btnIndex)
     {
         try
         {
-            int newRotZ = Hex::stoh(text);
-            rotationZ = newRotZ;
+            short newRotZ = Hex::stohshort(text);
+            rotationZ = (int)newRotZ;
             updateTransformationMatrixYXZ();
             updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], Hex::to_string(rotationZ).c_str());
+            SetWindowTextA(Global::windowValues[7], Hex::to_string_short((short)rotationZ).c_str());
             break;
         }
         catch (...) { break; }
@@ -466,9 +466,9 @@ void Unknown::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], Hex::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], Hex::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], Hex::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], Hex::to_string_short((short)rotationX).c_str());
+    SetWindowTextA(Global::windowValues[ 6], Hex::to_string_short((short)rotationY).c_str());
+    SetWindowTextA(Global::windowValues[ 7], Hex::to_string_short((short)rotationZ).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(var1).c_str());
     SetWindowTextA(Global::windowValues[ 9], std::to_string(var2).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
