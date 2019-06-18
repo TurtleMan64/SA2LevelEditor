@@ -17,6 +17,11 @@ private:
 
     friend class RING_LINEAR;
     friend class RING_CIRCLE;
+	friend class SWDRNGL;
+	friend class SWDRNGC;
+	friend class KDDRNGL;
+	friend class KDDRNGC;
+	friend class SG_RING;
 
 public:
 	RING();

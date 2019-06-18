@@ -323,7 +323,7 @@ void SWITCH::updateValue(int btnIndex)
 	{
 		try
 		{
-			float newVar1 = std::stof(text);
+			int newVar1 = std::stof(text);
 			type = newVar1;
 			updateTransformationMatrixYXZ();
 			updateCollisionModelYXZ();
@@ -478,14 +478,14 @@ void SWITCH::fillData(char data[32])
 	data[18] = (char)(*(ptr + 1));
 	data[19] = (char)(*(ptr + 0));
 
-	float var1 = type;
+	int var1 = type;
 	ptr = (char*)(&var1);
 	data[20] = (char)(*(ptr + 3));
 	data[21] = (char)(*(ptr + 2));
 	data[22] = (char)(*(ptr + 1));
 	data[23] = (char)(*(ptr + 0));
 
-	float var2 = triggerID;
+	int var2 = triggerID;
 	ptr = (char*)(&var2);
 	data[24] = (char)(*(ptr + 3));
 	data[25] = (char)(*(ptr + 2));

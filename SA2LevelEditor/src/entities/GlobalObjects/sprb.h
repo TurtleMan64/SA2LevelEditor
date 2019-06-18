@@ -26,6 +26,8 @@ private:
     void spawnGuides();
     void despawnGuides();
 
+	friend class KDSPRINGB;
+	friend class SG_SPRB;
 public:
 	SPRB();
 	SPRB(char data[32], bool useDefaultValues);

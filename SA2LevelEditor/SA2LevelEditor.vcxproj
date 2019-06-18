@@ -162,6 +162,12 @@
     <ClCompile Include="src\entities\GlobalObjects\CCYL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\EMERALD.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\IRONBALL2.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\KDDRNGC.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\KDDRNGL.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\KDSPRING.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\KDSPRINGB.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SWDRNGC.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SWDRNGL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWITCH.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KASOKU.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LIGHT_SW.cpp" />
@@ -227,6 +233,12 @@
     <ClInclude Include="src\entities\GlobalObjects\ccyl.h" />
     <ClInclude Include="src\entities\GlobalObjects\emerald.h" />
     <ClInclude Include="src\entities\GlobalObjects\ironball2.h" />
+    <ClInclude Include="src\entities\GlobalObjects\kddrngc.h" />
+    <ClInclude Include="src\entities\GlobalObjects\kddrngl.h" />
+    <ClInclude Include="src\entities\GlobalObjects\kdspringb.h" />
+    <ClInclude Include="src\entities\GlobalObjects\kdspring.h" />
+    <ClInclude Include="src\entities\GlobalObjects\swdrngc.h" />
+    <ClInclude Include="src\entities\GlobalObjects\swdrngl.h" />
     <ClInclude Include="src\entities\GlobalObjects\switch.h" />
     <ClInclude Include="src\entities\GlobalObjects\kasoku.h" />
     <ClInclude Include="src\entities\GlobalObjects\lightsw.h" />

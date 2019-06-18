@@ -41,7 +41,7 @@ IRONBALL2::IRONBALL2(char data[32], bool useDefaultValues)
 	memset(ptr + 1, data[6], 1);
 
 	rotZ = (int)rZ;
-	oscillates = (int)rZ / 2 % 2; //result is either 0 or 1, which are falsy and truthy and the results we want.
+	oscillates = rotZ / 2 % 2; //result is either 0 or 1, which are falsy and truthy and the results we want.
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -79,10 +79,10 @@ IRONBALL2::IRONBALL2(char data[32], bool useDefaultValues)
 
 	float var3;
 	char* v3 = (char*)&var3;
-	v2[3] = data[24];
-	v2[2] = data[25];
-	v2[1] = data[26];
-	v2[0] = data[27];
+	v3[3] = data[24];
+	v3[2] = data[25];
+	v3[1] = data[26];
+	v3[0] = data[27];
 	oscillation = var3;
 
     if (useDefaultValues)
@@ -401,7 +401,7 @@ void IRONBALL2::updateValue(int btnIndex)
 	{
 		try
 		{
-			float newRotZ = std::stof(text);
+			int newRotZ = std::stof(text);
 			rotZ = newRotZ;
 			oscillates = (int)rotZ / 2 % 2;
 			updateTransformationMatrixYXZ();

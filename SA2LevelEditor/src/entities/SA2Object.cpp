@@ -36,6 +36,10 @@ int SA2Object::getSwitchID() {
 	return -1;
 }
 
+int SA2Object::getShrineID() {
+	return -1;
+}
+
 bool SA2Object::isSA2Object()
 {
     return true;
