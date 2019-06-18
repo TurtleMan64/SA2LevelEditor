@@ -27,7 +27,7 @@ private:
     void despawnGuides();
 
 	friend class KDSPRING;
-	friend class SR_SPRA;
+	friend class SG_SPRA;
 public:
 	SPRA();
 	SPRA(char data[32], bool useDefaultValues);

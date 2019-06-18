@@ -4,7 +4,7 @@
 
 #include "../entity.h"
 #include "../../toolbox/vector.h"
-#include "bunchin.h"
+#include "knudai.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
 #include "../../loading/levelloader.h"
@@ -19,15 +19,15 @@
 
 
 
-std::list<TexturedModel*> BUNCHIN::models;
-CollisionModel* BUNCHIN::cmBase;
+std::list<TexturedModel*> KNUDAI::models;
+CollisionModel* KNUDAI::cmBase;
 
-BUNCHIN::BUNCHIN()
+KNUDAI::KNUDAI()
 {
 
 }
 
-BUNCHIN::BUNCHIN(char data[32], bool useDefaultValues)
+KNUDAI::KNUDAI(char data[32], bool useDefaultValues)
 {
 	std::memcpy(rawData, data, 32);
 
@@ -49,9 +49,9 @@ BUNCHIN::BUNCHIN(char data[32], bool useDefaultValues)
 	memset(ptr, data[7], 1);
 	memset(ptr + 1, data[6], 1);
 
-	dropType = (int)rX;
+	triggerID = (int)rX;
 	rotationY = (int)rY;
-	switchID = (int)rZ;
+	rotationZ = (int)rZ;
 
 	char* x = (char*)&position.x;
 	x[3] = data[8];
@@ -76,53 +76,53 @@ BUNCHIN::BUNCHIN(char data[32], bool useDefaultValues)
 	v1[2] = data[21];
 	v1[1] = data[22];
 	v1[0] = data[23];
-	scaleX = scaleToUnits(scaleX);
 
-	float var2;
-	char* v2 = (char*)&var2;
+	char* v2 = (char*)&scaleY;
 	v2[3] = data[24];
 	v2[2] = data[25];
 	v2[1] = data[26];
 	v2[0] = data[27];
-	weightHeight = var2 + 30.0f;
 
-	char* v3 = (char*)&scaleZ;
+	float var3;
+	char* v3 = (char*)&var3;
 	v3[3] = data[28];
 	v3[2] = data[29];
 	v3[1] = data[30];
 	v3[0] = data[31];
-	scaleZ = scaleToUnits(scaleZ);
 
 	if (useDefaultValues)
 	{
 		rotationY = 0;
-		dropType = 0;
-		weightHeight = 30.0f;
-		switchID = 0;
-		scaleX = scaleToUnits(0);
-		scaleZ = scaleToUnits(0);
+		rotationZ = 0;
+		triggerID = 0;
 	}
 
 	rotationX = 0;
-	rotationZ = 0;
-	scaleY = 10;
+	scaleX = 1;
+	scaleY = 1;
+	scaleZ = 1;
+	updateID();
 	visible = true;
 	baseColour.set(1, 1, 1);
 	updateTransformationMatrixYXZ();
 
-	collideModelOriginal = BUNCHIN::cmBase;
-	collideModelTransformed = BUNCHIN::cmBase->duplicateMe();
+	collideModelOriginal = KNUDAI::cmBase;
+	collideModelTransformed = KNUDAI::cmBase->duplicateMe();
 	collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
 	updateCollisionModelYXZ();
 }
 
-bool BUNCHIN::isSA2Object()
+int KNUDAI::getShrineID() {
+	return triggerID;
+}
+
+bool KNUDAI::isSA2Object()
 {
 	return true;
 }
 
-void BUNCHIN::step()
+void KNUDAI::step()
 {
 	if (Global::selectedSA2Object == this)
 	{
@@ -130,55 +130,50 @@ void BUNCHIN::step()
 	}
 	else
 	{
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
-			baseColour.set(1.0f, 1.0f, 2.0f);
-		}
-		else {
-			baseColour.set(1.0f, 1.0f, 1.0f);
-		}
-		if (guides.size() > 0)
+		baseColour.set(1.0f, 1.0f, 1.0f);
+		if (linkedObjects.size() > 0)
 		{
-			despawnGuides();
+			unhighlight();
 			Global::redrawWindow = true;
 		}
 	}
 }
 
-std::list<TexturedModel*>* BUNCHIN::getModels()
+std::list<TexturedModel*>* KNUDAI::getModels()
 {
-	return &BUNCHIN::models;
+	return &KNUDAI::models;
 }
 
-void BUNCHIN::loadStaticModels()
+void KNUDAI::loadStaticModels()
 {
-	if (BUNCHIN::models.size() > 0)
+	if (KNUDAI::models.size() > 0)
 	{
 		return;
 	}
 
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading BUNCHIN static models...\n");
+	std::fprintf(stdout, "Loading KNUDAI static models...\n");
 	#endif
 
-	loadModel(&BUNCHIN::models, "res/Models/GlobalObjects/Bunchin/", "Unknown");
+	loadModel(&KNUDAI::models, "res/Models/GlobalObjects/Knudai/", "Knudai");
 
-	if (BUNCHIN::cmBase == nullptr)
+	if (KNUDAI::cmBase == nullptr)
 	{
-		BUNCHIN::cmBase = loadCollisionModel("res/Models/GlobalObjects/Bunchin/", "Unknown");
+		KNUDAI::cmBase = loadCollisionModel("res/Models/GlobalObjects/Knudai/", "Knudai");
 	}
 }
 
-void BUNCHIN::deleteStaticModels()
+void KNUDAI::deleteStaticModels()
 {
 #ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting BUNCHIN static models...\n");
+	std::fprintf(stdout, "Deleting KNUDAI static models...\n");
 #endif
 
-	Entity::deleteModels(&BUNCHIN::models);
-	Entity::deleteCollisionModel(&BUNCHIN::cmBase);
+	Entity::deleteModels(&KNUDAI::models);
+	Entity::deleteCollisionModel(&KNUDAI::cmBase);
 }
 
-void BUNCHIN::updateValue(int btnIndex)
+void KNUDAI::updateValue(int btnIndex)
 {
 	char buf[128];
 	GetWindowTextA(Global::windowValues[btnIndex], buf, 128);
@@ -219,7 +214,7 @@ void BUNCHIN::updateValue(int btnIndex)
 					newObject->updateEditorWindows();
 					Global::redrawWindow = true;
 					CollisionChecker::deleteCollideModel(collideModelTransformed);
-					despawnGuides();
+					unhighlight();
 					Global::deleteEntity(this);
 					return;
 				}
@@ -278,12 +273,12 @@ void BUNCHIN::updateValue(int btnIndex)
 	{
 		try
 		{
-			int newRotX = std::stoi(text);
-			dropType = newRotX;
+			int newID = std::stoi(text);
+			triggerID = newID;
 			updateTransformationMatrixYXZ();
 			updateCollisionModelYXZ();
 			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[5], std::to_string(dropType).c_str());
+			SetWindowTextA(Global::windowValues[5], std::to_string(triggerID).c_str());
 			break;
 		}
 		catch (...) { break; }
@@ -309,56 +304,11 @@ void BUNCHIN::updateValue(int btnIndex)
 		try
 		{
 			int newRotZ = std::stoi(text);
-			switchID = newRotZ;
+			rotationZ = newRotZ;
 			updateTransformationMatrixYXZ();
 			updateCollisionModelYXZ();
 			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[7], std::to_string(switchID).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
-
-	case 8:
-	{
-		try
-		{
-			float newVar1 = std::stof(text);
-			scaleX = scaleToUnits(newVar1);
-			updateTransformationMatrixYXZ();
-			updateCollisionModelYXZ();
-			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[8], std::to_string(newVar1).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
-
-	case 9:
-	{
-		try
-		{
-			int newVar2 = std::stoi(text);
-			weightHeight = 30.0f + newVar2;
-			updateTransformationMatrixYXZ();
-			updateCollisionModelYXZ();
-			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[9], std::to_string(newVar2).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
-
-	case 10:
-	{
-		try
-		{
-			float newVar3 = std::stof(text);
-			scaleZ = scaleToUnits(newVar3);
-			updateTransformationMatrixYXZ();
-			updateCollisionModelYXZ();
-			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[10], std::to_string(newVar3).c_str());
+			SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
 			break;
 		}
 		catch (...) { break; }
@@ -367,34 +317,57 @@ void BUNCHIN::updateValue(int btnIndex)
 	default: break;
 	}
 
-	spawnGuides();
+	highlight();
 }
 
-void BUNCHIN::updateEditorWindows()
+void KNUDAI::updateID() {
+	linkedObjects.clear();
+	/*for (SA2Object* object in Global::Entities) {
+		if([object is connected with a switch] && object.switchID == triggerID){
+			linkedObjects.push_back(object);
+		}	
+	}*/
+}
+
+void KNUDAI::highlight() {
+	for (SA2Object* object : linkedObjects)
+	{
+		object->baseColour.set(1.75f, 1.75f, 1.75f);
+	}
+}
+
+void KNUDAI::unhighlight() {
+	for(SA2Object* object : linkedObjects)
+	{
+		object->baseColour.set(1.00f, 1.00f, 1.00f);
+	}
+}
+
+void KNUDAI::updateEditorWindows()
 {
 	SetWindowTextA(Global::windowLabels[0], "ID");
 	SetWindowTextA(Global::windowLabels[1], "Name");
 	SetWindowTextA(Global::windowLabels[2], "Position X");
 	SetWindowTextA(Global::windowLabels[3], "Position Y");
 	SetWindowTextA(Global::windowLabels[4], "Position Z");
-	SetWindowTextA(Global::windowLabels[5], "Falling Type");
+	SetWindowTextA(Global::windowLabels[5], "Trigger ID");
 	SetWindowTextA(Global::windowLabels[6], "Rotation Y");
-	SetWindowTextA(Global::windowLabels[7], "Switch ID");
-	SetWindowTextA(Global::windowLabels[8], "Scale X");
-	SetWindowTextA(Global::windowLabels[9], "Drop Height");
-	SetWindowTextA(Global::windowLabels[10], "Scale Z");
+	SetWindowTextA(Global::windowLabels[7], "Rotation Z");
+	SetWindowTextA(Global::windowLabels[8], "");
+	SetWindowTextA(Global::windowLabels[9], "");
+	SetWindowTextA(Global::windowLabels[10], "");
 
 	SetWindowTextA(Global::windowValues[0], std::to_string(ID).c_str());
-	SetWindowTextA(Global::windowValues[1], "BUNCHIN");
+	SetWindowTextA(Global::windowValues[1], "KNUDAI");
 	SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
 	SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
 	SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
-	SetWindowTextA(Global::windowValues[5], std::to_string(dropType).c_str());
+	SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
 	SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
-	SetWindowTextA(Global::windowValues[7], std::to_string(switchID).c_str());
-	SetWindowTextA(Global::windowValues[8], std::to_string(unitsToScale(scaleX)).c_str());
-	SetWindowTextA(Global::windowValues[9], std::to_string(weightHeight - 30.0f).c_str());
-	SetWindowTextA(Global::windowValues[10], std::to_string(unitsToScale(scaleZ)).c_str());
+	SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+	SetWindowTextA(Global::windowValues[8], "");
+	SetWindowTextA(Global::windowValues[9], "");
+	SetWindowTextA(Global::windowValues[10], "");
 
 	SendMessageA(Global::windowValues[0], EM_SETREADONLY, 0, 0);
 	SendMessageA(Global::windowValues[1], EM_SETREADONLY, 1, 0);
@@ -409,79 +382,32 @@ void BUNCHIN::updateEditorWindows()
 	SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 
 	SetWindowTextA(Global::windowDescriptions[0], "");
-	SetWindowTextA(Global::windowDescriptions[1], "Weight Trap");
+	SetWindowTextA(Global::windowDescriptions[1], "Switch");
 	SetWindowTextA(Global::windowDescriptions[2], "");
 	SetWindowTextA(Global::windowDescriptions[3], "");
 	SetWindowTextA(Global::windowDescriptions[4], "");
-	SetWindowTextA(Global::windowDescriptions[5], "Type of weight: 0 drops repeatedly, 1 drops when underneath and resets when away, 2 drops when underneath and stays down.");
+	SetWindowTextA(Global::windowDescriptions[5], "An ID that tells the game what shrine-activated objects to trigger.");
 	SetWindowTextA(Global::windowDescriptions[6], "");
-	SetWindowTextA(Global::windowDescriptions[7], "Hitting a SWITCH with RotationX equal to this number will disable the weight.");
-	SetWindowTextA(Global::windowDescriptions[8], "Length is equal to 40 + 40 * value.");
-	SetWindowTextA(Global::windowDescriptions[9], "Height that the weight rises to above 30 units.");
-	SetWindowTextA(Global::windowDescriptions[10], "Length is equal to 40 + 40 * value.");
+	SetWindowTextA(Global::windowDescriptions[7], "");
+	SetWindowTextA(Global::windowDescriptions[8], "");
+	SetWindowTextA(Global::windowDescriptions[9], "");
+	SetWindowTextA(Global::windowDescriptions[10], "");
 
 	updateTransformationMatrixYXZ();
 	updateCollisionModelYXZ();
-	spawnGuides();
+	highlight();
 }
 
-void BUNCHIN::despawnGuides()
-{
-	for (Dummy* guide : guides)
-	{
-		Global::deleteEntity(guide);
-	}
-	guides.clear();
-	Global::deleteTransparentEntity(topWeight);
-	topWeight = nullptr;
-}
-
-void BUNCHIN::spawnGuides()
-{
-	despawnGuides();
-
-	Vector3f pos(&position);
-
-	for (int i = 0; i < 20; i++) //TODO hard coded value for number of frames
-	{
-		Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
-		guide->setPosition(&pos);
-		guide->visible = true;
-		guide->updateTransformationMatrixYXZ();
-		Global::addEntity(guide);
-		guides.push_back(guide);
-
-		pos.y += weightHeight / 20;
-	}
-	topWeight = new Dummy(&models); INCR_NEW("Entity");
-	topWeight->setPosition(&pos);
-	topWeight->setRotation(rotationX, rotationY, rotationZ);
-	topWeight->setScale(scaleX, scaleY, scaleZ);
-	topWeight->visible = true;
-	topWeight->updateTransformationMatrixYXZ();
-	Global::addTransparentEntity(topWeight);
-
-	printf("done\n\n");
-}
-
-float BUNCHIN::scaleToUnits(float scale) {
-	return 40 + std::max(0.f,scale) * 40;
-}
-
-float BUNCHIN::unitsToScale(float units) {
-	return (units - 40) / 40.0f;
-}
-
-void BUNCHIN::fillData(char data[32])
+void KNUDAI::fillData(char data[32])
 {
 	data[1] = (char)ID;
 
-	data[2] = (char)((dropType >> 8) & 0xFF);
-	data[3] = (char)((dropType >> 0) & 0xFF);
+	data[2] = (char)((triggerID >> 8) & 0xFF);
+	data[3] = (char)((triggerID >> 0) & 0xFF);
 	data[4] = (char)((rotationY >> 8) & 0xFF);
 	data[5] = (char)((rotationY >> 0) & 0xFF);
-	data[6] = (char)((switchID >> 8) & 0xFF);
-	data[7] = (char)((switchID >> 0) & 0xFF);
+	data[6] = (char)((rotationZ >> 8) & 0xFF);
+	data[7] = (char)((rotationZ >> 0) & 0xFF);
 
 	char* ptr = (char*)(&position.x);
 	data[8] = (char)(*(ptr + 3));
@@ -501,22 +427,19 @@ void BUNCHIN::fillData(char data[32])
 	data[18] = (char)(*(ptr + 1));
 	data[19] = (char)(*(ptr + 0));
 
-	float var1 = unitsToScale(scaleX);
-	ptr = (char*)(&var1);
+	ptr = (char*)(&scaleX);
 	data[20] = (char)(*(ptr + 3));
 	data[21] = (char)(*(ptr + 2));
 	data[22] = (char)(*(ptr + 1));
 	data[23] = (char)(*(ptr + 0));
 
-	float var2 = weightHeight - 30.0f;
-	ptr = (char*)(&var2);
+	ptr = (char*)(&scaleY);
 	data[24] = (char)(*(ptr + 3));
 	data[25] = (char)(*(ptr + 2));
 	data[26] = (char)(*(ptr + 1));
 	data[27] = (char)(*(ptr + 0));
 
-	float var3 = unitsToScale(scaleZ);
-	ptr = (char*)(&var3);
+	ptr = (char*)(&scaleZ);
 	data[28] = (char)(*(ptr + 3));
 	data[29] = (char)(*(ptr + 2));
 	data[30] = (char)(*(ptr + 1));

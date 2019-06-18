@@ -1,5 +1,5 @@
-#ifndef KDSPRING_H
-#define KDSPRING_H
+#ifndef SGSPRB_H
+#define SGSPRB_H
 
 class TexturedModel;
 class CollisionModel;
@@ -10,21 +10,22 @@ class Dummy;
 #include "../entity.h"
 #include "../sa2object.h"
 
-class KDSPRING : public SA2Object
+class SG_SPRB : public SA2Object
 {
 private:
+
     std::vector<Dummy*> guides;
 
     int controlLockTime;
     float power;
-	int shrineID;
+    float var3;
 
     void spawnGuides();
     void despawnGuides();
 
 public:
-	KDSPRING();
-	KDSPRING(char data[32], bool useDefaultValues);
+	SG_SPRB();
+	SG_SPRB(char data[32], bool useDefaultValues);
 
 	void step();
 

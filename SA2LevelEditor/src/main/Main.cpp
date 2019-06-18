@@ -68,6 +68,7 @@
 #include "../entities/GlobalObjects/bunchin.h"
 #include "../entities/GlobalObjects/switch.h"
 #include "../entities/GlobalObjects/ironball2.h"
+#include "../entities/GlobalObjects/knudai.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -571,6 +572,7 @@ int Global::main()
 	BUNCHIN::loadStaticModels();
 	SWITCH::loadStaticModels();
 	IRONBALL2::loadStaticModels();
+	KNUDAI::loadStaticModels();
 
     #endif
 

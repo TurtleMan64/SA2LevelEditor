@@ -1,30 +1,19 @@
-#ifndef KDSPRING_H
-#define KDSPRING_H
+#ifndef SGRING_H
+#define SGRING_H
 
 class TexturedModel;
 class CollisionModel;
-class Dummy;
 
 #include <list>
-#include <vector>
 #include "../entity.h"
 #include "../sa2object.h"
 
-class KDSPRING : public SA2Object
+class SG_RING : public SA2Object
 {
-private:
-    std::vector<Dummy*> guides;
-
-    int controlLockTime;
-    float power;
-	int shrineID;
-
-    void spawnGuides();
-    void despawnGuides();
 
 public:
-	KDSPRING();
-	KDSPRING(char data[32], bool useDefaultValues);
+	SG_RING();
+	SG_RING(char data[32], bool useDefaultValues);
 
 	void step();
 

@@ -165,7 +165,7 @@ void KDDRNGL::step()
 		if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
 			for (Dummy* ring : rings)
 			{
-				ring->setBaseColour(2.0f, 1.5f, 1.5f);
+				ring->setBaseColour(2.0f, 1.0f, 1.0f);
 			}
 		}
 		else {

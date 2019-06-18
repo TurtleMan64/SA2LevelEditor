@@ -130,7 +130,7 @@ void KDSPRINGB::step()
 	else
 	{
 		if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
-			baseColour.set(2.0f, 1.5f, 1.5f);
+			baseColour.set(2.0f, 1.0f, 1.0f);
 		}
 		else {
 			baseColour.set(1.0f, 0.5f, 0.5f);

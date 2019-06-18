@@ -160,11 +160,11 @@ void SWITCH::loadStaticModels()
 	std::fprintf(stdout, "Loading SWITCH static models...\n");
 	#endif
 
-	loadModel(&SWITCH::models, "res/Models/GlobalObjects/Switch/", "Switch"); //This is a placeholder still
+	loadModel(&SWITCH::models, "res/Models/GlobalObjects/Switch/", "Switch");
 
 	if (SWITCH::cmBase == nullptr)
 	{
-		SWITCH::cmBase = loadCollisionModel("res/Models/GlobalObjects/Switch/", "Switch"); //This is a placeholder still
+		SWITCH::cmBase = loadCollisionModel("res/Models/GlobalObjects/Switch/", "Switch");
 	}
 }
 

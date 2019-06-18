@@ -166,6 +166,10 @@
     <ClCompile Include="src\entities\GlobalObjects\KDDRNGL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KDSPRING.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KDSPRINGB.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\KNUDAI.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SG_RING.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SG_SPRA.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\SG_SPRB.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWDRNGC.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWDRNGL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWITCH.cpp" />
@@ -237,6 +241,10 @@
     <ClInclude Include="src\entities\GlobalObjects\kddrngl.h" />
     <ClInclude Include="src\entities\GlobalObjects\kdspringb.h" />
     <ClInclude Include="src\entities\GlobalObjects\kdspring.h" />
+    <ClInclude Include="src\entities\GlobalObjects\knudai.h" />
+    <ClInclude Include="src\entities\GlobalObjects\sgring.h" />
+    <ClInclude Include="src\entities\GlobalObjects\sgspra.h" />
+    <ClInclude Include="src\entities\GlobalObjects\sgsprb.h" />
     <ClInclude Include="src\entities\GlobalObjects\swdrngc.h" />
     <ClInclude Include="src\entities\GlobalObjects\swdrngl.h" />
     <ClInclude Include="src\entities\GlobalObjects\switch.h" />

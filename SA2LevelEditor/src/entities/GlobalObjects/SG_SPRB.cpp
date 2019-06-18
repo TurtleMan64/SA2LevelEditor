@@ -4,8 +4,8 @@
 
 #include "../entity.h"
 #include "../../toolbox/vector.h"
-#include "swdrngl.h"
-#include "ring.h"
+#include "sgsprb.h"
+#include "sprb.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
 #include "../../loading/levelloader.h"
@@ -14,16 +14,18 @@
 #include "../../collision/collisionchecker.h"
 #include "../../toolbox/maths.h"
 #include "../dummy.h"
+#include "../unknown.h"
 
 #include <list>
 
 
-SWDRNGL::SWDRNGL()
+
+SG_SPRB::SG_SPRB()
 {
 
 }
 
-SWDRNGL::SWDRNGL(char data[32], bool useDefaultValues)
+SG_SPRB::SG_SPRB(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
 
@@ -47,7 +49,7 @@ SWDRNGL::SWDRNGL(char data[32], bool useDefaultValues)
 
     rotationX = (int)rX;
     rotationY = (int)rY;
-    switchID = (int)rZ;
+    rotationZ = (int)rZ;
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -68,136 +70,92 @@ SWDRNGL::SWDRNGL(char data[32], bool useDefaultValues)
     z[0] = data[19];
 
     float var1;
-    char* d = (char*)&var1;
-    d[3] = data[20];
-    d[2] = data[21];
-    d[1] = data[22];
-    d[0] = data[23];
+    char* v1 = (char*)&var1;
+    v1[3] = data[20];
+    v1[2] = data[21];
+    v1[1] = data[22];
+    v1[0] = data[23];
+    controlLockTime = (int)var1;
 
-    float var3;
-    char* n = (char*)&var3;
-    n[3] = data[28];
-    n[2] = data[29];
-    n[1] = data[30];
-    n[0] = data[31];
+    char* v2 = (char*)&power;
+    v2[3] = data[24];
+    v2[2] = data[25];
+    v2[1] = data[26];
+    v2[0] = data[27];
+    power += 5.0f;
 
-    numRings = (int)var3;
-    ringDelta = var1 + 10.0f;
-
-    numRings = std::max(1, numRings);
-    numRings = std::min(8, numRings);
+    char* v3 = (char*)&var3;
+    v3[3] = data[28];
+    v3[2] = data[29];
+    v3[1] = data[30];
+    v3[0] = data[31];
 
     if (useDefaultValues)
     {
         rotationX = 0;
         rotationY = 0;
-		switchID = 0;
-        numRings = 5;
-        ringDelta = 20.0f;
+        rotationZ = 0;
+        controlLockTime = 30;
+        power = 8.0f;
+        var3 = 0.0f;
     }
 
-    spawnChildren();
+	scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
+	visible = true;
+	baseColour.set(1, 1, 1);
+	updateTransformationMatrixYXZ();
 
-	visible = false;
+    collideModelOriginal = SPRB::cmBase;
+	collideModelTransformed = SPRB::cmBase->duplicateMe();
+    collideModelTransformed->parent = this;
+	CollisionChecker::addCollideModel(collideModelTransformed);
+	updateCollisionModelYXZ();
 }
 
-void SWDRNGL::despawnChildren()
+bool SG_SPRB::isSA2Object()
 {
-    for (Dummy* ring : rings)
-    {
-        Global::deleteEntity(ring);
-    }
-
-    for (CollisionModel* cm : cms)
-    {
-        CollisionChecker::deleteCollideModel(cm);
-    }
-
-    rings.clear();
-    cms.clear();
+    return true;
 }
 
-void SWDRNGL::spawnChildren()
-{
-    Vector3f ringDirection(0, 0, 1);
-
-    Vector3f xAxis(1, 0, 0);
-    Vector3f yAxis(0, 1, 0);
-    ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::toRadians(rotationX));
-    ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::toRadians(rotationY));
-
-    ringDirection.setLength(ringDelta);
-    ringDirection.neg();
-
-    for (int i = 0; i < numRings; i++)
-    {
-        Vector3f currOff = ringDirection.scaleCopy((float)i);
-        Vector3f ringPos = position + currOff;
-
-        Dummy* ring = new Dummy(&RING::models); INCR_NEW("Entity");
-        ring->setPosition(&ringPos);
-        ring->visible = true;
-        ring->updateTransformationMatrixYXZ();
-        Global::addEntity(ring);
-
-        CollisionModel* cm = RING::cmBase->duplicateMe();
-        cm->parent = this;
-        RING::cmBase->transformModelYXZ(cm, &ring->position, 0, 0, 0, 1, 1, 1);
-        CollisionChecker::addCollideModel(cm);
-
-        rings.push_back(ring);
-        cms.push_back(cm);
-    }
-}
-
-void SWDRNGL::step()
+void SG_SPRB::step()
 {
     if (Global::selectedSA2Object == this)
     {
-        for (Dummy* ring : rings)
-        {
-            ring->setBaseColour(1.75f, 1.75f, 1.75f);
-        }
+        baseColour.set(1.75f, 1.75f, 1.75f);
     }
     else
     {
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(1.0f, 1.0f, 2.0f);
-			}
-		}
-		else {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(0.5f, 0.5f, 1.0f);
-			}
-		}
+        baseColour.set(0.5f, 1.0f, 0.5f);
+        if (guides.size() > 0)
+        {
+            despawnGuides();
+            Global::redrawWindow = true;
+        }
     }
 }
 
-std::list<TexturedModel*>* SWDRNGL::getModels()
+std::list<TexturedModel*>* SG_SPRB::getModels()
 {
-	return nullptr; //our children are visible, not us
+	return &SPRB::models;
 }
 
-void SWDRNGL::loadStaticModels()
+void SG_SPRB::loadStaticModels()
 {
-	//we just use RING models
+	//We just use SPRB models
 }
 
-void SWDRNGL::deleteStaticModels()
+void SG_SPRB::deleteStaticModels()
 {
-	//we just use RING models
+	//We just use SPRB models
 }
 
-void SWDRNGL::updateValue(int btnIndex)
+void SG_SPRB::updateValue(int btnIndex)
 {
     char buf[128];
     GetWindowTextA(Global::windowValues[btnIndex], buf, 128);
     std::string text = buf;
-
-    bool remakeRings = false;
 
     switch (btnIndex)
     {
@@ -233,10 +191,10 @@ void SWDRNGL::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-
-                    despawnChildren();
-
+                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    despawnGuides();
                     Global::deleteEntity(this);
+                    return;
                 }
             }
             break;
@@ -250,9 +208,10 @@ void SWDRNGL::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
@@ -264,9 +223,10 @@ void SWDRNGL::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
@@ -278,23 +238,25 @@ void SWDRNGL::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
     }
-
+    
     case 5:
     {
         try
         {
             int newRotX = std::stoi(text);
             rotationX = newRotX;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
@@ -306,9 +268,10 @@ void SWDRNGL::updateValue(int btnIndex)
         {
             int newRotY = std::stoi(text);
             rotationY = newRotY;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
@@ -320,9 +283,10 @@ void SWDRNGL::updateValue(int btnIndex)
         {
             int newRotZ = std::stoi(text);
             rotationZ = newRotZ;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
-            remakeRings = true;
             break;
         }
         catch (...) { break; }
@@ -332,11 +296,27 @@ void SWDRNGL::updateValue(int btnIndex)
     {
         try
         {
-            float newRingDelta = std::stof(text);
-            ringDelta = newRingDelta;
+            int newVar1 = std::stoi(text);
+            controlLockTime = newVar1;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[8], std::to_string(ringDelta).c_str());
-            remakeRings = true;
+            SetWindowTextA(Global::windowValues[8], std::to_string(controlLockTime).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
+
+    case 9:
+    {
+        try
+        {
+            float newVar2 = std::stof(text);
+            power = newVar2;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
+            Global::redrawWindow = true;
+            SetWindowTextA(Global::windowValues[9], std::to_string(power).c_str());
             break;
         }
         catch (...) { break; }
@@ -346,27 +326,24 @@ void SWDRNGL::updateValue(int btnIndex)
     {
         try
         {
-            float newRingCount = std::stof(text);
-            numRings = (int)newRingCount;
+            float newVar3 = std::stof(text);
+            var3 = newVar3;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[10], std::to_string(numRings).c_str());
-            remakeRings = true;
+            SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
             break;
         }
         catch (...) { break; }
     }
-    
+
     default: break;
     }
 
-    if (remakeRings)
-    {
-        despawnChildren();
-        spawnChildren();
-    }
+    spawnGuides();
 }
 
-void SWDRNGL::updateEditorWindows()
+void SG_SPRB::updateEditorWindows()
 {
     SetWindowTextA(Global::windowLabels[ 0], "ID"        );
     SetWindowTextA(Global::windowLabels[ 1], "Name"      );
@@ -376,21 +353,21 @@ void SWDRNGL::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[ 5], "Rotation X");
     SetWindowTextA(Global::windowLabels[ 6], "Rotation Y");
     SetWindowTextA(Global::windowLabels[ 7], "Rotation Z");
-    SetWindowTextA(Global::windowLabels[ 8], "Ring Delta");
-    SetWindowTextA(Global::windowLabels[ 9], "");
-    SetWindowTextA(Global::windowLabels[10], "Ring Count");
+    SetWindowTextA(Global::windowLabels[ 8], "Time Lock");
+    SetWindowTextA(Global::windowLabels[ 9], "Power");
+    SetWindowTextA(Global::windowLabels[10], "Unknown");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
-    SetWindowTextA(Global::windowValues[ 1], "SWDRNGL");
+    SetWindowTextA(Global::windowValues[ 1], "SG_SPRB");
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
     SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
     SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
     SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
-    SetWindowTextA(Global::windowValues[ 8], std::to_string(ringDelta).c_str());
-    SetWindowTextA(Global::windowValues[ 9], "");
-    SetWindowTextA(Global::windowValues[10], std::to_string(numRings).c_str());
+    SetWindowTextA(Global::windowValues[ 8], std::to_string(controlLockTime).c_str());
+    SetWindowTextA(Global::windowValues[ 9], std::to_string(power).c_str());
+    SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
 
     SendMessageA(Global::windowValues[ 0], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 1], EM_SETREADONLY, 1, 0);
@@ -401,26 +378,60 @@ void SWDRNGL::updateEditorWindows()
     SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 1, 0);
-    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
-    SetWindowTextA(Global::windowDescriptions[ 1], "");
+    SetWindowTextA(Global::windowDescriptions[ 1], "Sunglasses-only SPRB");
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
     SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
-    SetWindowTextA(Global::windowDescriptions[ 8], "Distance between each individual ring.");
-    SetWindowTextA(Global::windowDescriptions[ 9], "");
-    SetWindowTextA(Global::windowDescriptions[10], "Total number of rings in the line.");
+    SetWindowTextA(Global::windowDescriptions[ 8], "Time (in frames) that controls are locked.");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Speed that the player goes once the touch this spring.");
+    SetWindowTextA(Global::windowDescriptions[10], "");
 
-    despawnChildren();
-    spawnChildren();
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
+    spawnGuides();
 }
 
-void SWDRNGL::fillData(char data[32])
+void SG_SPRB::despawnGuides()
+{
+    for (Dummy* guide : guides)
+    {
+        Global::deleteEntity(guide);
+    }
+    guides.clear();
+}
+
+void SG_SPRB::spawnGuides()
+{
+    despawnGuides();
+    
+    Vector3f pos(&position);
+    Vector3f dir(0, 10, 0);
+    Vector3f xAxis(1, 0, 0);
+    Vector3f zAxis(0, 0, 1);
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
+    
+    for (int i = 0; i < 30; i++)
+    {
+        Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
+        guide->setPosition(&pos);
+        guide->visible = true;
+        guide->updateTransformationMatrixYXZ();
+        Global::addEntity(guide);
+        guides.push_back(guide);
+    
+        pos = pos + dir;
+    }
+}
+
+void SG_SPRB::fillData(char data[32])
 {
     data[1] = (char)ID;
 
@@ -449,27 +460,23 @@ void SWDRNGL::fillData(char data[32])
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
 
-    float var1 = (ringDelta - 10.0f);
+    float var1 = (float)controlLockTime;
     ptr = (char*)(&var1);
     data[20] = (char)(*(ptr + 3));
     data[21] = (char)(*(ptr + 2));
     data[22] = (char)(*(ptr + 1));
     data[23] = (char)(*(ptr + 0));
 
-    data[24] = 0;
-    data[25] = 0;
-    data[26] = 0;
-    data[27] = 0;
+    float var2 = (power - 5.0f);
+    ptr = (char*)(&var2);
+    data[24] = (char)(*(ptr + 3));
+    data[25] = (char)(*(ptr + 2));
+    data[26] = (char)(*(ptr + 1));
+    data[27] = (char)(*(ptr + 0));
 
-    float var3 = (float)numRings;
     ptr = (char*)(&var3);
     data[28] = (char)(*(ptr + 3));
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
-}
-
-bool SWDRNGL::isSA2Object()
-{
-    return true;
 }
