@@ -22,6 +22,7 @@ public:
     static std::list<TexturedModel*> modelsGuide;
     static std::list<TexturedModel*> modelsTriggerCube;
     static std::list<TexturedModel*> modelsTriggerSphere;
+	static std::list<TexturedModel*> modelsTriggerCylinder;
 
 	Unknown();
 	Unknown(char data[32], bool useDefaultValues);

@@ -67,6 +67,7 @@
 #include "../entities/GlobalObjects/stoplockon.h"
 #include "../entities/GlobalObjects/bunchin.h"
 #include "../entities/GlobalObjects/switch.h"
+#include "../entities/GlobalObjects/ironball2.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -569,6 +570,7 @@ int Global::main()
     STOPLOCKON::loadStaticModels();
 	BUNCHIN::loadStaticModels();
 	SWITCH::loadStaticModels();
+	IRONBALL2::loadStaticModels();
 
     #endif
 
