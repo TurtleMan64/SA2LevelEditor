@@ -44,6 +44,18 @@
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
 #include "../entities/GlobalObjects/bunchin.h"
+#include "../entities/GlobalObjects/switch.h"
+#include "../entities/GlobalObjects/ironball2.h"
+#include "../entities/GlobalObjects/swdrngl.h"
+#include "../entities/GlobalObjects/swdrngc.h"
+#include "../entities/GlobalObjects/kddrngl.h"
+#include "../entities/GlobalObjects/kddrngc.h"
+#include "../entities/GlobalObjects/kdspring.h"
+#include "../entities/GlobalObjects/kdspringb.h"
+#include "../entities/GlobalObjects/sgring.h"
+#include "../entities/GlobalObjects/sgspra.h"
+#include "../entities/GlobalObjects/sgsprb.h"
+#include "../entities/GlobalObjects/knudai.h"
 #include "../entities/GlobalObjects/emeraldf.h"
 
 #ifdef _WIN32
@@ -317,11 +329,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x41: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x5A: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
@@ -334,16 +353,25 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
+                case    8: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x0A: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0B: return new ROCKET     (data, useDefaultValues);
                 case 0x19: return new LIGHT_SW   (data, useDefaultValues);
-				case 0x21: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x21: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x22: return new RING_LINEAR(data, useDefaultValues);
                 case 0x23: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x33: return new KNUDAI     (data, useDefaultValues);
+                case 0x3D: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x3E: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x3F: return new KDSPRING	 (data, useDefaultValues);
+                case 0x40: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x42: return new SPHERE     (data, useDefaultValues);
                 case 0x43: return new CCYL       (data, useDefaultValues);
                 case 0x44: return new CCUBE      (data, useDefaultValues);
                 case 0x49: return new LINKLINK   (data, useDefaultValues);
+                case 0x55: return new SWDRNGL	 (data, useDefaultValues);
+                case 0x56: return new SWDRNGC	 (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -357,11 +385,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x5E: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
@@ -377,12 +412,21 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x23: return new KNUDAI     (data, useDefaultValues);
+                case 0x28: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x29: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2A: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2B: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
                 case 0x2E: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x34: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x35: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x38: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x39: return new SWDRNGL	 (data, useDefaultValues);
+                case 0x3A: return new SWDRNGC	 (data, useDefaultValues);
                 case 0x3C: return new LINKLINK   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
@@ -397,11 +441,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
@@ -418,12 +469,19 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x5B: return new STOPLOCKON (data, useDefaultValues);
                 case 0x5D: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x60: return new LINKLINK   (data, useDefaultValues);
@@ -440,15 +498,25 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
+                case 0x54: return new SG_RING	 (data, useDefaultValues);
+                case 0x55: return new SG_SPRA    (data, useDefaultValues);
+                case 0x56: return new SG_SPRB    (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -459,11 +527,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
+                case    8: return new IRONBALL2	 (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
-				case 0x10: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x10: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x11: return new RING_LINEAR(data, useDefaultValues);
                 case 0x12: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x21: return new KNUDAI     (data, useDefaultValues);
+                //case 0x43: return new KDDRNGL	 (data, useDefaultValues); Wrong ID
+                //case 0x44: return new KDDRNGC	 (data, useDefaultValues); Wrong ID
+                //case 0x45: return new KDSPRING	 (data, useDefaultValues); Wrong ID
+                //case 0x46: return new KDSPRINGB	 (data, useDefaultValues); Wrong ID
                 case 0x4A: return new SPHERE     (data, useDefaultValues);
                 case 0x4B: return new CCYL       (data, useDefaultValues);
                 case 0x4C: return new CCUBE      (data, useDefaultValues);
@@ -481,11 +556,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2(data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
@@ -499,12 +581,19 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    1: return new SPRA       (data, useDefaultValues);
                 case    2: return new SPRB       (data, useDefaultValues);
                 case    3: return new KASOKU     (data, useDefaultValues);
+                case    5: return new SWITCH     (data, useDefaultValues);
+                case    8: return new IRONBALL2	 (data, useDefaultValues);
                 case    9: return new BIGJUMP    (data, useDefaultValues);
                 case 0x0A: return new ROCKET     (data, useDefaultValues);
                 case 0x0E: return new EMERALD    (data, useDefaultValues);
-				case 0x0F: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x0F: return new BUNCHIN	 (data, useDefaultValues);
                 case 0x10: return new RING_LINEAR(data, useDefaultValues);
                 case 0x11: return new RING_CIRCLE(data, useDefaultValues);
+                case 0x28: return new KNUDAI     (data, useDefaultValues);
+                case 0x2F: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x30: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x31: return new KDSPRING	 (data, useDefaultValues);
+                case 0x32: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x33: return new SPHERE     (data, useDefaultValues);
                 case 0x34: return new CCYL       (data, useDefaultValues);
                 case 0x35: return new CCUBE      (data, useDefaultValues);
@@ -524,11 +613,18 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x23: return new KNUDAI     (data, useDefaultValues);
+                case 0x28: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x29: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2A: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2B: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2C: return new SPHERE     (data, useDefaultValues);
                 case 0x2D: return new CCYL       (data, useDefaultValues);
                 case 0x2E: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3B: return new LINKLINK   (data, useDefaultValues);
                 case 0x3C: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x49: return new STOPLOCKON (data, useDefaultValues);
@@ -545,13 +641,23 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x53: return new LIGHT_SW   (data, useDefaultValues);
+                case 0x5A: return new SG_RING	 (data, useDefaultValues);
+                case 0x5B: return new SG_SPRA    (data, useDefaultValues);
+                case 0x5C: return new SG_SPRB    (data, useDefaultValues);
                 case 0x5E: return new EMERALD_F  (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
@@ -566,13 +672,23 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x25: return new KNUDAI     (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2E: return new SPHERE     (data, useDefaultValues);
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x4A: return new LINKLINK   (data, useDefaultValues);
+                case 0x50: return new SG_RING	 (data, useDefaultValues);
+                case 0x51: return new SG_SPRA    (data, useDefaultValues);
+                case 0x52: return new SG_SPRB    (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }
 
@@ -586,13 +702,23 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    4: return new SPRB       (data, useDefaultValues);
                 case    6: return new BIGJUMP    (data, useDefaultValues);
                 case    7: return new KASOKU     (data, useDefaultValues);
+                case    9: return new SWITCH     (data, useDefaultValues);
                 case 0x0F: return new EMERALD    (data, useDefaultValues);
                 case 0x15: return new ROCKET     (data, useDefaultValues);
+                case 0x24: return new KNUDAI     (data, useDefaultValues);
+                case 0x29: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x2A: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x2B: return new KDSPRING	 (data, useDefaultValues);
+                case 0x2C: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x2D: return new SPHERE     (data, useDefaultValues);
                 case 0x2E: return new CCYL       (data, useDefaultValues);
                 case 0x2F: return new CCUBE      (data, useDefaultValues);
-				case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	 (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3C: return new LINKLINK   (data, useDefaultValues);
+                case 0x40: return new SG_RING	 (data, useDefaultValues);
+                case 0x41: return new SG_SPRA    (data, useDefaultValues);
+                case 0x42: return new SG_SPRB    (data, useDefaultValues);
                 case 0x51: return new LIGHT_SW   (data, useDefaultValues);
                 default:   return new Unknown    (data, useDefaultValues);
             }

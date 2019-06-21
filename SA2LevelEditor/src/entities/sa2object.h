@@ -42,6 +42,10 @@ public:
     // 32 byte buffer and write those to the set file
     virtual void fillData(char data[32]);
 
+	//returns ID of switch or knudai (MM shrine) linked to the object, or -1 otherwise
+	virtual int getSwitchID();
+	virtual int getShrineID();
+
     bool isSA2Object();
 
     virtual int getIntRotationX();

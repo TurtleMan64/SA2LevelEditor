@@ -224,6 +224,42 @@
     <ClCompile Include="src\entities\GlobalObjects\BUNCHIN.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SWITCH.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\IRONBALL2.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SWDRNGC.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SWDRNGL.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\KDDRNGC.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\KDDRNGL.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\KDSPRING.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\KDSPRINGB.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SG_RING.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SG_SPRA.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SG_SPRB.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\KNUDAI.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
     <ClCompile Include="src\entities\GlobalObjects\EMERALD_F.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
@@ -407,6 +443,42 @@
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\bunchin.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\switch.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ironball2.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\swdrngc.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\swdrngl.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\kddrngc.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\kddrngl.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\kdspringb.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\kdspring.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\sgring.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\sgspra.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\sgsprb.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\knudai.h">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\emeraldf.h">

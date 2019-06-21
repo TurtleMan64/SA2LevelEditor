@@ -66,6 +66,9 @@
 #include "../entities/GlobalObjects/linklink.h"
 #include "../entities/GlobalObjects/stoplockon.h"
 #include "../entities/GlobalObjects/bunchin.h"
+#include "../entities/GlobalObjects/switch.h"
+#include "../entities/GlobalObjects/ironball2.h"
+#include "../entities/GlobalObjects/knudai.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -567,6 +570,9 @@ int Global::main()
     LINKLINK::loadStaticModels();
     STOPLOCKON::loadStaticModels();
     BUNCHIN::loadStaticModels();
+    SWITCH::loadStaticModels();
+    IRONBALL2::loadStaticModels();
+    KNUDAI::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

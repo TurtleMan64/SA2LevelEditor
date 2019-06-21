@@ -1,1 +1,0 @@
-This is a placeholder model, not the actual weight.

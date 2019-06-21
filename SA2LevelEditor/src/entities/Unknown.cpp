@@ -20,6 +20,7 @@ std::vector<std::list<TexturedModel*>> Unknown::models;
 std::list<TexturedModel*> Unknown::modelsGuide;
 std::list<TexturedModel*> Unknown::modelsTriggerCube;
 std::list<TexturedModel*> Unknown::modelsTriggerSphere;
+std::list<TexturedModel*> Unknown::modelsTriggerCylinder;
 
 CollisionModel* Unknown::cmBase;
 
@@ -212,9 +213,10 @@ void Unknown::loadStaticModels()
 		Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
 	}
 
-    loadModel(&Unknown::modelsGuide,         "res/Models/GlobalObjects/Guide/",   "Guide");
-    loadModel(&Unknown::modelsTriggerCube,   "res/Models/GlobalObjects/Trigger/", "TriggerCube");
-    loadModel(&Unknown::modelsTriggerSphere, "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+    loadModel(&Unknown::modelsGuide,			"res/Models/GlobalObjects/Guide/",   "Guide");
+    loadModel(&Unknown::modelsTriggerCube,		"res/Models/GlobalObjects/Trigger/", "TriggerCube");
+    loadModel(&Unknown::modelsTriggerSphere,	"res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+	loadModel(&Unknown::modelsTriggerCylinder,	"res/Models/GlobalObjects/Trigger/", "TriggerCylinder");
 }
 
 void Unknown::deleteStaticModels()
