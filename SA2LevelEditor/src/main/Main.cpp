@@ -569,11 +569,10 @@ int Global::main()
     ROCKET::loadStaticModels();
     LINKLINK::loadStaticModels();
     STOPLOCKON::loadStaticModels();
-	BUNCHIN::loadStaticModels();
-	SWITCH::loadStaticModels();
-	IRONBALL2::loadStaticModels();
-	KNUDAI::loadStaticModels();
-
+    BUNCHIN::loadStaticModels();
+    SWITCH::loadStaticModels();
+    IRONBALL2::loadStaticModels();
+    KNUDAI::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

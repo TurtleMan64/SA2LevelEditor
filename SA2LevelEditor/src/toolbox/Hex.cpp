@@ -48,6 +48,11 @@ std::string Hex::to_string_short(short num)
         result = "0"+result;
     }
 
+    if (result.length() == 2)
+    {
+        result = "00"+result;
+    }
+
     if (result.length() > 4)
     {
         result = result.substr(result.length()-4);

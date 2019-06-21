@@ -173,6 +173,7 @@
     <ClCompile Include="src\entities\GlobalObjects\SWDRNGC.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWDRNGL.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SWITCH.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\EMERALD_F.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\KASOKU.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LIGHT_SW.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\LINKLINK.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="src\entities\GlobalObjects\swdrngc.h" />
     <ClInclude Include="src\entities\GlobalObjects\swdrngl.h" />
     <ClInclude Include="src\entities\GlobalObjects\switch.h" />
+    <ClInclude Include="src\entities\GlobalObjects\emeraldf.h" />
     <ClInclude Include="src\entities\GlobalObjects\kasoku.h" />
     <ClInclude Include="src\entities\GlobalObjects\lightsw.h" />
     <ClInclude Include="src\entities\GlobalObjects\linklink.h" />

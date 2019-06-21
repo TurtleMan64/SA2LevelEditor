@@ -50,9 +50,9 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     memset(ptr, data[7], 1);
     memset(ptr+1, data[6], 1);
 
-    pieceID   = (int)rX;
-    rotationY = (int)rY;
-    rotationZ = (int)rZ;
+    pieceID = (int)rX;
+    rotY    = (int)rY;
+    rotZ    = (int)rZ;
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -94,14 +94,16 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     if (useDefaultValues)
     {
         pieceID = 0;
+        rotY = 0;
+        rotZ = 0;
         var1 = 0.0f;
         radius = 10.0f;
         var3 = 0.0f;
-        rotationY = 0;
-	    rotationZ = 0; 
     }
 
 	rotationX = 0;
+    rotationY = 0;
+	rotationZ = 0; 
 	scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
@@ -118,7 +120,7 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
     hitbox = nullptr;
     hitbox = new Dummy(&Unknown::modelsTriggerSphere); INCR_NEW("Entity");
     hitbox->setPosition(&position);
-    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setRotation(0, 0, 0);
     hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
     hitbox->visible = true;
     hitbox->updateTransformationMatrixYXZ();
@@ -268,9 +270,9 @@ void EMERALD::updateValue(int btnIndex)
     {
         try
         {
-            int newPieceID = Hex::stoh(text);
+            short newPieceID = Hex::stohshort(text);
             pieceID = newPieceID;
-            SetWindowTextA(Global::windowValues[5], Hex::to_string(pieceID).c_str());
+            SetWindowTextA(Global::windowValues[5], Hex::to_string_short(pieceID).c_str());
             break;
         }
         catch (...) { break; }
@@ -280,9 +282,9 @@ void EMERALD::updateValue(int btnIndex)
     {
         try
         {
-            int newRotY = std::stoi(text);
-            rotationY = newRotY;
-            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
+            short newRotY = Hex::stohshort(text);
+            rotY = newRotY;
+            SetWindowTextA(Global::windowValues[6], Hex::to_string_short(rotY).c_str());
             break;
         }
         catch (...) { break; }
@@ -292,9 +294,9 @@ void EMERALD::updateValue(int btnIndex)
     {
         try
         {
-            int newRotZ = std::stoi(text);
-            rotationZ = newRotZ;
-            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+            short newRotZ = Hex::stohshort(text);
+            rotZ = newRotZ;
+            SetWindowTextA(Global::windowValues[7], Hex::to_string_short(rotZ).c_str());
             break;
         }
         catch (...) { break; }
@@ -347,7 +349,7 @@ void EMERALD::updateValue(int btnIndex)
     updateCollisionModelYXZ();
     Global::redrawWindow = true;
     hitbox->setPosition(&position);
-    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setRotation(0, 0, 0);
     hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
     hitbox->updateTransformationMatrixYXZ();
 }
@@ -371,9 +373,9 @@ void EMERALD::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], Hex::to_string(pieceID).c_str());
-    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], Hex::to_string_short(pieceID).c_str());
+    SetWindowTextA(Global::windowValues[ 6], Hex::to_string_short(rotY).c_str());
+    SetWindowTextA(Global::windowValues[ 7], Hex::to_string_short(rotZ).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(var1).c_str());
     SetWindowTextA(Global::windowValues[ 9], std::to_string(radius).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
@@ -405,7 +407,7 @@ void EMERALD::updateEditorWindows()
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
     hitbox->setPosition(&position);
-    hitbox->setRotation(rotationX, rotationY, rotationZ);
+    hitbox->setRotation(0, 0, 0);
     hitbox->setScale(fminf(radius, 400), fminf(radius, 400), fminf(radius, 400));
     hitbox->updateTransformationMatrixYXZ();
 }
@@ -414,12 +416,12 @@ void EMERALD::fillData(char data[32])
 {
     data[1] = (char)ID;
 
-    data[2] = (char)((pieceID   >> 8) & 0xFF);
-    data[3] = (char)((pieceID   >> 0) & 0xFF);
-    data[4] = (char)((rotationY >> 8) & 0xFF);
-    data[5] = (char)((rotationY >> 0) & 0xFF);
-    data[6] = (char)((rotationZ >> 8) & 0xFF);
-    data[7] = (char)((rotationZ >> 0) & 0xFF);
+    data[2] = (char)((pieceID >> 8) & 0xFF);
+    data[3] = (char)((pieceID >> 0) & 0xFF);
+    data[4] = (char)((rotY    >> 8) & 0xFF);
+    data[5] = (char)((rotY    >> 0) & 0xFF);
+    data[6] = (char)((rotZ    >> 8) & 0xFF);
+    data[7] = (char)((rotZ    >> 0) & 0xFF);
 
     char* ptr = (char*)(&position.x);
     data[ 8] = (char)(*(ptr + 3));
