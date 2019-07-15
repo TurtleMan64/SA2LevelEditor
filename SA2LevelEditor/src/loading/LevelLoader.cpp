@@ -535,10 +535,10 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x11: return new RING_LINEAR(data, useDefaultValues);
                 case 0x12: return new RING_CIRCLE(data, useDefaultValues);
                 case 0x21: return new KNUDAI     (data, useDefaultValues);
-                //case 0x43: return new KDDRNGL	 (data, useDefaultValues); Wrong ID
-                //case 0x44: return new KDDRNGC	 (data, useDefaultValues); Wrong ID
-                //case 0x45: return new KDSPRING	 (data, useDefaultValues); Wrong ID
-                //case 0x46: return new KDSPRINGB	 (data, useDefaultValues); Wrong ID
+                case 0x45: return new KDDRNGL	 (data, useDefaultValues);
+                case 0x46: return new KDDRNGC	 (data, useDefaultValues);
+                case 0x47: return new KDSPRING	 (data, useDefaultValues);
+                case 0x48: return new KDSPRINGB	 (data, useDefaultValues);
                 case 0x4A: return new SPHERE     (data, useDefaultValues);
                 case 0x4B: return new CCYL       (data, useDefaultValues);
                 case 0x4C: return new CCUBE      (data, useDefaultValues);
@@ -567,7 +567,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2F: return new CCYL       (data, useDefaultValues);
                 case 0x30: return new CCUBE      (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	 (data, useDefaultValues);
-                case 0x37: return new IRONBALL2(data, useDefaultValues);
+                case 0x37: return new IRONBALL2	 (data, useDefaultValues);
                 case 0x3D: return new LINKLINK   (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW   (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON (data, useDefaultValues);
