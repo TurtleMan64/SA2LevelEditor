@@ -25,6 +25,8 @@ public:
 
     static float toRadians(int bams);
 
+    static float toRadians(signed short bams);
+
 	static float toDegrees(float rad);
 
     static float toDegrees(int bams);

@@ -18,6 +18,7 @@ private:
     std::vector<CollisionModel*> cms;
 
     float ringDelta;
+    float var2;
     int numRings;
 	int switchID;
 

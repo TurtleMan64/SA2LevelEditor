@@ -1,8 +1,8 @@
-# Blender MTL File: 'Unknown.obj'
-# Material Count: 2
+# Blender MTL File: 'None'
+# Material Count: 4
 
-newmtl Material
-Ns 96.078431
+newmtl Mesh_0168.rip
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -10,10 +10,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd Top.png
+map_Kd Tex_0042_0.png
 
-newmtl Material_Side.png
-Ns 96.078431
+newmtl Mesh_0170.rip
+Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
@@ -21,4 +21,26 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd Side.png
+map_Kd Tex_0043_0.png
+
+newmtl Mesh_0172.rip
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tex_0044_0.png
+
+newmtl Mesh_0174.rip
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Tex_0045_0.png

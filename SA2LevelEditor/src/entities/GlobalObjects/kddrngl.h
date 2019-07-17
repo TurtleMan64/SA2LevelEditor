@@ -17,9 +17,10 @@ private:
     std::vector<Dummy*> rings;
     std::vector<CollisionModel*> cms;
 
+    int shrineID;
+    float curveHeight;
     float ringDelta;
     int numRings;
-	int shrineID;
 
     void spawnChildren();
     void despawnChildren();

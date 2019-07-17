@@ -206,7 +206,8 @@ void IRONBALL2::createModel() {
 
 	CollisionModel* rodCM = IRONBALL2::cmRod->duplicateMe();
 	rodCM->parent = this;
-	IRONBALL2::cmRod->transformModelYXZ(rodCM, &Vector3f(position.x,position.y + 3.f,position.z), 0, 0, 0, unitRadius, 1, 1);
+    Vector3f pos(position.x,position.y + 3.f,position.z);
+	IRONBALL2::cmRod->transformModelYXZ(rodCM, &pos, 0, 0, 0, unitRadius, 1, 1);
 	updateCollisionModelYXZ();
 	CollisionChecker::addCollideModel(rodCM);
 	std::get<1>(*rod) = rodCM;
@@ -224,7 +225,8 @@ void IRONBALL2::createModel() {
 
 	CollisionModel* ballCM = IRONBALL2::cmBall->duplicateMe();
 	ballCM->parent = this;
-	IRONBALL2::cmBall->transformModelYXZ(ballCM, &Vector3f(position.x + unitRadius, position.y, position.z), 0, 0, 0, 1, 1, 1);
+    pos.set(position.x + unitRadius, position.y, position.z);
+	IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
 	updateCollisionModelYXZ();
 	CollisionChecker::addCollideModel(ballCM);
 	std::get<1>(*ball1) = rodCM;
@@ -241,7 +243,8 @@ void IRONBALL2::createModel() {
 
 	ballCM = IRONBALL2::cmBall->duplicateMe();
 	ballCM->parent = this;
-	IRONBALL2::cmBall->transformModelYXZ(ballCM, &Vector3f(position.x - unitRadius, position.y, position.z), 0, 0, 0, 1, 1, 1);
+    pos.set(position.x - unitRadius, position.y, position.z);
+	IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
 	updateCollisionModelYXZ();
 	CollisionChecker::addCollideModel(ballCM);
 	std::get<1>(*ball2) = rodCM;
@@ -401,7 +404,7 @@ void IRONBALL2::updateValue(int btnIndex)
 	{
 		try
 		{
-			int newRotZ = std::stof(text);
+			int newRotZ = std::stoi(text);
 			rotZ = newRotZ;
 			oscillates = (int)rotZ / 2 % 2;
 			updateTransformationMatrixYXZ();

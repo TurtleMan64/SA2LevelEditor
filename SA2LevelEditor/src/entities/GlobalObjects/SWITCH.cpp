@@ -323,7 +323,7 @@ void SWITCH::updateValue(int btnIndex)
 	{
 		try
 		{
-			int newVar1 = std::stof(text);
+			int newVar1 = std::stoi(text);
 			type = newVar1;
 			updateTransformationMatrixYXZ();
 			updateCollisionModelYXZ();

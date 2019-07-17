@@ -18,6 +18,7 @@ private:
     std::vector<CollisionModel*> cms;
 
     float ringDelta;
+    float curveHeight;
     int numRings;
 
     void spawnChildren();

@@ -14,6 +14,7 @@
 #include "../../collision/collisionchecker.h"
 #include "../../toolbox/maths.h"
 #include "../dummy.h"
+#include "../../toolbox/hex.h"
 
 #include <list>
 
@@ -74,6 +75,13 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
     d[1] = data[22];
     d[0] = data[23];
 
+    float var2;
+    char* u = (char*)&curveHeight;
+    u[3] = data[24];
+    u[2] = data[25];
+    u[1] = data[26];
+    u[0] = data[27];
+
     float var3;
     char* n = (char*)&var3;
     n[3] = data[28];
@@ -93,6 +101,7 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
         rotationY = 0;
         rotationZ = 0;
         numRings = 5;
+        var2 = 0.0f;
         ringDelta = 20.0f;
     }
 
@@ -119,20 +128,35 @@ void RING_LINEAR::despawnChildren()
 
 void RING_LINEAR::spawnChildren()
 {
-    Vector3f ringDirection(0, 0, 1);
+    //no rotation goes in the -Z direction
+    Vector3f ringDirection(0, 0, -1);
+
+    //for use with the var2 sine curve offset
+    Vector3f relativeUp(0, 1, 0);
+    float angleDelta = 0.0f;
+    if (numRings >= 2)
+    {
+        angleDelta = 1.0f/(numRings-1);
+    }
 
     Vector3f xAxis(1, 0, 0);
     Vector3f yAxis(0, 1, 0);
+    Vector3f zAxis(0, 0, 1);
+
     ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::toRadians(rotationX));
     ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::toRadians(rotationY));
-
+    ringDirection = Maths::rotatePoint(&ringDirection, &zAxis, Maths::toRadians(rotationZ));
     ringDirection.setLength(ringDelta);
-    ringDirection.neg();
+
+    relativeUp = Maths::rotatePoint(&relativeUp, &xAxis, Maths::toRadians(rotationX));
+    relativeUp = Maths::rotatePoint(&relativeUp, &yAxis, Maths::toRadians(rotationY));
+    relativeUp = Maths::rotatePoint(&relativeUp, &zAxis, Maths::toRadians(rotationZ));
 
     for (int i = 0; i < numRings; i++)
     {
-        Vector3f currOff = ringDirection.scaleCopy((float)i);
-        Vector3f ringPos = position + currOff;
+        Vector3f currOffsetLine = ringDirection.scaleCopy((float)i);
+        Vector3f currOffsetCurve = relativeUp.scaleCopy(curveHeight*sinf((i*angleDelta)*(Maths::PI/2)));
+        Vector3f ringPos = position + currOffsetLine + currOffsetCurve;
 
         Dummy* ring = new Dummy(&RING::models); INCR_NEW("Entity");
         ring->setPosition(&ringPos);
@@ -282,10 +306,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            int newRotX = std::stoi(text);
-            rotationX = newRotX;
+            signed short newRotX = Hex::stohshort(text);
+            rotationX = (int)newRotX;
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
+            SetWindowTextA(Global::windowValues[5], Hex::to_string_short((signed short)rotationX).c_str());
             remakeRings = true;
             break;
         }
@@ -296,10 +320,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            int newRotY = std::stoi(text);
-            rotationY = newRotY;
+            signed short newRotY = Hex::stohshort(text);
+            rotationY = (int)newRotY;
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
+            SetWindowTextA(Global::windowValues[6], Hex::to_string_short((signed short)rotationY).c_str());
             remakeRings = true;
             break;
         }
@@ -310,10 +334,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            int newRotZ = std::stoi(text);
-            rotationZ = newRotZ;
+            signed short newRotZ = Hex::stohshort(text);
+            rotationZ = (int)newRotZ;
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+            SetWindowTextA(Global::windowValues[7], Hex::to_string_short((signed short)rotationZ).c_str());
             remakeRings = true;
             break;
         }
@@ -328,6 +352,20 @@ void RING_LINEAR::updateValue(int btnIndex)
             ringDelta = newRingDelta;
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(ringDelta).c_str());
+            remakeRings = true;
+            break;
+        }
+        catch (...) { break; }
+    }
+
+    case 9:
+    {
+        try
+        {
+            float newCurveHeight = std::stof(text);
+            curveHeight = newCurveHeight;
+            Global::redrawWindow = true;
+            SetWindowTextA(Global::windowValues[9], std::to_string(curveHeight).c_str());
             remakeRings = true;
             break;
         }
@@ -369,7 +407,7 @@ void RING_LINEAR::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[ 6], "Rotation Y");
     SetWindowTextA(Global::windowLabels[ 7], "Rotation Z");
     SetWindowTextA(Global::windowLabels[ 8], "Ring Delta");
-    SetWindowTextA(Global::windowLabels[ 9], "");
+    SetWindowTextA(Global::windowLabels[ 9], "Curve Height");
     SetWindowTextA(Global::windowLabels[10], "Ring Count");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
@@ -377,11 +415,11 @@ void RING_LINEAR::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], Hex::to_string_short((signed short)rotationX).c_str());
+    SetWindowTextA(Global::windowValues[ 6], Hex::to_string_short((signed short)rotationY).c_str());
+    SetWindowTextA(Global::windowValues[ 7], Hex::to_string_short((signed short)rotationZ).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(ringDelta).c_str());
-    SetWindowTextA(Global::windowValues[ 9], "");
+    SetWindowTextA(Global::windowValues[ 9], std::to_string(curveHeight).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(numRings).c_str());
 
     SendMessageA(Global::windowValues[ 0], EM_SETREADONLY, 0, 0);
@@ -393,7 +431,7 @@ void RING_LINEAR::updateEditorWindows()
     SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
@@ -405,7 +443,7 @@ void RING_LINEAR::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
     SetWindowTextA(Global::windowDescriptions[ 8], "Distance between each individual ring.");
-    SetWindowTextA(Global::windowDescriptions[ 9], "");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Height of the curve that the rings follow.");
     SetWindowTextA(Global::windowDescriptions[10], "Total number of rings in the line.");
 
     despawnChildren();
@@ -448,10 +486,11 @@ void RING_LINEAR::fillData(char data[32])
     data[22] = (char)(*(ptr + 1));
     data[23] = (char)(*(ptr + 0));
 
-    data[24] = 0;
-    data[25] = 0;
-    data[26] = 0;
-    data[27] = 0;
+    ptr = (char*)(&curveHeight);
+    data[24] = (char)(*(ptr + 3));
+    data[25] = (char)(*(ptr + 2));
+    data[26] = (char)(*(ptr + 1));
+    data[27] = (char)(*(ptr + 0));
 
     float var3 = (float)numRings;
     ptr = (char*)(&var3);

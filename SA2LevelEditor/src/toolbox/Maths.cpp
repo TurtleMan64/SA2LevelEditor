@@ -34,6 +34,11 @@ float Maths::toRadians(int bams)
 	return toRadians(toDegrees(bams));
 }
 
+float Maths::toRadians(signed short bams)
+{
+    return toRadians(toDegrees((int)bams));
+}
+
 float Maths::toDegrees(int bams)
 {
 	return (bams/182.044444444444444f);

@@ -69,6 +69,10 @@
 #include "../entities/GlobalObjects/switch.h"
 #include "../entities/GlobalObjects/ironball2.h"
 #include "../entities/GlobalObjects/knudai.h"
+#include "../entities/GlobalObjects/itembox.h"
+#include "../entities/GlobalObjects/itemboxair.h"
+#include "../entities/GlobalObjects/itemboxballoon.h"
+#include "../entities/GlobalObjects/savepoint.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -573,6 +577,10 @@ int Global::main()
     SWITCH::loadStaticModels();
     IRONBALL2::loadStaticModels();
     KNUDAI::loadStaticModels();
+    ITEMBOX::loadStaticModels();
+    ITEMBOXAIR::loadStaticModels();
+    ITEMBOXBALLOON::loadStaticModels();
+    SAVEPOINT::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

@@ -333,7 +333,7 @@ void KDSPRINGB::updateValue(int btnIndex)
     {
         try
         {
-            int newVar3 = std::stof(text);
+            int newVar3 = std::stoi(text);
             shrineID = newVar3;
             updateTransformationMatrixYXZ();
             updateCollisionModelYXZ();
