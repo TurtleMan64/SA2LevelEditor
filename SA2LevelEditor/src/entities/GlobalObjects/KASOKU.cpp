@@ -25,6 +25,15 @@ KASOKU::KASOKU()
 
 }
 
+void KASOKU::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 KASOKU::KASOKU(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -204,7 +213,7 @@ void KASOKU::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

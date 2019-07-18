@@ -23,6 +23,11 @@ KDDRNGL::KDDRNGL()
 
 }
 
+void KDDRNGL::cleanUp()
+{
+    despawnChildren();
+}
+
 KDDRNGL::KDDRNGL(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -234,9 +239,7 @@ void KDDRNGL::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-
-                    despawnChildren();
-
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

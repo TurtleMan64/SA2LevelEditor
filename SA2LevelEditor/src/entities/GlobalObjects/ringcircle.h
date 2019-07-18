@@ -37,6 +37,8 @@ public:
 
 	void step();
 
+    void cleanUp();
+
 	std::list<TexturedModel*>* getModels();
 
 	static void loadStaticModels();

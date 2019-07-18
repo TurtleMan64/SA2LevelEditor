@@ -19,14 +19,14 @@ private:
 
     float ringRadius;
     int numRings;
-	int switchID;
+    int switchID;
 
     void spawnChildren();
     void despawnChildren();
 
 public:
-	SWDRNGC();
-	SWDRNGC(char data[32], bool useDefaultValues);
+    SWDRNGC();
+    SWDRNGC(char data[32], bool useDefaultValues);
 
     void updateEditorWindows();
 
@@ -36,12 +36,14 @@ public:
 
     bool isSA2Object();
 
-	void step();
+    void step();
 
-	std::list<TexturedModel*>* getModels();
+    void cleanUp();
 
-	static void loadStaticModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void deleteStaticModels();
+    static void loadStaticModels();
+
+    static void deleteStaticModels();
 };
 #endif

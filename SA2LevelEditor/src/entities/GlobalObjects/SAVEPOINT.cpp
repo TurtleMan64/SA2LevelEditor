@@ -26,6 +26,15 @@ SAVEPOINT::SAVEPOINT()
 
 }
 
+void SAVEPOINT::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 SAVEPOINT::SAVEPOINT(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -202,7 +211,7 @@ void SAVEPOINT::updateValue(int btnIndex)
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

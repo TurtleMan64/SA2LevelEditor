@@ -30,6 +30,8 @@ public:
 
 	virtual void step();
 
+    virtual void cleanUp(); //when you need to delete a single object from the scene, call this on it first.
+
 	void increasePosition(float dx, float dy, float dz);
 
 	void increaseRotation(int dx, int dy, int dz);

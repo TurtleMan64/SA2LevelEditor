@@ -11,23 +11,25 @@ class CollisionModel;
 class RING : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> models;
+    static std::list<TexturedModel*> models;
 
     static CollisionModel* cmBase;
 
     friend class RING_LINEAR;
     friend class RING_CIRCLE;
-	friend class SWDRNGL;
-	friend class SWDRNGC;
-	friend class KDDRNGL;
-	friend class KDDRNGC;
-	friend class SG_RING;
+    friend class SWDRNGL;
+    friend class SWDRNGC;
+    friend class KDDRNGL;
+    friend class KDDRNGC;
+    friend class SG_RING;
 
 public:
-	RING();
-	RING(char data[32], bool useDefaultValues);
+    RING();
+    RING(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -37,10 +39,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

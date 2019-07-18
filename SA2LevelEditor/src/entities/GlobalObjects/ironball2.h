@@ -14,39 +14,41 @@ class CollisionModel;
 class IRONBALL2 : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> baseModels;
-	static std::list<TexturedModel*> rodModels;
-	static std::list<TexturedModel*> ballModels;
+    static std::list<TexturedModel*> baseModels;
+    static std::list<TexturedModel*> rodModels;
+    static std::list<TexturedModel*> ballModels;
 
     static CollisionModel* cmBase;
-	static CollisionModel* cmRod;
-	static CollisionModel* cmBall;
+    static CollisionModel* cmRod;
+    static CollisionModel* cmBall;
 
-	std::tuple<Dummy*, CollisionModel*>* rod;
-	std::tuple<Dummy*, CollisionModel*>* ball1;
-	std::tuple<Dummy*, CollisionModel*>* ball2;
+    std::tuple<Dummy*, CollisionModel*>* rod = nullptr;
+    std::tuple<Dummy*, CollisionModel*>* ball1 = nullptr;
+    std::tuple<Dummy*, CollisionModel*>* ball2 = nullptr;
 
-	std::vector<Dummy*> guides;
-	Dummy* swingCylinder;
+    std::vector<Dummy*> guides;
+    Dummy* swingCylinder = nullptr;
 
     float radius;
     float rotSpeed;
-	bool oscillates;
-	float oscillation;
+    bool oscillates;
+    float oscillation;
 
-	int rotZ; //Stores the numerical value of z-rotation since it is interpreted as a boolean
+    int rotZ; //Stores the numerical value of z-rotation since it is interpreted as a boolean
 
-	void createModel();
-	void destroyModel();
+    void createModel();
+    void destroyModel();
 
-	void spawnGuides();
-	void despawnGuides();
+    void spawnGuides();
+    void despawnGuides();
 
 public:
-	IRONBALL2();
-	IRONBALL2(char data[32], bool useDefaultValues);
+    IRONBALL2();
+    IRONBALL2(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -56,10 +58,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

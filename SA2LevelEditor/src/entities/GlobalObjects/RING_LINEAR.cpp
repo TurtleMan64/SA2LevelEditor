@@ -24,6 +24,11 @@ RING_LINEAR::RING_LINEAR()
 
 }
 
+void RING_LINEAR::cleanUp()
+{
+    despawnChildren();
+}
+
 RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -107,7 +112,7 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
 
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void RING_LINEAR::despawnChildren()
@@ -194,17 +199,17 @@ void RING_LINEAR::step()
 
 std::list<TexturedModel*>* RING_LINEAR::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void RING_LINEAR::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void RING_LINEAR::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void RING_LINEAR::updateValue(int btnIndex)
@@ -249,9 +254,7 @@ void RING_LINEAR::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-
-                    despawnChildren();
-
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

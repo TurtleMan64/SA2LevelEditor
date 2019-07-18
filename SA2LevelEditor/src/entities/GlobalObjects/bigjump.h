@@ -13,7 +13,7 @@ class Dummy;
 class BIGJUMP : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> models;
+    static std::list<TexturedModel*> models;
 
     static CollisionModel* cmBase;
 
@@ -27,10 +27,12 @@ private:
     void despawnGuides();
 
 public:
-	BIGJUMP();
-	BIGJUMP(char data[32], bool useDefaultValues);
+    BIGJUMP();
+    BIGJUMP(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -40,10 +42,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

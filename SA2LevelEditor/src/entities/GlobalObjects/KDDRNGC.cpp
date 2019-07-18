@@ -23,6 +23,11 @@ KDDRNGC::KDDRNGC()
 
 }
 
+void KDDRNGC::cleanUp()
+{
+    despawnChildren();
+}
+
 KDDRNGC::KDDRNGC(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -245,18 +250,7 @@ void KDDRNGC::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    
-                    for (Dummy* ring : rings)
-                    {
-                        Global::deleteEntity(ring);
-                    }
-                    for (CollisionModel* cm : cms)
-                    {
-                        CollisionChecker::deleteCollideModel(cm);
-                    }
-                    rings.clear();
-                    cms.clear();
-
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

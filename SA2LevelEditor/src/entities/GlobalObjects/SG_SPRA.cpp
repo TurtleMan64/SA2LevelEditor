@@ -25,6 +25,17 @@ SG_SPRA::SG_SPRA()
 
 }
 
+void SG_SPRA::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+
+    despawnGuides();
+}
+
 SG_SPRA::SG_SPRA(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -191,8 +202,7 @@ void SG_SPRA::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
-                    despawnGuides();
+                    cleanUp();
                     Global::deleteEntity(this);
                     return;
                 }

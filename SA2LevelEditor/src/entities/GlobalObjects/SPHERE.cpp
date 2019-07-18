@@ -25,6 +25,15 @@ SPHERE::SPHERE()
 
 }
 
+void SPHERE::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 SPHERE::SPHERE(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);

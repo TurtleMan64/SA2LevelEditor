@@ -25,6 +25,15 @@ CCYL::CCYL()
 
 }
 
+void CCYL::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 CCYL::CCYL(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -177,7 +186,7 @@ void CCYL::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

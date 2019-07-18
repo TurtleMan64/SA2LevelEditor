@@ -30,6 +30,15 @@ Unknown::Unknown()
 
 }
 
+void Unknown::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 Unknown::Unknown(char data[32], bool /*useDefaultValues*/)
 {
     ID = data[1];
@@ -293,7 +302,7 @@ void Unknown::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
                 else

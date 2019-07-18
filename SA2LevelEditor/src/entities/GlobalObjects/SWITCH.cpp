@@ -27,6 +27,17 @@ SWITCH::SWITCH()
 
 }
 
+void SWITCH::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    unhighlight();
+}
+
 SWITCH::SWITCH(char data[32], bool useDefaultValues)
 {
 	std::memcpy(rawData, data, 32);
@@ -218,8 +229,7 @@ void SWITCH::updateValue(int btnIndex)
 					Global::selectedSA2Object = newObject;
 					newObject->updateEditorWindows();
 					Global::redrawWindow = true;
-					CollisionChecker::deleteCollideModel(collideModelTransformed);
-					unhighlight();
+					cleanUp();
 					Global::deleteEntity(this);
 					return;
 				}

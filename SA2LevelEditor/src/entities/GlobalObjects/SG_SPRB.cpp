@@ -25,6 +25,17 @@ SG_SPRB::SG_SPRB()
 
 }
 
+void SG_SPRB::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    despawnGuides();
+}
+
 SG_SPRB::SG_SPRB(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -191,8 +202,7 @@ void SG_SPRB::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
-                    despawnGuides();
+                    cleanUp();
                     Global::deleteEntity(this);
                     return;
                 }

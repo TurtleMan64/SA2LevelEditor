@@ -31,6 +31,33 @@ ITEMBOX::ITEMBOX()
 
 }
 
+void ITEMBOX::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    if (collideModelShellTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelShellTransformed);
+        collideModelShellTransformed = nullptr;
+    }
+    
+    if (shell != nullptr)
+    {
+        Global::deleteTransparentEntity(shell);
+        shell = nullptr;
+    }
+    
+    if (item != nullptr)
+    {
+        Global::deleteEntity(item);
+        item = nullptr;
+    }
+}
+
 ITEMBOX::ITEMBOX(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -259,13 +286,8 @@ void ITEMBOX::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
-                    CollisionChecker::deleteCollideModel(collideModelShellTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
-                    Global::deleteTransparentEntity(shell);
-                    Global::deleteEntity(item);
-                    shell = nullptr;
-                    item = nullptr;
                     return;
                 }
             }

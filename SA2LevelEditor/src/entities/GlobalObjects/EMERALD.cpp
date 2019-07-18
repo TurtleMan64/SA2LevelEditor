@@ -28,6 +28,21 @@ EMERALD::EMERALD()
 
 }
 
+void EMERALD::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    if (hitbox != nullptr)
+    {
+        Global::deleteTransparentEntity(hitbox);
+        hitbox = nullptr;
+    }
+}
+
 EMERALD::EMERALD(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -218,10 +233,8 @@ void EMERALD::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
-                    Global::deleteTransparentEntity(hitbox);
-                    hitbox = nullptr;
                     return;
                 }
             }

@@ -29,6 +29,18 @@ IRONBALL2::IRONBALL2()
 
 }
 
+void IRONBALL2::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    despawnGuides();
+    destroyModel();
+}
+
 IRONBALL2::IRONBALL2(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -345,8 +357,7 @@ void IRONBALL2::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
-					destroyModel();
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

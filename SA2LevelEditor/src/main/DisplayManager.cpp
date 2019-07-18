@@ -380,7 +380,7 @@ void DisplayManager::callbackMouseClick(GLFWwindow* window, int button, int acti
     }
 }
 
-void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int /*mods*/)
+void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*scancode*/, int action, int mods)
 {
     switch (key)
     {
@@ -458,6 +458,42 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             else if (action == GLFW_RELEASE)
             {
                 Global::isHoldingAlt = false;
+            }
+            break;
+
+        case GLFW_KEY_DELETE:
+            if (action == GLFW_PRESS)
+            {
+                if (Global::selectedSA2Object != nullptr)
+                {
+                    Global::deleteEntity(Global::selectedSA2Object);
+                    Global::selectedSA2Object->cleanUp();
+                    Global::selectedSA2Object = nullptr;
+                    Global::deleteEntity(Global::selectedSA2Object);
+                    Global::redrawWindow = true;
+                    Global::resetObjectWindow();
+                }
+            }
+            break;
+
+        case GLFW_KEY_D:
+            if (action == GLFW_PRESS && (mods & 0x0002))
+            {
+                if (Global::selectedSA2Object != nullptr)
+                {
+                    char data[32] = {0};
+                    Global::selectedSA2Object->fillData(&data[0]);
+
+                    SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, Global::selectedSA2Object->ID, &data[0], false);
+                    if (newObject != nullptr)
+                    {
+                        newObject->position.y += 10;
+                        Global::addEntity(newObject);
+                        Global::selectedSA2Object = newObject;
+                        Global::selectedSA2Object->updateEditorWindows();
+                        Global::redrawWindow = true;
+                    }
+                }
             }
             break;
 

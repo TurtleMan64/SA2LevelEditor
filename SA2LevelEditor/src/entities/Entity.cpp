@@ -51,6 +51,11 @@ void Entity::step()
 
 }
 
+void Entity::cleanUp()
+{
+
+}
+
 void Entity::increasePosition(float dx, float dy, float dz)
 {
 	position.x += dx;

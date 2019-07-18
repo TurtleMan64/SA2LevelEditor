@@ -11,7 +11,7 @@ class CollisionModel;
 class LINKLINK : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> modelsSphere;
+    static std::list<TexturedModel*> modelsSphere;
     static std::list<TexturedModel*> modelsCube;
 
     static CollisionModel* cmBaseSphere;
@@ -28,10 +28,12 @@ private:
     float var3;
 
 public:
-	LINKLINK();
-	LINKLINK(char data[32], bool useDefaultValues);
+    LINKLINK();
+    LINKLINK(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -41,10 +43,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

@@ -118,6 +118,21 @@ STOPLOCKON::STOPLOCKON(char data[32], bool useDefaultValues)
     Global::addTransparentEntity(box);
 }
 
+void STOPLOCKON::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    if (box != nullptr)
+    {
+        Global::deleteTransparentEntity(box);
+        box = nullptr;
+    }
+}
+
 bool STOPLOCKON::isSA2Object()
 {
     return true;
@@ -208,11 +223,9 @@ void STOPLOCKON::updateValue(int btnIndex)
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
+                    cleanUp();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
                     Global::deleteEntity(this);
-                    Global::deleteTransparentEntity(box);
-                    box = nullptr;
                     return;
                 }
             }

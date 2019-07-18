@@ -25,6 +25,15 @@ CCUBE::CCUBE()
 
 }
 
+void CCUBE::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 CCUBE::CCUBE(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -204,7 +213,7 @@ void CCUBE::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

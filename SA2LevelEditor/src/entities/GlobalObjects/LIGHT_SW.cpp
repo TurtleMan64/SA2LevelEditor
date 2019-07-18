@@ -31,6 +31,21 @@ LIGHT_SW::LIGHT_SW()
 
 }
 
+void LIGHT_SW::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    if (box != nullptr)
+    {
+        Global::deleteTransparentEntity(box);
+        box = nullptr;
+    }
+}
+
 LIGHT_SW::LIGHT_SW(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -267,8 +282,7 @@ void LIGHT_SW::updateValue(int btnIndex)
                     Global::redrawWindow = true;
                     CollisionChecker::deleteCollideModel(collideModelTransformed);
                     Global::deleteEntity(this);
-                    Global::deleteTransparentEntity(box);
-                    box = nullptr;
+                    cleanUp();
                     return;
                 }
             }

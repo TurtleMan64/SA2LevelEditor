@@ -13,41 +13,43 @@ class Dummy;
 class BUNCHIN : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> models;
+    static std::list<TexturedModel*> models;
 
-	static CollisionModel* cmBase;
+    static CollisionModel* cmBase;
 
-	std::vector<Dummy*> guides;
-	Dummy* topWeight;
+    std::vector<Dummy*> guides;
+    Dummy* topWeight = nullptr;
 
-	int dropType;
-	int switchID;
-	float weightHeight;
+    int dropType;
+    int switchID;
+    float weightHeight;
 
-	float scaleToUnits(float scale);
-	float unitsToScale(float units);
+    float scaleToUnits(float scale);
+    float unitsToScale(float units);
 
-	void spawnGuides();
-	void despawnGuides();
+    void spawnGuides();
+    void despawnGuides();
 
 public:
-	BUNCHIN();
-	BUNCHIN(char data[32], bool useDefaultValues);
+    BUNCHIN();
+    BUNCHIN(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
 
-	void updateEditorWindows();
+    void cleanUp();
 
-	void updateValue(int btnIndex);
+    void updateEditorWindows();
 
-	void fillData(char data[32]);
+    void updateValue(int btnIndex);
 
-	bool isSA2Object();
+    void fillData(char data[32]);
 
-	std::list<TexturedModel*>* getModels();
+    bool isSA2Object();
 
-	static void loadStaticModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void deleteStaticModels();
+    static void loadStaticModels();
+
+    static void deleteStaticModels();
 };
 #endif

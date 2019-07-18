@@ -27,6 +27,17 @@ KNUDAI::KNUDAI()
 
 }
 
+void KNUDAI::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+    
+    unhighlight();
+}
+
 KNUDAI::KNUDAI(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -213,8 +224,7 @@ void KNUDAI::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
-                    unhighlight();
+                    cleanUp();
                     Global::deleteEntity(this);
                     return;
                 }

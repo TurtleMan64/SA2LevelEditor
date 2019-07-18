@@ -23,6 +23,11 @@ RING_CIRCLE::RING_CIRCLE()
 
 }
 
+void RING_CIRCLE::cleanUp()
+{
+    despawnChildren();
+}
+
 RING_CIRCLE::RING_CIRCLE(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -220,18 +225,7 @@ void RING_CIRCLE::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    
-                    for (Dummy* ring : rings)
-                    {
-                        Global::deleteEntity(ring);
-                    }
-                    for (CollisionModel* cm : cms)
-                    {
-                        CollisionChecker::deleteCollideModel(cm);
-                    }
-                    rings.clear();
-                    cms.clear();
-
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

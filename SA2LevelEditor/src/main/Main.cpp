@@ -156,12 +156,12 @@ void addControls(HWND window);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int /*nCmdShow*/)
 {
     //remake the console, since it somehow becomes missing once we enter the program here
-#ifdef DEV_MODE
+    #ifdef DEV_MODE
     AllocConsole();
     freopen("CONIN$", "r",stdin);
     freopen("CONOUT$", "w",stdout);
     freopen("CONOUT$", "w",stderr);
-#endif
+    #endif
 
     if (Global::initWin32GUI(hInstance) < 0)
     {

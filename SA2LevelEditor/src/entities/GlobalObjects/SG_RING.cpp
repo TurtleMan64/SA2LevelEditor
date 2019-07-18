@@ -23,6 +23,15 @@ SG_RING::SG_RING()
 
 }
 
+void SG_RING::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 SG_RING::SG_RING(char data[32], bool /*useDefaultValues*/)
 {
     std::memcpy(rawData, data, 32);
@@ -136,7 +145,7 @@ void SG_RING::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

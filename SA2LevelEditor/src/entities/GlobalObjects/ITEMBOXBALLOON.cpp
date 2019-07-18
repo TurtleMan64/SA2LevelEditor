@@ -27,6 +27,15 @@ ITEMBOXBALLOON::ITEMBOXBALLOON()
 
 }
 
+void ITEMBOXBALLOON::cleanUp()
+{
+    if (collideModelTransformed != nullptr)
+    {
+        CollisionChecker::deleteCollideModel(collideModelTransformed);
+        collideModelTransformed = nullptr;
+    }
+}
+
 ITEMBOXBALLOON::ITEMBOXBALLOON(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -106,7 +115,7 @@ ITEMBOXBALLOON::ITEMBOXBALLOON(char data[32], bool useDefaultValues)
     scaleY = 1;
     scaleZ = 1;
 	visible = true;
-	updateTransformationMatrixZY();
+	updateTransformationMatrixYXZ();
 
 	collideModelOriginal = ITEMBOXBALLOON::cmBase;
 	collideModelTransformed = ITEMBOXBALLOON::cmBase->duplicateMe();
@@ -206,7 +215,7 @@ void ITEMBOXBALLOON::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-                    CollisionChecker::deleteCollideModel(collideModelTransformed);
+                    cleanUp();
                     Global::deleteEntity(this);
                     return;
                 }

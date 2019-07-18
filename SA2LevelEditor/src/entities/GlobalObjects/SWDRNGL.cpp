@@ -23,6 +23,11 @@ SWDRNGL::SWDRNGL()
 
 }
 
+void SWDRNGL::cleanUp()
+{
+    despawnChildren();
+}
+
 SWDRNGL::SWDRNGL(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
@@ -233,9 +238,7 @@ void SWDRNGL::updateValue(int btnIndex)
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
                     Global::redrawWindow = true;
-
-                    despawnChildren();
-
+                    cleanUp();
                     Global::deleteEntity(this);
                 }
             }

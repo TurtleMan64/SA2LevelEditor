@@ -13,38 +13,40 @@ class Dummy;
 class KNUDAI : public SA2Object
 {
 private:
-	static std::list<TexturedModel*> models;
+    static std::list<TexturedModel*> models;
 
-	static CollisionModel* cmBase;
+    static CollisionModel* cmBase;
 
-	std::vector<SA2Object*> linkedObjects;
+    std::vector<SA2Object*> linkedObjects;
 
-	int triggerID;
+    int triggerID;
 
-	void updateID();
-	void highlight();
-	void unhighlight();
+    void updateID();
+    void highlight();
+    void unhighlight();
 
 public:
-	KNUDAI();
-	KNUDAI(char data[32], bool useDefaultValues);
+    KNUDAI();
+    KNUDAI(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
 
-	void updateEditorWindows();
+    void cleanUp();
 
-	void updateValue(int btnIndex);
+    void updateEditorWindows();
 
-	void fillData(char data[32]);
+    void updateValue(int btnIndex);
 
-	int getShrineID();
+    void fillData(char data[32]);
 
-	bool isSA2Object();
+    int getShrineID();
 
-	std::list<TexturedModel*>* getModels();
+    bool isSA2Object();
 
-	static void loadStaticModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void deleteStaticModels();
+    static void loadStaticModels();
+
+    static void deleteStaticModels();
 };
 #endif

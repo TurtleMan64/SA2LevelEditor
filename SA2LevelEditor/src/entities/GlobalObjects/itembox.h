@@ -32,10 +32,12 @@ private:
     static void loadNewItemModel(std::string folder, std::string filename);
 
 public:
-	ITEMBOX();
-	ITEMBOX(char data[32], bool useDefaultValues);
+    ITEMBOX();
+    ITEMBOX(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -45,10 +47,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

@@ -20,7 +20,7 @@ private:
     static CollisionModel* cmBaseSphere;
     static CollisionModel* cmBaseCylinder;
 
-    Dummy* box;
+    Dummy* box = nullptr;
 
     //0 = box zy
     //1 = sphere of mag var123
@@ -36,10 +36,12 @@ private:
     std::list<TexturedModel*>* getSpecificModels(int type);
 
 public:
-	LIGHT_SW();
-	LIGHT_SW(char data[32], bool useDefaultValues);
+    LIGHT_SW();
+    LIGHT_SW(char data[32], bool useDefaultValues);
 
-	void step();
+    void step();
+
+    void cleanUp();
 
     void updateEditorWindows();
 
@@ -49,10 +51,10 @@ public:
 
     bool isSA2Object();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif
