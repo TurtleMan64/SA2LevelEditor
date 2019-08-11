@@ -4,7 +4,7 @@
 
 #include "../entity.h"
 #include "../../toolbox/vector.h"
-#include "sprb.h"
+#include "3spring.h"
 #include "../../models/texturedmodel.h"
 #include "../../loading/objLoader.h"
 #include "../../loading/levelloader.h"
@@ -19,15 +19,15 @@
 
 
 
-std::list<TexturedModel*> SPRB::models;
-CollisionModel* SPRB::cmBase;
+std::list<TexturedModel*> THREESPRING::models;
+CollisionModel* THREESPRING::cmBase;
 
-SPRB::SPRB()
+THREESPRING::THREESPRING()
 {
 
 }
 
-void SPRB::cleanUp()
+void THREESPRING::cleanUp()
 {
     if (collideModelTransformed != nullptr)
     {
@@ -38,7 +38,7 @@ void SPRB::cleanUp()
     despawnGuides();
 }
 
-SPRB::SPRB(char data[32], bool useDefaultValues)
+THREESPRING::THREESPRING(char data[32], bool useDefaultValues)
 {
     std::memcpy(rawData, data, 32);
 
@@ -120,19 +120,19 @@ SPRB::SPRB(char data[32], bool useDefaultValues)
 	baseColour.set(1, 1, 1);
 	updateTransformationMatrixYXZ();
 
-    collideModelOriginal = SPRB::cmBase;
-	collideModelTransformed = SPRB::cmBase->duplicateMe();
+    collideModelOriginal = THREESPRING::cmBase;
+	collideModelTransformed = THREESPRING::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
 	updateCollisionModelYXZ();
 }
 
-bool SPRB::isSA2Object()
+bool THREESPRING::isSA2Object()
 {
     return true;
 }
 
-void SPRB::step()
+void THREESPRING::step()
 {
     if (Global::selectedSA2Object == this)
     {
@@ -149,41 +149,41 @@ void SPRB::step()
     }
 }
 
-std::list<TexturedModel*>* SPRB::getModels()
+std::list<TexturedModel*>* THREESPRING::getModels()
 {
-	return &SPRB::models;
+	return &THREESPRING::models;
 }
 
-void SPRB::loadStaticModels()
+void THREESPRING::loadStaticModels()
 {
-	if (SPRB::models.size() > 0)
+	if (THREESPRING::models.size() > 0)
 	{
 		return;
 	}
 
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading SPRB static models...\n");
+	std::fprintf(stdout, "Loading THREESPRING static models...\n");
 	#endif
 
-	loadModel(&SPRB::models, "res/Models/GlobalObjects/Spring/", "SpringB");
+	loadModel(&THREESPRING::models, "res/Models/GlobalObjects/Spring/", "TripleSpring");
 
-    if (SPRB::cmBase == nullptr)
+    if (THREESPRING::cmBase == nullptr)
 	{
-		SPRB::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "SpringB");
+		THREESPRING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "TripleSpring");
 	}
 }
 
-void SPRB::deleteStaticModels()
+void THREESPRING::deleteStaticModels()
 {
 	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting SPRB static models...\n");
+	std::fprintf(stdout, "Deleting THREESPRING static models...\n");
 	#endif
 
-	Entity::deleteModels(&SPRB::models);
-    Entity::deleteCollisionModel(&SPRB::cmBase);
+	Entity::deleteModels(&THREESPRING::models);
+    Entity::deleteCollisionModel(&THREESPRING::cmBase);
 }
 
-void SPRB::updateValue(int btnIndex)
+void THREESPRING::updateValue(int btnIndex)
 {
     char buf[128];
     GetWindowTextA(Global::windowValues[btnIndex], buf, 128);
@@ -374,7 +374,7 @@ void SPRB::updateValue(int btnIndex)
     spawnGuides();
 }
 
-void SPRB::updateEditorWindows()
+void THREESPRING::updateEditorWindows()
 {
     SetWindowTextA(Global::windowLabels[ 0], "ID"        );
     SetWindowTextA(Global::windowLabels[ 1], "Name"      );
@@ -389,7 +389,7 @@ void SPRB::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[10], "Unknown");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
-    SetWindowTextA(Global::windowValues[ 1], "SPRB");
+    SetWindowTextA(Global::windowValues[ 1], "3SPRING");
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
@@ -413,14 +413,14 @@ void SPRB::updateEditorWindows()
     SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
-    SetWindowTextA(Global::windowDescriptions[ 1], "When the player touches this spring, the player's Y rotation is set to the spring's Y rotation.");
+    SetWindowTextA(Global::windowDescriptions[ 1], "");
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
     SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
-    SetWindowTextA(Global::windowDescriptions[ 8], "Time (in frames) that controls are locked.");
+    SetWindowTextA(Global::windowDescriptions[ 8], "");
     SetWindowTextA(Global::windowDescriptions[ 9], "Speed that the player goes once the touch this spring.");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
@@ -429,7 +429,8 @@ void SPRB::updateEditorWindows()
     spawnGuides();
 }
 
-void SPRB::despawnGuides()
+
+void THREESPRING::despawnGuides()
 {
     for (Dummy* guide : guides)
     {
@@ -438,7 +439,7 @@ void SPRB::despawnGuides()
     guides.clear();
 }
 
-void SPRB::spawnGuides()
+void THREESPRING::spawnGuides()
 {
     despawnGuides();
     
@@ -449,7 +450,6 @@ void SPRB::spawnGuides()
     dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
     dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
     
-    #ifndef SAB_MODE
     for (int i = 0; i < 30; i++)
     {
         Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
@@ -461,39 +461,9 @@ void SPRB::spawnGuides()
     
         pos = pos + dir;
     }
-    #else
-    Vector3f vel = dir;
-    vel.setLength(power*60.0f);
-    float timeLeft = ((float)controlLockTime)/60.0f;
-    const float dt = 0.0166666666666f;
-    while (timeLeft > 0)
-    {
-        Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
-        guide->setPosition(&pos);
-        guide->visible = true;
-        guide->updateTransformationMatrixYXZ();
-        Global::addEntity(guide);
-        guides.push_back(guide);
-    
-        pos = pos + vel.scaleCopy(dt);
-
-        const float airNeutralFriction = 1.25f;
-        float storedVelY = vel.y;
-		vel.y = 0;
-		vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
-		vel.y = storedVelY;
-
-        const float gravityForce = 280.0f;
-	    const float gravityTerminal = -650.0f;
-	    const float gravityApproach = 0.45f;
-        vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
-
-        timeLeft -= dt;
-    }
-    #endif
 }
 
-void SPRB::fillData(char data[32])
+void THREESPRING::fillData(char data[32])
 {
     data[1] = (char)ID;
 

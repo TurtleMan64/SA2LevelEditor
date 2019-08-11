@@ -24,6 +24,7 @@ class Dummy;
 
 //#define OBS_MODE
 #define DEV_MODE
+//#define SAB_MODE
 
 #ifdef DEV_MODE
 	#define INCR_NEW(NAME) Global::debugNew(NAME);

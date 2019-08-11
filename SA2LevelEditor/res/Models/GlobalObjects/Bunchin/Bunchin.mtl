@@ -1,0 +1,17 @@
+# Material Count: 3
+
+newmtl Tex_0054_0.dds
+Ns 20
+Ni 0.0
+map_Kd Tex_0054_0.dds
+
+newmtl Tex_0053_0.dds
+Ns 20
+Ni 0.0
+map_Kd Tex_0053_0.dds
+
+newmtl Tex_0055_0.dds
+Ns 20
+Ni 0.0
+map_Kd Tex_0055_0.dds
+

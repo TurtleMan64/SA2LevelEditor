@@ -116,7 +116,7 @@ BUNCHIN::BUNCHIN(char data[32], bool useDefaultValues)
 
 	rotationX = 0;
 	rotationZ = 0;
-	scaleY = 10;
+	scaleY = 20;
 	visible = true;
 	baseColour.set(1, 1, 1);
 	updateTransformationMatrixYXZ();
@@ -171,11 +171,11 @@ void BUNCHIN::loadStaticModels()
 	std::fprintf(stdout, "Loading BUNCHIN static models...\n");
 	#endif
 
-	loadModel(&BUNCHIN::models, "res/Models/GlobalObjects/Bunchin/", "Unknown");
+	loadModel(&BUNCHIN::models, "res/Models/GlobalObjects/Bunchin/", "BunchinSmall");
 
 	if (BUNCHIN::cmBase == nullptr)
 	{
-		BUNCHIN::cmBase = loadCollisionModel("res/Models/GlobalObjects/Bunchin/", "Unknown");
+		BUNCHIN::cmBase = loadCollisionModel("res/Models/GlobalObjects/Bunchin/", "BunchinSmall");
 	}
 }
 
@@ -442,7 +442,7 @@ void BUNCHIN::despawnGuides()
 		Global::deleteEntity(guide);
 	}
 	guides.clear();
-	Global::deleteTransparentEntity(topWeight);
+	Global::deleteEntity(topWeight);
 	topWeight = nullptr;
 }
 
@@ -469,7 +469,7 @@ void BUNCHIN::spawnGuides()
 	topWeight->setScale(scaleX, scaleY, scaleZ);
 	topWeight->visible = true;
 	topWeight->updateTransformationMatrixYXZ();
-	Global::addTransparentEntity(topWeight);
+	Global::addEntity(topWeight);
 
 	printf("done\n\n");
 }

@@ -73,6 +73,7 @@
 #include "../entities/GlobalObjects/itemboxair.h"
 #include "../entities/GlobalObjects/itemboxballoon.h"
 #include "../entities/GlobalObjects/savepoint.h"
+#include "../entities/GlobalObjects/3spring.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -581,6 +582,7 @@ int Global::main()
     ITEMBOXAIR::loadStaticModels();
     ITEMBOXBALLOON::loadStaticModels();
     SAVEPOINT::loadStaticModels();
+    THREESPRING::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

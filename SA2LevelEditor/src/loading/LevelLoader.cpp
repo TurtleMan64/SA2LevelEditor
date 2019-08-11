@@ -61,6 +61,7 @@
 #include "../entities/GlobalObjects/itemboxair.h"
 #include "../entities/GlobalObjects/itemboxballoon.h"
 #include "../entities/GlobalObjects/savepoint.h"
+#include "../entities/GlobalObjects/3spring.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -331,6 +332,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -549,6 +551,39 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 default:   return new Unknown       (data, useDefaultValues);
             }
 
+        case Global::Levels::Eternal_Engine:
+            switch (objectID)
+            {
+                case    0: return new RING          (data, useDefaultValues);
+                case    1: return new RING_LINEAR   (data, useDefaultValues);
+                case    2: return new RING_CIRCLE   (data, useDefaultValues);
+                case    3: return new SPRA          (data, useDefaultValues);
+                case    4: return new SPRB          (data, useDefaultValues);
+                case    6: return new BIGJUMP       (data, useDefaultValues);
+                case    7: return new KASOKU        (data, useDefaultValues);
+                case    8: return new SAVEPOINT     (data, useDefaultValues);
+                case    9: return new SWITCH        (data, useDefaultValues);
+                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
+                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
+                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
+                case 0x0F: return new EMERALD       (data, useDefaultValues);
+                case 0x15: return new ROCKET        (data, useDefaultValues);
+                case 0x25: return new KNUDAI        (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	    (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	    (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	    (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	    (data, useDefaultValues);
+                case 0x2E: return new SPHERE        (data, useDefaultValues);
+                case 0x2F: return new CCYL          (data, useDefaultValues);
+                case 0x30: return new CCUBE         (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	    (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x3D: return new LINKLINK      (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
+                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
+                default:   return new Unknown       (data, useDefaultValues);
+            }
+
         case Global::Levels::Meteor_Herd:
             switch (objectID)
             {
@@ -698,11 +733,11 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x0F: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x10: return new RING_LINEAR   (data, useDefaultValues);
                 case 0x11: return new RING_CIRCLE   (data, useDefaultValues);
-                case 0x28: return new KNUDAI        (data, useDefaultValues);
-                case 0x2F: return new KDDRNGL	    (data, useDefaultValues);
-                case 0x30: return new KDDRNGC	    (data, useDefaultValues);
-                case 0x31: return new KDSPRING	    (data, useDefaultValues);
-                case 0x32: return new KDSPRINGB	    (data, useDefaultValues);
+                case 0x1E: return new KNUDAI        (data, useDefaultValues);
+                case 0x2E: return new KDDRNGL	    (data, useDefaultValues);
+                case 0x2F: return new KDDRNGC	    (data, useDefaultValues);
+                case 0x30: return new KDSPRING	    (data, useDefaultValues);
+                case 0x31: return new KDSPRINGB	    (data, useDefaultValues);
                 case 0x33: return new SPHERE        (data, useDefaultValues);
                 case 0x34: return new CCYL          (data, useDefaultValues);
                 case 0x35: return new CCUBE         (data, useDefaultValues);
@@ -736,9 +771,8 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2C: return new SPHERE        (data, useDefaultValues);
                 case 0x2D: return new CCYL          (data, useDefaultValues);
                 case 0x2E: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN	    (data, useDefaultValues);
-                case 0x37: return new IRONBALL2	    (data, useDefaultValues);
-                case 0x3B: return new LINKLINK      (data, useDefaultValues);
+                case 0x34: return new BUNCHIN	    (data, useDefaultValues);
+                case 0x35: return new IRONBALL2	    (data, useDefaultValues);
                 case 0x3C: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x49: return new STOPLOCKON    (data, useDefaultValues);
                 default:   return new Unknown       (data, useDefaultValues);
@@ -974,9 +1008,9 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0023_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0023_s.bin"]        = "";
     Global::levelSetToLVL2["set0023_u.bin"]        = "";
-    Global::levelSetToLVL2["set0024_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0024_s.bin"]        = "";
-    Global::levelSetToLVL2["SET0024_U.bin"]        = "";
+    Global::levelSetToLVL2["set0024_hd_s.bin"]     = "EternalEngine.lvl2";
+    Global::levelSetToLVL2["set0024_s.bin"]        = "EternalEngine.lvl2";
+    Global::levelSetToLVL2["SET0024_U.BIN"]        = "EternalEngine.lvl2";
     Global::levelSetToLVL2["set0025_2p_s.bin"]     = "";
     Global::levelSetToLVL2["set0025_2p_u.bin"]     = "";
     Global::levelSetToLVL2["set0025_hd_s.bin"]     = "";

@@ -1,0 +1,32 @@
+# Material Count: 5
+
+newmtl Mesh_1279.rip
+Ns 92.156863
+Ni 0.02
+d 1.000000
+map_Kd Tex_0135_0.dds
+
+newmtl Mesh_1277.rip
+Ns 92.156863
+Ni 0.02
+d 1.000000
+map_Kd face.png
+
+newmtl Mesh_1278.rip
+Ns 92.156863
+Ni 0.02
+d 1.000000
+map_Kd Tex_0134_0.dds
+
+newmtl Mesh_1282.rip
+Ns 92.156863
+Ni 0.02
+d 1.000000
+map_Kd Tex_0136_0.dds
+
+newmtl Mesh_1277.rip_Tex_0133_0.dds
+Ns 92.156863
+Ni 0.02
+d 1.000000
+map_Kd Tex_0133_0.dds
+

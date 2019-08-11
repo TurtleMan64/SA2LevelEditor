@@ -373,7 +373,7 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[ 7], "Rotation Z");
     SetWindowTextA(Global::windowLabels[ 8], "Power");
     SetWindowTextA(Global::windowLabels[ 9], "Cooldown");
-    SetWindowTextA(Global::windowLabels[10], "Unknown");
+    SetWindowTextA(Global::windowLabels[10], "Unused");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
     SetWindowTextA(Global::windowValues[ 1], "KASOKU");
@@ -407,9 +407,39 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 5], "");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "");
-    SetWindowTextA(Global::windowDescriptions[ 8], "Multiplier of speed. Defaults to 16 if set to 0.");
-    SetWindowTextA(Global::windowDescriptions[ 9], "Time (in frames) of cooldown after each use.");
+    SetWindowTextA(Global::windowDescriptions[ 8], "Speed that the player goes. If <= 0, 14 is used instead.");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Time (in frames) of cooldown after each use. The player's control stick is also locked during this time. If <= 0, 60 is used instead.");
     SetWindowTextA(Global::windowDescriptions[10], "");
+
+    #ifdef SAB_MODE
+    Vector3f vel(1, 0, 0);
+    Vector3f up(0, 1, 0);
+    vel.setLength(power*60.0f);
+    float timeLeft = ((float)cooldown)/60.0f;
+    const float dt = 0.0166666666666f;
+    const float groundNeutralFriction = 1.5f;
+    while (timeLeft > 0)
+    {
+        if (vel.lengthSquared() > 35.0f*35.0f) //normal neutral stick friction
+		{
+			Vector3f fr(0, -0.95f, 0); //0.75
+			fr = Maths::projectOntoPlane(&fr, &up);
+			float frictionPower = groundNeutralFriction*(1 - fr.length());
+			vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
+        }
+        else //when close to no speed, increase friction
+		{
+			Vector3f fr(0, -0.95f, 0); //0.75
+			fr = Maths::projectOntoPlane(&fr, &up);
+			float frictionPower = (groundNeutralFriction*4)*(1 - fr.length()); //multiply by 4, arbitrary
+			vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
+        }
+
+        timeLeft -= dt;
+    }
+    std::string endSpeed = std::to_string(vel.length());
+    SetWindowTextA(Global::windowDescriptions[10], endSpeed.c_str());
+    #endif
 
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
