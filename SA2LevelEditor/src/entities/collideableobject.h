@@ -18,8 +18,16 @@ public:
 	void updateCollisionModelYXZ();
     void updateCollisionModelYXZ(float sclX, float sclY, float sclZ);
 
+    void updateCollisionModelZXY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+	void updateCollisionModelZXY();
+    void updateCollisionModelZXY(float sclX, float sclY, float sclZ);
+
     void updateCollisionModelZY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
 	void updateCollisionModelZY();
     void updateCollisionModelZY(float sclX, float sclY, float sclZ);
+
+    void updateCollisionModelXY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+	void updateCollisionModelXY();
+    void updateCollisionModelXY(float sclX, float sclY, float sclZ);
 };
 #endif

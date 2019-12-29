@@ -1,0 +1,9 @@
+# Material Count: 1
+
+newmtl spiderweb.png
+Ns 20
+Ni 0.0
+Tr 0
+d 0
+map_Kd spiderweb.png
+

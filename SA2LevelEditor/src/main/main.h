@@ -101,6 +101,7 @@ public:
     //if this is true, the editor will try to attach to a running SA2 process
     // and follow the camera
     static bool gameIsFollowingSA2;
+    static bool gameIsFollowingSA2NoCam;
     static int sa2Type;
     enum SA2Type
     {

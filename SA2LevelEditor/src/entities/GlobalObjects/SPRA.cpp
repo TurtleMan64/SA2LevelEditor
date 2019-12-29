@@ -410,7 +410,7 @@ void SPRA::updateEditorWindows()
     SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
     SetWindowTextA(Global::windowDescriptions[ 1], "When the player touches this spring, the player's rotation is not changed.");

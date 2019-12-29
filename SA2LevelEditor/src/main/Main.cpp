@@ -134,6 +134,7 @@ int Global::levelID = 0;
 bool Global::shouldLoadNewLevel = false;
 bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
+bool Global::gameIsFollowingSA2NoCam = false;
 bool Global::renderWithCulling = false;
 int Global::sa2Type = Global::SA2Type::None;
 
@@ -173,17 +174,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
     return Global::main();
 }
 
-#define CMD_FILE_LOAD       1
-#define CMD_FILE_EXPORT     2
-#define CMD_FILE_EXIT       3
-#define CMD_VIEW_STAGE      4
-#define CMD_VIEW_COLLISION  5
-#define CMD_VIEW_KILLPLANES 6
-#define CMD_VIEW_BACKGROUND 7
-#define CMD_VIEW_CULLING    8
-#define CMD_SA2_FOLLOW      9
-#define CMD_SA2_TELEPORT   10
-#define CMD_HELP           11
+#define CMD_FILE_LOAD          1
+#define CMD_FILE_EXPORT        2
+#define CMD_FILE_EXIT          3
+#define CMD_VIEW_STAGE         4
+#define CMD_VIEW_COLLISION     5
+#define CMD_VIEW_KILLPLANES    6
+#define CMD_VIEW_BACKGROUND    7
+#define CMD_VIEW_CULLING       8
+#define CMD_SA2_FOLLOW         9
+#define CMD_SA2_FOLLOW_NO_CAM 10
+#define CMD_SA2_TELEPORT      11
+#define CMD_HELP              12
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -220,9 +222,11 @@ void addMenus(HWND window)
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING   , MF_UNCHECKED);
 
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,   "Follow SA2 in Real Time");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT, "Teleport Playable Character to 3D Cursor");
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED);
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,        "Follow SA2 in Real Time");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM, "Follow SA2 in Real Time (No Camera)");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT,      "Teleport Playable Character to 3D Cursor");
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW,        MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED);
 
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuFile, "File");
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuView, "View");
@@ -353,8 +357,27 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         case CMD_SA2_FOLLOW:
         {
             Global::gameIsFollowingSA2 = !Global::gameIsFollowingSA2;
+            if (Global::gameIsFollowingSA2NoCam)
+            {
+                Global::gameIsFollowingSA2NoCam = false;
+            }
             if (Global::gameIsFollowingSA2) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_CHECKED  ); }
             else                            { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2NoCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_CHECKED  ); }
+            else                                 { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED); }
+            break;
+        }
+        case CMD_SA2_FOLLOW_NO_CAM:
+        {
+            Global::gameIsFollowingSA2NoCam = !Global::gameIsFollowingSA2NoCam;
+            if (Global::gameIsFollowingSA2)
+            {
+                Global::gameIsFollowingSA2 = false;
+            }
+            if (Global::gameIsFollowingSA2) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_CHECKED  ); }
+            else                            { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2NoCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_CHECKED  ); }
+            else                                 { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED); }
             break;
         }
         case CMD_SA2_TELEPORT: Global::teleportSA2PlayerToCursor3D(); break;
@@ -610,7 +633,7 @@ int Global::main()
 
 		timeOld = timeNew;
 
-        if (!Global::gameIsFollowingSA2)
+        if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
         {
 		    Input::waitForInputs();
         }
@@ -631,7 +654,7 @@ int Global::main()
             LevelLoader::exportLevel();
         }
 
-        if (!Global::redrawWindow && !Global::gameIsFollowingSA2)
+        if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
         {
             continue;
         }
@@ -644,7 +667,7 @@ int Global::main()
 			std::fprintf(stderr, "%d\n", err);
 		}
 
-        if (Global::gameIsFollowingSA2)
+        if (Global::gameIsFollowingSA2 || Global::gameIsFollowingSA2NoCam)
         {
             //Camera prevCam(Global::gameCamera);
             //Vector3f prevPos(&Global::gamePlayer->position);
@@ -1130,18 +1153,20 @@ void Global::updateCamFromSA2()
         zptr[2] = buffer[10];
         zptr[3] = buffer[11];
 
-        Global::gameCamera->eye.x = camX;
-        Global::gameCamera->eye.y = camY;
-        Global::gameCamera->eye.z = camZ;
-
         int pitch;
         memcpy(&pitch, &buffer[12], 4);
     
         int yaw;
         memcpy(&yaw, &buffer[16], 4);
 
-        Global::gameCamera->yaw = -Maths::toDegrees(yaw);
-        Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+        if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        {
+            Global::gameCamera->eye.x = camX;
+            Global::gameCamera->eye.y = camY;
+            Global::gameCamera->eye.z = camZ;
+            Global::gameCamera->yaw = -Maths::toDegrees(yaw);
+            Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+        }
 
         //0x019ED3FC = global position copy
         bytesRead = 0;
@@ -1302,10 +1327,6 @@ void Global::updateCamFromSA2()
             zptr[1] = buffer[10];
             zptr[0] = buffer[11];
 
-            Global::gameCamera->eye.x = camX;
-            Global::gameCamera->eye.y = camY;
-            Global::gameCamera->eye.z = camZ;
-
             int pitch = 0;
             char* ptr = (char*)&pitch;
             memcpy(ptr+1, &buffer[14], 1);
@@ -1316,8 +1337,14 @@ void Global::updateCamFromSA2()
             memcpy(ptr+1, &buffer[18], 1);
             memcpy(ptr+0, &buffer[19], 1);
 
-            Global::gameCamera->yaw = -Maths::toDegrees(yaw);
-            Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+            if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+            {
+                Global::gameCamera->eye.x = camX;
+                Global::gameCamera->eye.y = camY;
+                Global::gameCamera->eye.z = camZ;
+                Global::gameCamera->yaw = -Maths::toDegrees(yaw);
+                Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+            }
         }
 
         //read in character position and rotation

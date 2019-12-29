@@ -50,8 +50,14 @@ public:
 	void updateTransformationMatrixYXZ();
     void updateTransformationMatrixYXZ(float sclX, float sclY, float sclZ);
 
+    void updateTransformationMatrixZXY();
+    void updateTransformationMatrixZXY(float sclX, float sclY, float sclZ);
+
     void updateTransformationMatrixZY();
     void updateTransformationMatrixZY(float sclX, float sclY, float sclZ);
+
+    void updateTransformationMatrixXY();
+    void updateTransformationMatrixXY(float sclX, float sclY, float sclZ);
 
     virtual bool isSA2Object();
 };

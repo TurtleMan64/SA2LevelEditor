@@ -115,6 +115,16 @@ void Entity::updateTransformationMatrixYXZ(float sclX, float sclY, float sclZ)
 	Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
+void Entity::updateTransformationMatrixZXY()
+{
+	Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixZXY(float sclX, float sclY, float sclZ)
+{
+	Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+}
+
 void Entity::updateTransformationMatrixZY()
 {
 	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);
@@ -123,6 +133,16 @@ void Entity::updateTransformationMatrixZY()
 void Entity::updateTransformationMatrixZY(float sclX, float sclY, float sclZ)
 {
 	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, sclX, sclY, sclZ);
+}
+
+void Entity::updateTransformationMatrixXY()
+{
+	Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixXY(float sclX, float sclY, float sclZ)
+{
+	Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, sclX, sclY, sclZ);
 }
 
 Matrix4f* Entity::getTransformationMatrix()

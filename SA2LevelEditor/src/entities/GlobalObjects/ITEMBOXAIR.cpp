@@ -244,7 +244,7 @@ void ITEMBOXAIR::deleteStaticModels()
 
 	Entity::deleteModels(&ITEMBOXAIR::modelsBase);
     Entity::deleteModels(&ITEMBOXAIR::modelsShell);
-    for (int i = 0; i < ITEMBOXAIR::modelsItem.size(); i++)
+    for (int i = 0; i < (int)ITEMBOXAIR::modelsItem.size(); i++)
     {
         Entity::deleteModels(&ITEMBOXAIR::modelsItem[i]);
     }

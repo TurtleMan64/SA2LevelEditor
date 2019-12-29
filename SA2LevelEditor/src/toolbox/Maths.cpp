@@ -105,7 +105,6 @@ void Maths::createTransformationMatrix(Matrix4f* result, Vector2f* translation, 
 	result->scale(scale);
 }
 
-//Based on how sa2 calculates rotations
 void Maths::createTransformationMatrixYXZ(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
 {
 	matrix->setIdentity();
@@ -125,6 +124,25 @@ void Maths::createTransformationMatrixYXZ(Matrix4f* matrix, Vector3f* translatio
 	matrix->scale(&vec);
 }
 
+void Maths::createTransformationMatrixZXY(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
+{
+	matrix->setIdentity();
+	matrix->translate(translation);
+	Vector3f vec;
+
+    vec.set(0, 1, 0);
+	matrix->rotate(toRadians(ry), &vec);
+
+	vec.set(1, 0, 0);
+	matrix->rotate(toRadians(rx), &vec);
+
+    vec.set(0, 0, 1);
+	matrix->rotate(toRadians(rz), &vec);
+
+	vec.set(sX, sY, sZ);
+	matrix->scale(&vec);
+}
+
 void Maths::createTransformationMatrixZY(Matrix4f* matrix, Vector3f* translation, int ry, int rz,  float sX, float sY, float sZ)
 {
     matrix->setIdentity();
@@ -138,6 +156,24 @@ void Maths::createTransformationMatrixZY(Matrix4f* matrix, Vector3f* translation
 
 	vec.set(0, 0, 1);
 	matrix->rotate(Maths::toRadians(rz), &vec);
+
+	vec.set(sX, sY, sZ);
+	matrix->scale(&vec);
+}
+
+void Maths::createTransformationMatrixXY(Matrix4f* matrix, Vector3f* translation, int rx, int ry, float sX, float sY, float sZ)
+{
+    matrix->setIdentity();
+	matrix->translate(translation);
+	Vector3f vec;
+
+    //X, then Y. No Z
+
+    vec.set(0, 1, 0);
+	matrix->rotate(Maths::toRadians(ry), &vec);
+
+	vec.set(1, 0, 0);
+	matrix->rotate(Maths::toRadians(rx), &vec);
 
 	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);

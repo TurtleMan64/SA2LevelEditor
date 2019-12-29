@@ -43,10 +43,13 @@ public:
 	//For 2D GUI Images
 	static void createTransformationMatrix(Matrix4f* result, Vector2f* translation, float roation, Vector2f* scale);
 
-	//Based on how sa2 calculates rotations
 	static void createTransformationMatrixYXZ(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
 
+    static void createTransformationMatrixZXY(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
+
     static void createTransformationMatrixZY(Matrix4f* result, Vector3f* translation, int rY, int rZ, float sX, float sY, float sZ);
+
+    static void createTransformationMatrixXY(Matrix4f* result, Vector3f* translation, int rX, int rY, float sX, float sY, float sZ);
 
 	static void createViewMatrix(Matrix4f* result, Camera* cam);
 

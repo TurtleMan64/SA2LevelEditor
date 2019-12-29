@@ -62,6 +62,7 @@
 #include "../entities/GlobalObjects/itemboxballoon.h"
 #include "../entities/GlobalObjects/savepoint.h"
 #include "../entities/GlobalObjects/3spring.h"
+#include "../entities/LevelSpecific/PyramidCave/spiderweb.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -194,14 +195,8 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
     // load all the models associated with a specific level
     switch (Global::levelID)
     {
-        case Global::Levels::Green_Forest:
-            //Ring::loadStaticModels();
-            //Unknown::loadStaticModels();
-            break;
-
-        case Global::Levels::Metal_Harbor:
-            //Ring::loadStaticModels();
-            //Unknown::loadStaticModels();
+        case Global::Levels::Pyramid_Cave:
+            SPIDERWEB::loadStaticModels();
             break;
 
         default:
@@ -366,6 +361,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -408,6 +404,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x21: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x22: return new RING_LINEAR   (data, useDefaultValues);
                 case 0x23: return new RING_CIRCLE   (data, useDefaultValues);
+                case 0x24: return new THREESPRING   (data, useDefaultValues);
                 case 0x33: return new KNUDAI        (data, useDefaultValues);
                 case 0x3D: return new KDDRNGL	    (data, useDefaultValues);
                 case 0x3E: return new KDDRNGC	    (data, useDefaultValues);
@@ -430,6 +427,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -449,6 +447,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
+                case 0x5A: return new SPIDERWEB     (data, useDefaultValues);
                 case 0x5E: return new LINKLINK      (data, useDefaultValues);
                 default:   return new Unknown       (data, useDefaultValues);
             }
@@ -461,6 +460,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -494,6 +494,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -526,6 +527,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -559,6 +561,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -592,6 +595,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -628,6 +632,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP	    (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -652,6 +657,38 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 default:   return new Unknown       (data, useDefaultValues);
             }
 
+        case Global::Levels::White_Jungle:
+            switch (objectID)
+            {
+                case    0: return new RING          (data, useDefaultValues);
+                case    1: return new SPRA          (data, useDefaultValues);
+                case    2: return new SPRB          (data, useDefaultValues);
+                case    3: return new KASOKU        (data, useDefaultValues);
+                case    4: return new SAVEPOINT     (data, useDefaultValues);
+                case    5: return new SWITCH        (data, useDefaultValues);
+                case    6: return new ITEMBOX       (data, useDefaultValues);
+                case    7: return new ITEMBOXAIR    (data, useDefaultValues);
+                case    8: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x0A: return new BIGJUMP       (data, useDefaultValues);
+                case 0x0B: return new ROCKET        (data, useDefaultValues);
+                case 0x1B: return new ITEMBOXBALLOON(data, useDefaultValues);
+                case 0x1D: return new EMERALD       (data, useDefaultValues);
+                case 0x1E: return new BUNCHIN	    (data, useDefaultValues);
+                case 0x1F: return new RING_LINEAR   (data, useDefaultValues);
+                case 0x20: return new RING_CIRCLE   (data, useDefaultValues);
+                case 0x21: return new THREESPRING   (data, useDefaultValues);
+                case 0x31: return new KNUDAI        (data, useDefaultValues);
+                case 0x3B: return new KDDRNGL	    (data, useDefaultValues);
+                case 0x3C: return new KDDRNGC	    (data, useDefaultValues);
+                case 0x3D: return new KDSPRING	    (data, useDefaultValues);
+                case 0x3E: return new KDSPRINGB	    (data, useDefaultValues);
+                case 0x40: return new SPHERE        (data, useDefaultValues);
+                case 0x41: return new CCYL          (data, useDefaultValues);
+                case 0x42: return new CCUBE         (data, useDefaultValues);
+                case 0x47: return new LINKLINK      (data, useDefaultValues);
+                default:   return new Unknown       (data, useDefaultValues);
+            }
+
         case Global::Levels::Sky_Rail:
             switch (objectID)
             {
@@ -670,6 +707,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x10: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x11: return new RING_LINEAR   (data, useDefaultValues);
                 case 0x12: return new RING_CIRCLE   (data, useDefaultValues);
+                case 0x13: return new THREESPRING   (data, useDefaultValues);
                 case 0x21: return new KNUDAI        (data, useDefaultValues);
                 case 0x45: return new KDDRNGL	    (data, useDefaultValues);
                 case 0x46: return new KDDRNGC	    (data, useDefaultValues);
@@ -691,6 +729,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
                 case    9: return new SWITCH        (data, useDefaultValues);
@@ -733,6 +772,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x0F: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x10: return new RING_LINEAR   (data, useDefaultValues);
                 case 0x11: return new RING_CIRCLE   (data, useDefaultValues);
+                case 0x12: return new THREESPRING   (data, useDefaultValues);
                 case 0x1E: return new KNUDAI        (data, useDefaultValues);
                 case 0x2E: return new KDDRNGL	    (data, useDefaultValues);
                 case 0x2F: return new KDDRNGC	    (data, useDefaultValues);
@@ -755,6 +795,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -786,6 +827,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -821,6 +863,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -855,6 +898,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    2: return new RING_CIRCLE   (data, useDefaultValues);
                 case    3: return new SPRA          (data, useDefaultValues);
                 case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
                 case    6: return new BIGJUMP       (data, useDefaultValues);
                 case    7: return new KASOKU        (data, useDefaultValues);
                 case    8: return new SAVEPOINT     (data, useDefaultValues);
@@ -928,11 +972,11 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0003_hd_u.bin"]     = "GreenForest.lvl2";
     Global::levelSetToLVL2["set0003_s.bin"]        = "GreenForest.lvl2";
     Global::levelSetToLVL2["set0003_u.bin"]        = "GreenForest.lvl2";
-    Global::levelSetToLVL2["set0004_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0004_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0004_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0004_s.bin"]        = "";
-    Global::levelSetToLVL2["set0004_u.bin"]        = "";
+    Global::levelSetToLVL2["set0004_2p_s.bin"]     = "WhiteJungle.lvl2";
+    Global::levelSetToLVL2["set0004_2p_u.bin"]     = "WhiteJungle.lvl2";
+    Global::levelSetToLVL2["set0004_hd_s.bin"]     = "WhiteJungle.lvl2";
+    Global::levelSetToLVL2["set0004_s.bin"]        = "WhiteJungle.lvl2";
+    Global::levelSetToLVL2["set0004_u.bin"]        = "WhiteJungle.lvl2";
     Global::levelSetToLVL2["set0005_2P_s.bin"]     = "";
     Global::levelSetToLVL2["set0005_2P_u.bin"]     = "";
     Global::levelSetToLVL2["set0005_hd_s.bin"]     = "";
@@ -1151,6 +1195,7 @@ void LevelLoader::freeAllStaticModels()
 {
     //Ring::deleteStaticModels(); //dont delete these since theyll be in basically all levels
     //Unknown::deleteStaticModels();
+    SPIDERWEB::deleteStaticModels();
 }
 
 int LevelLoader::getNumLevels()
@@ -1198,7 +1243,7 @@ void LevelLoader::promptUserForLevel()
         {
             if (filePaths[i+1] == 0)
             {
-                MessageBox(NULL, "You only selected one file. Please select both setXXXX_s.bin and setXXXX_u.bin", "silly", NULL);
+                MessageBox(NULL, "You only selected one file. Please select both setXXXX_s.bin and setXXXX_u.bin", "silly", MB_OK);
                 return;
             }
             else
@@ -1211,12 +1256,12 @@ void LevelLoader::promptUserForLevel()
 
     if (Global::levelSetToLVL2.find(file1) == Global::levelSetToLVL2.end())
     {
-        MessageBox(NULL, (("This program does not recognize "+file1)+" to have a SA2 level associated with it.").c_str(), "silly", NULL);
+        MessageBox(NULL, (("This program does not recognize "+file1)+" to have a SA2 level associated with it.").c_str(), "silly", MB_OK);
         return;
     }
     if (Global::levelSetToLVL2.find(file2) == Global::levelSetToLVL2.end())
     {
-        MessageBox(NULL, (("This program does not recognize "+file2)+" to have a SA2 level associated with it.").c_str(), "silly", NULL);
+        MessageBox(NULL, (("This program does not recognize "+file2)+" to have a SA2 level associated with it.").c_str(), "silly", MB_OK);
         return;
     }
 
@@ -1225,14 +1270,14 @@ void LevelLoader::promptUserForLevel()
 
     if (lvl1 != lvl2)
     {
-        MessageBox(NULL, "These setfiles aren't associated with the same SA2 level.", "silly", NULL);
+        MessageBox(NULL, "These setfiles aren't associated with the same SA2 level.", "silly", MB_OK);
         return;
     }
 
     if (lvl1 == "" ||
         lvl2 == "")
     {
-        MessageBox(NULL, "This level is not supported at this time.", "silly", NULL);
+        MessageBox(NULL, "This level is not supported at this time.", "silly", MB_OK);
         return;
     }
 
@@ -1317,7 +1362,7 @@ void LevelLoader::exportLevel()
         {
             if (filePaths[i+1] == 0)
             {
-                MessageBox(NULL, "You only selected one file. Please select both setXXXX_s.bin and setXXXX_u.bin", "silly", NULL);
+                MessageBox(NULL, "You only selected one file. Please select both setXXXX_s.bin and setXXXX_u.bin", "silly", MB_OK);
                 return;
             }
             else
@@ -1347,7 +1392,7 @@ void LevelLoader::exportLevel()
     }
     else
     {
-        MessageBox(NULL, "Cannot determine which file is the U file and which is the S file.", "silly", NULL);
+        MessageBox(NULL, "Cannot determine which file is the U file and which is the S file.", "silly", MB_OK);
         return;
     }
 
@@ -1371,7 +1416,7 @@ void LevelLoader::exportLevel()
     if (sa2Objects.size() < 2)
     {
         std::fprintf(stdout, "Error: Less than 2 objects to export. Each setfile needs to have at least 1\n");
-        MessageBox(NULL, "Error: Less than 2 objects to export. Each setfile needs to have at least 1", "silly", NULL);
+        MessageBox(NULL, "Error: Less than 2 objects to export. Each setfile needs to have at least 1", "silly", MB_OK);
         return;
     }
 
@@ -1387,7 +1432,7 @@ void LevelLoader::exportLevel()
     if (!myfileU.is_open())
     {
         std::string exp = (folder+"\\")+fileU;
-        MessageBox(NULL, (("Cannot open file '"+exp)+"' for writing.").c_str(), "silly", NULL);
+        MessageBox(NULL, (("Cannot open file '"+exp)+"' for writing.").c_str(), "silly", MB_OK);
         return;
     }
 
@@ -1415,7 +1460,7 @@ void LevelLoader::exportLevel()
     if (!myfileS.is_open())
     {
         std::string exp = (folder+"\\")+fileS;
-        MessageBox(NULL, (("Cannot open file '"+exp)+"' for writing.").c_str(), "silly", NULL);
+        MessageBox(NULL, (("Cannot open file '"+exp)+"' for writing.").c_str(), "silly", MB_OK);
         return;
     }
 
@@ -1428,7 +1473,7 @@ void LevelLoader::exportLevel()
     myfileS.write(buf, 32);
 
     //write objects to the S file
-    for (int i = countU; i < sa2Objects.size(); i++)
+    for (int i = countU; i < (int)sa2Objects.size(); i++)
     {
         SA2Object* o = sa2Objects[i];
         memset(buf, 0, 32);

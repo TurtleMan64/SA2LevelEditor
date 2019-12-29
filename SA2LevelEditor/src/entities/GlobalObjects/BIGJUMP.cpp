@@ -118,13 +118,19 @@ BIGJUMP::BIGJUMP(char data[32], bool useDefaultValues)
     scaleZ = 1;
 	visible = true;
 	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
 
     collideModelOriginal = BIGJUMP::cmBase;
 	collideModelTransformed = BIGJUMP::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
 	CollisionChecker::addCollideModel(collideModelTransformed);
+
+    #ifndef SAB_MODE
+    updateTransformationMatrixYXZ();
 	updateCollisionModelYXZ();
+    #else
+    updateTransformationMatrixXY();
+	updateCollisionModelXY();
+    #endif
 }
 
 bool BIGJUMP::isSA2Object()
@@ -166,7 +172,6 @@ void BIGJUMP::loadStaticModels()
 	#endif
 
 	loadModel(&BIGJUMP::models, "res/Models/GlobalObjects/BigJump/", "BigJump");
-
     if (BIGJUMP::cmBase == nullptr)
 	{
 		BIGJUMP::cmBase = loadCollisionModel("res/Models/GlobalObjects/BigJump/", "BigJump");
@@ -239,8 +244,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
@@ -254,8 +257,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
@@ -269,8 +270,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
@@ -284,8 +283,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             int newRotX = std::stoi(text);
             rotationX = newRotX;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
             break;
@@ -299,8 +296,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             int newRotY = std::stoi(text);
             rotationY = newRotY;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
             break;
@@ -314,8 +309,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             int newRotZ = std::stoi(text);
             rotationZ = newRotZ;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
             break;
@@ -329,8 +322,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             float newVar1 = std::stof(text);
             powerH = newVar1;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(powerH).c_str());
             break;
@@ -344,8 +335,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             int newVar2 = std::stoi(text);
             cooldown = newVar2;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[9], std::to_string(cooldown).c_str());
             break;
@@ -359,8 +348,6 @@ void BIGJUMP::updateValue(int btnIndex)
         {
             float newVar3 = std::stof(text);
             powerV = newVar3;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[10], std::to_string(powerV).c_str());
             break;
@@ -370,6 +357,14 @@ void BIGJUMP::updateValue(int btnIndex)
 
     default: break;
     }
+
+    #ifndef SAB_MODE
+    updateTransformationMatrixYXZ();
+	updateCollisionModelYXZ();
+    #else
+    updateTransformationMatrixXY();
+	updateCollisionModelXY();
+    #endif
 
     spawnGuides();
 }
@@ -420,12 +415,24 @@ void BIGJUMP::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 5], "Affects model and collision, but not launch direction.");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "Affects model and collision, but not launch direction.");
+    #ifndef SAB_MODE
     SetWindowTextA(Global::windowDescriptions[ 8], "Horizontal speed of the player after being launched.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Unsure if this has any effect.");
     SetWindowTextA(Global::windowDescriptions[10], "Vertical speed of the player after being launched.");
+    #else
+    SetWindowTextA(Global::windowDescriptions[ 8], "Speed");
+    SetWindowTextA(Global::windowDescriptions[ 9], "Time lock frames");
+    SetWindowTextA(Global::windowDescriptions[10], "");
+    #endif
 
+    #ifndef SAB_MODE
     updateTransformationMatrixYXZ();
-    updateCollisionModelYXZ();
+	updateCollisionModelYXZ();
+    #else
+    updateTransformationMatrixXY();
+	updateCollisionModelXY();
+    #endif
+
     spawnGuides();
 }
 
@@ -442,6 +449,7 @@ void BIGJUMP::spawnGuides()
 {
     despawnGuides();
 
+    #ifndef SAB_MODE
     const float GRAVITY = -0.08f; //TODO hard coded value of gravity
 
     Vector3f pos(&position);
@@ -503,6 +511,47 @@ void BIGJUMP::spawnGuides()
     }
 
     printf("done\n\n");
+
+    #else
+    Vector3f pos(&position);
+    pos.y += 4;
+
+    Vector3f dir(0, 0, -1);
+    Vector3f xAxis(1, 0, 0);
+    Vector3f yAxis(0, 1, 0);
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(20.0f)); //hard coded 20 degree offset
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX)); //additional rot from var
+    dir = Maths::rotatePoint(&dir, &yAxis, Maths::toRadians(rotationY));
+
+    Vector3f vel = dir;
+    vel.setLength(powerH*60.0f);
+    float timeLeft = ((float)cooldown)/60.0f;
+    const float dt = 0.0166666666666f;
+    while (timeLeft > 0)
+    {
+        Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
+        guide->setPosition(&pos);
+        guide->visible = true;
+        guide->updateTransformationMatrixYXZ();
+        Global::addEntity(guide);
+        guides.push_back(guide);
+    
+        pos = pos + vel.scaleCopy(dt);
+
+        const float airNeutralFriction = 1.25f;
+        float storedVelY = vel.y;
+		vel.y = 0;
+		vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
+		vel.y = storedVelY;
+
+        const float gravityForce = 280.0f;
+	    const float gravityTerminal = -650.0f;
+	    const float gravityApproach = 0.45f;
+        vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
+
+        timeLeft -= dt;
+    }
+    #endif
 }
 
 void BIGJUMP::fillData(char data[32])

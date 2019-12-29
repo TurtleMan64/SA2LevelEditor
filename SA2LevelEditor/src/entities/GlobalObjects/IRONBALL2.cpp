@@ -171,7 +171,7 @@ void IRONBALL2::loadStaticModels()
 	#endif
 
 	loadModel(&IRONBALL2::baseModels, "res/Models/GlobalObjects/IronBall2/", "Base");
-	loadModel(&IRONBALL2::rodModels, "res/Models/GlobalObjects/IronBall2/", "Rod");
+	loadModel(&IRONBALL2::rodModels,  "res/Models/GlobalObjects/IronBall2/", "Rod");
 	loadModel(&IRONBALL2::ballModels, "res/Models/GlobalObjects/IronBall2/", "Ball");
 
     if (IRONBALL2::cmBase == nullptr)
@@ -205,7 +205,7 @@ void IRONBALL2::deleteStaticModels()
 void IRONBALL2::createModel() {
 	float unitRadius = 20 * (radius + 1);
 	//Rod
-	rod = new std::tuple<Dummy*, CollisionModel*>();
+	rod = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
 
 	Dummy* rodDummy = new Dummy(&rodModels); INCR_NEW("Entity");
 	rodDummy->setPosition(&position);
@@ -225,7 +225,7 @@ void IRONBALL2::createModel() {
 	std::get<1>(*rod) = rodCM;
 
 	//Ball 1 (+X)
-	ball1 = new std::tuple<Dummy*, CollisionModel*>();
+	ball1 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
 
 	Dummy* ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
 	ballDummy->setPosition(&position);
@@ -244,7 +244,7 @@ void IRONBALL2::createModel() {
 	std::get<1>(*ball1) = rodCM;
 
 	//Ball 2 (-X)
-	ball2 = new std::tuple<Dummy*, CollisionModel*>();
+	ball2 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
 	ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
 	ballDummy->setPosition(&position);
 	ballDummy->increasePosition(-unitRadius, 0, 0);
@@ -271,9 +271,9 @@ void IRONBALL2::destroyModel() {
 	CollisionChecker::deleteCollideModel(std::get<1>(*ball1));
 	CollisionChecker::deleteCollideModel(std::get<1>(*ball2));
 
-	delete rod;
-	delete ball1;
-	delete ball2;
+	delete rod;   INCR_DEL("tuple");
+	delete ball1; INCR_DEL("tuple");
+	delete ball2; INCR_DEL("tuple");
 }
 
 void IRONBALL2::spawnGuides() {
@@ -303,8 +303,6 @@ void IRONBALL2::spawnGuides() {
 	swingCylinder->visible = true;
 	swingCylinder->updateTransformationMatrixYXZ();
 	Global::addTransparentEntity(swingCylinder);
-
-	printf("done\n\n");
 }
 
 void IRONBALL2::despawnGuides() {

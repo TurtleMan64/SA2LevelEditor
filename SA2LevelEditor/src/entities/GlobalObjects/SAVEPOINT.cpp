@@ -213,6 +213,8 @@ void SAVEPOINT::updateValue(int btnIndex)
                     newObject->updateEditorWindows();
                     cleanUp();
                     Global::deleteEntity(this);
+                    Global::redrawWindow = true;
+                    return;
                 }
             }
             break;

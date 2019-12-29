@@ -190,6 +190,7 @@
     <ClCompile Include="src\entities\GlobalObjects\SPRA.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SPRB.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\STOPLOCKON.cpp" />
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SPIDERWEB.cpp" />
     <ClCompile Include="src\entities\SA2Object.cpp" />
     <ClCompile Include="src\entities\Stage.cpp" />
     <ClCompile Include="src\entities\StageCollision.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="src\entities\GlobalObjects\spra.h" />
     <ClInclude Include="src\entities\GlobalObjects\sprb.h" />
     <ClInclude Include="src\entities\GlobalObjects\stoplockon.h" />
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\spiderweb.h" />
     <ClInclude Include="src\entities\sa2object.h" />
     <ClInclude Include="src\entities\stage.h" />
     <ClInclude Include="src\entities\stagecollision.h" />

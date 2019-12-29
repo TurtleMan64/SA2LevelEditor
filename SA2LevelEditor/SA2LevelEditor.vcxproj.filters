@@ -39,6 +39,12 @@
     <Filter Include="Source Files\guis">
       <UniqueIdentifier>{f0cb61ea-997c-4796-9029-41f00b67714d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific">
+      <UniqueIdentifier>{1ebf60f9-d429-4b72-b0c1-b1fa27ec4269}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\PyramidCave">
+      <UniqueIdentifier>{c2cbc78a-d907-4e53-b988-ff90c344b766}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c">
@@ -278,6 +284,9 @@
     <ClCompile Include="src\entities\GlobalObjects\3SPRING.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SPIDERWEB.cpp">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -513,6 +522,9 @@
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\3spring.h">
       <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\spiderweb.h">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <cstring>
+#include <cmath>
 #include <Windows.h>
 
 #include "../entity.h"
@@ -549,7 +550,7 @@ void LIGHT_SW::fillData(char data[32])
 
 void LIGHT_SW::updateBoxTransformationMatrix()
 {
-    float rad = std::sqrtf(var1*var1 + var2*var2 + var3*var3);
+    float rad = sqrtf(var1*var1 + var2*var2 + var3*var3);
     switch (collisionType)
     {
     case 0: box->updateTransformationMatrixZY(var1, var2, var3); break;
@@ -561,7 +562,7 @@ void LIGHT_SW::updateBoxTransformationMatrix()
 
 void LIGHT_SW::updateMyCollisionModel()
 {
-    float rad = std::sqrtf(var1*var1 + var2*var2 + var3*var3);
+    float rad = sqrtf(var1*var1 + var2*var2 + var3*var3);
     switch (collisionType)
     {
     case 0: updateCollisionModelZY(var1, var2, var3); break;
