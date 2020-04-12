@@ -50,9 +50,9 @@ bool CollisionModel::hasQuadTree()
 //makes a collision model be the transformed version of this collision model
 void CollisionModel::transformModelYXZ(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
-    float angleRadX = Maths::toRadians(bamsXRot);
-	float angleRadY = Maths::toRadians(bamsYRot);
-	float angleRadZ = Maths::toRadians(bamsZRot);
+    float angleRadX = Maths::bamsToRad(bamsXRot);
+	float angleRadY = Maths::bamsToRad(bamsYRot);
+	float angleRadZ = Maths::bamsToRad(bamsZRot);
 
 	targetModel->deleteMe();
 
@@ -93,9 +93,9 @@ void CollisionModel::transformModelYXZ(CollisionModel* targetModel, Vector3f* tr
 
 void CollisionModel::transformModelZXY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
-    float angleRadX = Maths::toRadians(bamsXRot);
-	float angleRadY = Maths::toRadians(bamsYRot);
-	float angleRadZ = Maths::toRadians(bamsZRot);
+    float angleRadX = Maths::bamsToRad(bamsXRot);
+	float angleRadY = Maths::bamsToRad(bamsYRot);
+	float angleRadZ = Maths::bamsToRad(bamsZRot);
 
 	targetModel->deleteMe();
 
@@ -136,8 +136,8 @@ void CollisionModel::transformModelZXY(CollisionModel* targetModel, Vector3f* tr
 
 void CollisionModel::transformModelZY(CollisionModel* targetModel, Vector3f* translate, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
-    float angleRadY = Maths::toRadians(bamsYRot);
-	float angleRadZ = Maths::toRadians(bamsZRot);
+    float angleRadY = Maths::bamsToRad(bamsYRot);
+	float angleRadZ = Maths::bamsToRad(bamsZRot);
 
 	targetModel->deleteMe();
 
@@ -173,8 +173,8 @@ void CollisionModel::transformModelZY(CollisionModel* targetModel, Vector3f* tra
 
 void CollisionModel::transformModelXY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, float xScale, float yScale, float zScale)
 {
-    float angleRadY = Maths::toRadians(bamsYRot);
-	float angleRadX = Maths::toRadians(bamsXRot);
+    float angleRadY = Maths::bamsToRad(bamsYRot);
+	float angleRadX = Maths::bamsToRad(bamsXRot);
 
 	targetModel->deleteMe();
 

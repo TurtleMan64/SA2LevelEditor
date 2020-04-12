@@ -1,0 +1,167 @@
+# Material Count: 33
+
+newmtl dz_iron_box2.png
+Ns 20
+Ni 0.0
+map_Kd dz_iron_box2.png
+
+newmtl kd_nde_hasira7.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira7.png
+
+newmtl dz_iron_boxeye.png
+Ns 20
+Ni 0.0
+map_Kd dz_iron_boxeye.png
+
+newmtl kd_nde_kabe8_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabe8_vq.png
+
+newmtl kd_nde_ido1.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_ido1.png
+
+newmtl dz_pharaohsit.png
+Ns 20
+Ni 0.0
+map_Kd dz_pharaohsit.png
+
+newmtl dz_iron_box.png
+Ns 20
+Ni 0.0
+map_Kd dz_iron_box.png
+
+newmtl kd_sphinx_face1.png
+Ns 20
+Ni 0.0
+map_Kd kd_sphinx_face1.png
+
+newmtl kd_nde_hasira3_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira3_vq.png
+
+newmtl kd_wc_gc021.png
+Ns 20
+Ni 0.0
+map_Kd kd_wc_gc021.png
+
+newmtl kd_nde_hasira2_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira2_vq.png
+
+newmtl kd_nde_hasira4.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira4.png
+
+newmtl kd_nde_hasira6_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira6_vq.png
+
+newmtl dz_balconymoji_tile.png
+Ns 20
+Ni 0.0
+map_Kd dz_balconymoji_tile.png
+
+newmtl kd_nde_kabe2_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabe2_vq.png
+
+newmtl kd_nde_hasira1_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira1_vq.png
+
+newmtl kd_nde_hasira5_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira5_vq.png
+
+newmtl kd_nde_kabe4_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabe4_vq.png
+
+newmtl kd_nde_hasira9_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira9_vq.png
+
+newmtl kd_nde_hasira8_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_hasira8_vq.png
+
+newmtl kd_nde_kabepic4.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabepic4.png
+
+newmtl kd_wc_gc022.png
+Ns 20
+Ni 0.0
+map_Kd kd_wc_gc022.png
+
+newmtl kd_nde_kabe5_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabe5_vq.png
+
+newmtl kd_wc_gc001.png
+Ns 20
+Ni 0.0
+map_Kd kd_wc_gc001.png
+
+newmtl kd_wc_gc031.png
+Ns 20
+Ni 0.0
+map_Kd kd_wc_gc031.png
+
+newmtl kd_nde_yuka1.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_yuka1.png
+
+newmtl dz_pharaoh_wall.png
+Ns 20
+Ni 0.0
+map_Kd dz_pharaoh_wall.png
+
+newmtl kd_nde_yuka2_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_yuka2_vq.png
+
+newmtl kd_nde_kabepic3_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabepic3_vq.png
+
+newmtl dz_pharaohmanface.png
+Ns 20
+Ni 0.0
+map_Kd dz_pharaohmanface.png
+
+newmtl kd_nde_kabepic2_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabepic2_vq.png
+
+newmtl kd_nde_kabepic1_vq.png
+Ns 20
+Ni 0.0
+map_Kd kd_nde_kabepic1_vq.png
+
+newmtl dz_swallpaint.png
+Ns 20
+Ni 0.0
+map_Kd dz_swallpaint.png
+

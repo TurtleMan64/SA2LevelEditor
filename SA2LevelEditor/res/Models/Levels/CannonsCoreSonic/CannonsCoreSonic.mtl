@@ -1,0 +1,217 @@
+# Material Count: 43
+
+newmtl kd_ls_gc708.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc708.png
+
+newmtl kd_ls_gc5011.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc5011.png
+
+newmtl kd_ls_gc402.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc402.png
+
+newmtl kd_ls_unit604.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit604.png
+
+newmtl kd_ls_gc606.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc606.png
+
+newmtl kd_ls_gc712.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc712.png
+
+newmtl kd_ls_gc5012.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc5012.png
+
+newmtl kd_ls_unit205.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit205.png
+
+newmtl kd_ls_gc716.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc716.png
+
+newmtl kd_ls_gc4042.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc4042.png
+
+newmtl kd_ls_gc703.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc703.png
+
+newmtl kd_ls_gc002.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc002.png
+
+newmtl kd_ls_gccylind13.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gccylind13.png
+
+newmtl kd_ls_unit603.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit603.png
+
+newmtl kd_ls_gcblack1.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gcblack1.png
+
+newmtl kd_ls_unit407.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit407.png
+
+newmtl kd_ls_gc7021.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc7021.png
+
+newmtl kd_ls_gc5013.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc5013.png
+
+newmtl kd_ls_unit403.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit403.png
+
+newmtl kd_ls_gc704.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc704.png
+
+newmtl kd_ls_gc001.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc001.png
+
+newmtl kd_ls_gc302.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc302.png
+
+newmtl kd_ls_unit602.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit602.png
+
+newmtl kd_ls_gccylind12.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gccylind12.png
+
+newmtl kd_ls_gc701.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc701.png
+
+newmtl kd_ls_unit203.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit203.png
+
+newmtl kd_ls_gc502.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc502.png
+
+newmtl kd_ls_unit504.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit504.png
+
+newmtl kd_ls_gc303.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc303.png
+
+newmtl kd_ls_gc705.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc705.png
+
+newmtl kd_ls_gclastkusa1.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gclastkusa1.png
+
+newmtl kd_ls_unit406.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit406.png
+
+newmtl kd_ls_gc605.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc605.png
+
+newmtl kd_ls_gcbeam2.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gcbeam2.png
+
+newmtl kd_ls_gc405.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc405.png
+
+newmtl kd_ls_gc706.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc706.png
+
+newmtl kd_ls_gc304.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc304.png
+
+newmtl kd_ls_gc401.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc401.png
+
+newmtl kd_ls_unit503.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit503.png
+
+newmtl kd_ls_gc4041.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc4041.png
+
+newmtl kd_ls_gc702.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_gc702.png
+
+newmtl kd_ls_unit202.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_unit202.png
+
+newmtl kd_ls_beam1.png
+Ns 20
+Ni 0.0
+map_Kd kd_ls_beam1.png
+

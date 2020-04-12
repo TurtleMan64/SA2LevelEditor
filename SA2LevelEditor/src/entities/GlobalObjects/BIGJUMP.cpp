@@ -224,6 +224,7 @@ void BIGJUMP::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -455,7 +456,7 @@ void BIGJUMP::spawnGuides()
     Vector3f pos(&position);
     Vector3f deltaH(0, 0, -powerH);
     Vector3f yAxis(0, 1, 0);
-    deltaH = Maths::rotatePoint(&deltaH, &yAxis, Maths::toRadians(rotationY));
+    deltaH = Maths::rotatePoint(&deltaH, &yAxis, Maths::bamsToRad(rotationY));
     float speedV = powerV+GRAVITY;
     int count = 0;
 
@@ -467,7 +468,7 @@ void BIGJUMP::spawnGuides()
 
     if (debug)
     {
-        printf("deltaH = %f, %f, %f\n", deltaH.x, deltaH.y, deltaH.z);
+        //printf("deltaH = %f, %f, %f\n", deltaH.x, deltaH.y, deltaH.z);
     }
 
 
@@ -501,7 +502,7 @@ void BIGJUMP::spawnGuides()
 
         if (debug)
         {
-            printf("speedV = %f\n", speedV);
+            //printf("speedV = %f\n", speedV);
         }
 
         if (pos.y < position.y)
@@ -510,7 +511,7 @@ void BIGJUMP::spawnGuides()
         }
     }
 
-    printf("done\n\n");
+    //printf("done\n\n");
 
     #else
     Vector3f pos(&position);
@@ -520,8 +521,8 @@ void BIGJUMP::spawnGuides()
     Vector3f xAxis(1, 0, 0);
     Vector3f yAxis(0, 1, 0);
     dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(20.0f)); //hard coded 20 degree offset
-    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX)); //additional rot from var
-    dir = Maths::rotatePoint(&dir, &yAxis, Maths::toRadians(rotationY));
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX)); //additional rot from var
+    dir = Maths::rotatePoint(&dir, &yAxis, Maths::bamsToRad(rotationY));
 
     Vector3f vel = dir;
     vel.setLength(powerH*60.0f);

@@ -1,3 +1,7 @@
+#include <Windows.h>
+#include <commdlg.h>
+#include <tchar.h>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <SOIL/SOIL.h>
@@ -24,12 +28,6 @@
 #include "../entities/stagesky.h"
 #include "../entities/stage.h"
 #include "../loading/levelloader.h"
-
-#ifdef _WIN32
-#include <windows.h>
-#include <commdlg.h>
-#include <tchar.h>
-#endif
 
 #include "../entities/GlobalObjects/ring.h"
 
@@ -277,40 +275,48 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
         //rotate objects
         if (Global::isHoldingClickRight)
         {
-            const float SLIDE_SPEED = 1.0f;
+            float ROT_SPEED = 0.07f;
+
+            if (Global::isHoldingShift)
+            {
+                ROT_SPEED = 3.0f;
+            }
+
             if (Global::isHoldingX)
             {
-                Global::selectedSA2Object->rotationX -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+                Global::selectedSA2Object->rotationX -= (int)std::round((yDiff)*ROT_SPEED);
             }
             if (Global::isHoldingY)
             {
-                Global::selectedSA2Object->rotationY -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+                Global::selectedSA2Object->rotationY -= (int)std::round((xDiff)*ROT_SPEED);
             }
             if (Global::isHoldingZ)
             {
-                Global::selectedSA2Object->rotationZ -= (int)((xDiff + yDiff)*SLIDE_SPEED);
+                Global::selectedSA2Object->rotationZ -= (int)std::round((xDiff)*ROT_SPEED);
             }
         }
         else //move objects
         {
-            const float SLIDE_SPEED = 0.1f;
+            float SLIDE_SPEED = 0.005f;
+
+            if (Global::isHoldingShift)
+            {
+                SLIDE_SPEED = 0.5f;
+            }
+
             if (Global::isHoldingX)
             {
-                Global::selectedSA2Object->position.x -= (xDiff + yDiff)*SLIDE_SPEED;
+                Global::selectedSA2Object->position.x += (xDiff)*SLIDE_SPEED;
             }
             if (Global::isHoldingY)
             {
-                Global::selectedSA2Object->position.y -= (xDiff + yDiff)*SLIDE_SPEED;
+                Global::selectedSA2Object->position.y -= (yDiff)*SLIDE_SPEED;
             }
             if (Global::isHoldingZ)
             {
-                Global::selectedSA2Object->position.z -= (xDiff + yDiff)*SLIDE_SPEED;
+                Global::selectedSA2Object->position.z += (yDiff)*SLIDE_SPEED;
             }
         }
-
-        //not all objects have collision models, so we cant do this here. instead they should do it in the update editor window function
-        //Global::selectedSA2Object->updateCollisionModel();
-        //Global::selectedSA2Object->updateTransformationMatrix();
 
         Global::selectedSA2Object->updateEditorWindows();
         Global::redrawWindow = true;
@@ -407,7 +413,10 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             else if (action == GLFW_RELEASE)
             {
                 Global::isHoldingX = false;
-                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                if (!Global::isHoldingY && !Global::isHoldingZ)
+                {
+                    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                }
             }
             break;
 
@@ -420,7 +429,10 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             else if (action == GLFW_RELEASE)
             {
                 Global::isHoldingY = false;
-                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                if (!Global::isHoldingX && !Global::isHoldingZ)
+                {
+                    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                }
             }
             break;
 
@@ -433,7 +445,10 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             else if (action == GLFW_RELEASE)
             {
                 Global::isHoldingZ = false;
-                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                if (!Global::isHoldingX && !Global::isHoldingY)
+                {
+                    glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                }
             }
             break;
 
@@ -467,9 +482,14 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
                 if (Global::selectedSA2Object != nullptr)
                 {
                     Global::deleteEntity(Global::selectedSA2Object);
+
+                    if (Global::selectedSA2Object->lvlLineNum >= 0)
+                    {
+                        LevelLoader::lvlFile[Global::selectedSA2Object->lvlLineNum] = "";
+                    }
+
                     Global::selectedSA2Object->cleanUp();
                     Global::selectedSA2Object = nullptr;
-                    Global::deleteEntity(Global::selectedSA2Object);
                     Global::redrawWindow = true;
                     Global::resetObjectWindow();
                 }
@@ -494,6 +514,31 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
                         Global::redrawWindow = true;
                     }
                 }
+            }
+            break;
+
+        case GLFW_KEY_KP_7:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameCamera->yaw = 0.0f;
+                Global::gameCamera->pitch = 89.99f;
+                Global::redrawWindow = true;
+            }
+            break;
+
+        case GLFW_KEY_KP_4:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameCamera->yaw -= 22.5f;
+                Global::redrawWindow = true;
+            }
+            break;
+
+        case GLFW_KEY_KP_6:
+            if (action == GLFW_PRESS)
+            {
+                Global::gameCamera->yaw += 22.5f;
+                Global::redrawWindow = true;
             }
             break;
 

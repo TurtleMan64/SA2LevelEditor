@@ -1,0 +1,162 @@
+# Material Count: 32
+
+newmtl miu128_cg011.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg011.png
+
+newmtl et256_1.png
+Ns 20
+Ni 0.0
+map_Kd et256_1.png
+
+newmtl ct256_1.png
+Ns 20
+Ni 0.0
+map_Kd ct256_1.png
+
+newmtl miu128_cg016.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg016.png
+
+newmtl miu128_cg007.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg007.png
+
+newmtl miu256_cg004.png
+Ns 20
+Ni 0.0
+map_Kd miu256_cg004.png
+
+newmtl et128_1.png
+Ns 20
+Ni 0.0
+map_Kd et128_1.png
+
+newmtl miu64_ee002.png
+Ns 20
+Ni 0.0
+map_Kd miu64_ee002.png
+
+newmtl et64_4.png
+Ns 20
+Ni 0.0
+map_Kd et64_4.png
+
+newmtl miu64_cg007.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg007.png
+
+newmtl miu512_cg001.png
+Ns 20
+Ni 0.0
+map_Kd miu512_cg001.png
+
+newmtl et512_1.png
+Ns 20
+Ni 0.0
+map_Kd et512_1.png
+
+newmtl miu128_cg008.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg008.png
+
+newmtl et64_3.png
+Ns 20
+Ni 0.0
+map_Kd et64_3.png
+
+newmtl miu64_cg003.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg003.png
+
+newmtl miu128_cg005.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg005.png
+
+newmtl miu256_cg001.png
+Ns 20
+Ni 0.0
+map_Kd miu256_cg001.png
+
+newmtl miu64_cg012.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg012.png
+
+newmtl miu64_cg008.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg008.png
+
+newmtl miu512_cg003.png
+Ns 20
+Ni 0.0
+map_Kd miu512_cg003.png
+
+newmtl ct512_1.png
+Ns 20
+Ni 0.0
+map_Kd ct512_1.png
+
+newmtl miu32_cg004.png
+Ns 20
+Ni 0.0
+map_Kd miu32_cg004.png
+
+newmtl miu64_cg004.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg004.png
+
+newmtl miu128_cg013.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg013.png
+
+newmtl miu256_cg002.png
+Ns 20
+Ni 0.0
+map_Kd miu256_cg002.png
+
+newmtl miu128_cg022.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg022.png
+
+newmtl et256_2.png
+Ns 20
+Ni 0.0
+map_Kd et256_2.png
+
+newmtl miu128_cg001.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg001.png
+
+newmtl miu128_cg014.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg014.png
+
+newmtl miu64_cg010.png
+Ns 20
+Ni 0.0
+map_Kd miu64_cg010.png
+
+newmtl miu128_cg010.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg010.png
+
+newmtl et64_1.png
+Ns 20
+Ni 0.0
+map_Kd et64_1.png
+

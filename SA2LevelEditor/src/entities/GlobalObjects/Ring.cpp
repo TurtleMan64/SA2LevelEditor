@@ -162,6 +162,7 @@ void RING::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -299,4 +300,12 @@ void RING::fillData(char data[32])
     data[17] = (char)(*(ptr + 2));
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
+}
+
+std::string RING::toSabString()
+{
+    return "0 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z);
 }

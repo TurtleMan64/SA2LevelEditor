@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <random>
@@ -29,17 +30,17 @@ float Maths::toDegrees(float radians)
 	return (radians*57.2957795131f);
 }
 
-float Maths::toRadians(int bams)
+float Maths::bamsToRad(int bams)
 {
-	return toRadians(toDegrees(bams));
+	return toRadians(bamsToDeg(bams));
 }
 
-float Maths::toRadians(signed short bams)
+float Maths::bamsToRad(signed short bams)
 {
-    return toRadians(toDegrees((int)bams));
+    return toRadians(bamsToDeg((int)bams));
 }
 
-float Maths::toDegrees(int bams)
+float Maths::bamsToDeg(int bams)
 {
 	return (bams/182.044444444444444f);
 }
@@ -51,7 +52,7 @@ int Maths::radToBams(float rad)
 
 int Maths::degToBams(float deg)
 {
-    return (int)(deg*182.044444444444444f);
+    return (int)std::round(deg*182.044444444444444f);
 }
 
 /*
@@ -112,13 +113,13 @@ void Maths::createTransformationMatrixYXZ(Matrix4f* matrix, Vector3f* translatio
 	Vector3f vec;
 
 	vec.set(0, 0, 1);
-	matrix->rotate(toRadians(rz), &vec);
+	matrix->rotate(bamsToRad(rz), &vec);
 
 	vec.set(1, 0, 0);
-	matrix->rotate(toRadians(rx), &vec);
+	matrix->rotate(bamsToRad(rx), &vec);
 
 	vec.set(0, 1, 0);
-	matrix->rotate(toRadians(ry), &vec);
+	matrix->rotate(bamsToRad(ry), &vec);
 
 	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);
@@ -131,13 +132,13 @@ void Maths::createTransformationMatrixZXY(Matrix4f* matrix, Vector3f* translatio
 	Vector3f vec;
 
     vec.set(0, 1, 0);
-	matrix->rotate(toRadians(ry), &vec);
+	matrix->rotate(bamsToRad(ry), &vec);
 
 	vec.set(1, 0, 0);
-	matrix->rotate(toRadians(rx), &vec);
+	matrix->rotate(bamsToRad(rx), &vec);
 
     vec.set(0, 0, 1);
-	matrix->rotate(toRadians(rz), &vec);
+	matrix->rotate(bamsToRad(rz), &vec);
 
 	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);
@@ -152,10 +153,10 @@ void Maths::createTransformationMatrixZY(Matrix4f* matrix, Vector3f* translation
     //Z, then Y. No X
 
     vec.set(0, 1, 0);
-	matrix->rotate(Maths::toRadians(ry), &vec);
+	matrix->rotate(Maths::bamsToRad(ry), &vec);
 
 	vec.set(0, 0, 1);
-	matrix->rotate(Maths::toRadians(rz), &vec);
+	matrix->rotate(Maths::bamsToRad(rz), &vec);
 
 	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);
@@ -170,10 +171,10 @@ void Maths::createTransformationMatrixXY(Matrix4f* matrix, Vector3f* translation
     //X, then Y. No Z
 
     vec.set(0, 1, 0);
-	matrix->rotate(Maths::toRadians(ry), &vec);
+	matrix->rotate(Maths::bamsToRad(ry), &vec);
 
 	vec.set(1, 0, 0);
-	matrix->rotate(Maths::toRadians(rx), &vec);
+	matrix->rotate(Maths::bamsToRad(rx), &vec);
 
 	vec.set(sX, sY, sZ);
 	matrix->scale(&vec);

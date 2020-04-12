@@ -1,6 +1,6 @@
+#include <Windows.h>
 #include <glad/glad.h>
 #include <cstring>
-#include <Windows.h>
 
 #include "../../entity.h"
 #include "../../dummy.h"
@@ -207,6 +207,7 @@ void SPIDERWEB::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();

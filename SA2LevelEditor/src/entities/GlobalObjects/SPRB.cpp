@@ -219,6 +219,7 @@ void SPRB::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -446,8 +447,8 @@ void SPRB::spawnGuides()
     Vector3f dir(0, 10, 0);
     Vector3f xAxis(1, 0, 0);
     Vector3f zAxis(0, 0, 1);
-    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
-    dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX));
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
     
     #ifndef SAB_MODE
     for (int i = 0; i < 30; i++)
@@ -541,4 +542,30 @@ void SPRB::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
+}
+
+std::string SPRB::toSabString()
+{
+    Vector3f dir(0, 1, 0);
+	Vector3f xAxis(1, 0, 0);
+	Vector3f zAxis(0, 0, 1);
+	dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX));
+	dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
+	
+	int cam = (int)std::round(var3);
+	if (cam != 1)
+	{
+	    cam = 0;
+	}
+
+    return "12 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z) + " " + 
+        std::to_string(dir.x) + " " + 
+        std::to_string(dir.y) + " " + 
+        std::to_string(dir.z) + " " + 
+        std::to_string(power*60) + " " + 
+        std::to_string(((float)controlLockTime)/60) + " " + 
+        std::to_string(cam);
 }

@@ -1,4 +1,6 @@
+#include <Windows.h>
 #include <glad/glad.h>
+#include <list>
 
 #include "entity.h"
 #include "../toolbox/vector.h"
@@ -11,9 +13,6 @@
 #include "../collision/collisionmodel.h"
 #include "../toolbox/maths.h"
 #include "../toolbox/hex.h"
-#include <Windows.h>
-
-#include <list>
 
 
 std::vector<std::list<TexturedModel*>> Unknown::models;
@@ -298,6 +297,7 @@ void Unknown::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();

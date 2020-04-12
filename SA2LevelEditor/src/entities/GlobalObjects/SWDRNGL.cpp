@@ -128,8 +128,8 @@ void SWDRNGL::spawnChildren()
 
     Vector3f xAxis(1, 0, 0);
     Vector3f yAxis(0, 1, 0);
-    ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::toRadians(rotationX));
-    ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::toRadians(rotationY));
+    ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::bamsToRad(rotationX));
+    ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::bamsToRad(rotationY));
 
     ringDirection.setLength(ringDelta);
     ringDirection.neg();
@@ -234,6 +234,7 @@ void SWDRNGL::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();

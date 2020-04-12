@@ -225,6 +225,7 @@ void BUNCHIN::updateValue(int btnIndex)
 				SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
 				if (newObject != nullptr)
 				{
+                    newObject->lvlLineNum = lvlLineNum;
 					Global::addEntity(newObject);
 					Global::selectedSA2Object = newObject;
 					newObject->updateEditorWindows();

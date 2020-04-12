@@ -117,13 +117,13 @@ void RING_CIRCLE::spawnChildren()
     Vector3f zAxis(0, 0, 1);
 
     //y, x, z
-    circleNormal = Maths::rotatePoint(&circleNormal, &yAxis, Maths::toRadians(rotationY));
-    circleNormal = Maths::rotatePoint(&circleNormal, &xAxis, Maths::toRadians(rotationX));
-    circleNormal = Maths::rotatePoint(&circleNormal, &zAxis, Maths::toRadians(rotationZ));
+    circleNormal = Maths::rotatePoint(&circleNormal, &yAxis, Maths::bamsToRad(rotationY));
+    circleNormal = Maths::rotatePoint(&circleNormal, &xAxis, Maths::bamsToRad(rotationX));
+    circleNormal = Maths::rotatePoint(&circleNormal, &zAxis, Maths::bamsToRad(rotationZ));
 
-    circleForward = Maths::rotatePoint(&circleForward, &yAxis, Maths::toRadians(rotationY));
-    circleForward = Maths::rotatePoint(&circleForward, &xAxis, Maths::toRadians(rotationX));
-    circleForward = Maths::rotatePoint(&circleForward, &zAxis, Maths::toRadians(rotationZ));
+    circleForward = Maths::rotatePoint(&circleForward, &yAxis, Maths::bamsToRad(rotationY));
+    circleForward = Maths::rotatePoint(&circleForward, &xAxis, Maths::bamsToRad(rotationX));
+    circleForward = Maths::rotatePoint(&circleForward, &zAxis, Maths::bamsToRad(rotationZ));
 
     circleForward.setLength(ringRadius);
     circleNormal.setLength(1);
@@ -221,6 +221,7 @@ void RING_CIRCLE::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();

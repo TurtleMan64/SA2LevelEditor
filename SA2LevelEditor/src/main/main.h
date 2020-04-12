@@ -23,7 +23,7 @@ class Dummy;
 #define STATE_EXITING 2
 
 //#define OBS_MODE
-#define DEV_MODE
+//#define DEV_MODE
 //#define SAB_MODE
 
 #ifdef DEV_MODE
@@ -157,7 +157,8 @@ public:
         Sonic_Vs_Shadow_2       = 42,
         Cosmic_Wall             = 43,
         Mad_Space               = 44,
-        Sand_Ocean_2P           = 45
+        Sand_Ocean_2P           = 45,
+        Custom_Level            = 420
     };
 
 	static int levelID;

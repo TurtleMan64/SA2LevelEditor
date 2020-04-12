@@ -1,0 +1,92 @@
+# Material Count: 18
+
+newmtl meteo64_6.png
+Ns 20
+Ni 0.0
+map_Kd meteo64_6.png
+
+newmtl miu128_cg011.png
+Ns 20
+Ni 0.0
+map_Kd miu128_cg011.png
+
+newmtl space128_8.png
+Ns 20
+Ni 0.0
+map_Kd space128_8.png
+
+newmtl meteo128_3.png
+Ns 20
+Ni 0.0
+map_Kd meteo128_3.png
+
+newmtl meteo256_8.png
+Ns 20
+Ni 0.0
+map_Kd meteo256_8.png
+
+newmtl space128_6.png
+Ns 20
+Ni 0.0
+map_Kd space128_6.png
+
+newmtl meteo128_10.png
+Ns 20
+Ni 0.0
+map_Kd meteo128_10.png
+
+newmtl meteo512_1.png
+Ns 20
+Ni 0.0
+map_Kd meteo512_1.png
+
+newmtl meteo128_4.png
+Ns 20
+Ni 0.0
+map_Kd meteo128_4.png
+
+newmtl meteo64_7.png
+Ns 20
+Ni 0.0
+map_Kd meteo64_7.png
+
+newmtl meteo256_6.png
+Ns 20
+Ni 0.0
+map_Kd meteo256_6.png
+
+newmtl space64_10.png
+Ns 20
+Ni 0.0
+map_Kd space64_10.png
+
+newmtl space64_7.png
+Ns 20
+Ni 0.0
+map_Kd space64_7.png
+
+newmtl meteo128_11.png
+Ns 20
+Ni 0.0
+map_Kd meteo128_11.png
+
+newmtl meteo256_1.png
+Ns 20
+Ni 0.0
+map_Kd meteo256_1.png
+
+newmtl meteo32_2.png
+Ns 20
+Ni 0.0
+map_Kd meteo32_2.png
+
+newmtl meteo64_1.png
+Ns 20
+Ni 0.0
+map_Kd meteo64_1.png
+
+newmtl space128_5.png
+Ns 20
+Ni 0.0
+map_Kd space128_5.png
+

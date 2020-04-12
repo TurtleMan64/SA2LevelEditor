@@ -219,6 +219,7 @@ void THREESPRING::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -448,8 +449,8 @@ void THREESPRING::spawnGuides()
     Vector3f xAxis(1, 0, 0);
     Vector3f yAxis(0, 1, 0);
     Vector3f zAxis(0, 0, 1);
-    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
-    dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX));
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
 
     #ifndef SAB_MODE
     for (int i = 0; i < 30; i++)
@@ -468,7 +469,7 @@ void THREESPRING::spawnGuides()
     float springPower = fmaxf(100.0f, power*60.0f);
 
     Vector3f off(0, 5.29734f, 5.88928f);
-    off = Maths::rotatePoint(&off, &yAxis, Maths::toRadians(rotationY));
+    off = Maths::rotatePoint(&off, &yAxis, Maths::bamsToRad(rotationY));
     pos = pos + off;
 
     Vector3f oppositeDir(&off);

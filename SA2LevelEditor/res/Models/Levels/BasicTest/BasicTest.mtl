@@ -1,0 +1,87 @@
+# Material Count: 17
+
+newmtl tx03.png
+Ns 20
+Ni 0.0
+map_Kd tx03.png
+
+newmtl tx50.png
+Ns 20
+Ni 0.0
+map_Kd tx50.png
+
+newmtl tx25.png
+Ns 20
+Ni 0.0
+map_Kd tx25.png
+
+newmtl t_road256_3.png
+Ns 20
+Ni 0.0
+map_Kd t_road256_3.png
+
+newmtl tx06.png
+Ns 20
+Ni 0.0
+map_Kd tx06.png
+
+newmtl tx30.png
+Ns 20
+Ni 0.0
+map_Kd tx30.png
+
+newmtl tx08.png
+Ns 20
+Ni 0.0
+map_Kd tx08.png
+
+newmtl tx40.png
+Ns 20
+Ni 0.0
+map_Kd tx40.png
+
+newmtl tx15.png
+Ns 20
+Ni 0.0
+map_Kd tx15.png
+
+newmtl tx45.png
+Ns 20
+Ni 0.0
+map_Kd tx45.png
+
+newmtl tx02.png
+Ns 20
+Ni 0.0
+map_Kd tx02.png
+
+newmtl tx10.png
+Ns 20
+Ni 0.0
+map_Kd tx10.png
+
+newmtl tx04.png
+Ns 20
+Ni 0.0
+map_Kd tx04.png
+
+newmtl tx05.png
+Ns 20
+Ni 0.0
+map_Kd tx05.png
+
+newmtl tx07.png
+Ns 20
+Ni 0.0
+map_Kd tx07.png
+
+newmtl tx20.png
+Ns 20
+Ni 0.0
+map_Kd tx20.png
+
+newmtl tx35.png
+Ns 20
+Ni 0.0
+map_Kd tx35.png
+

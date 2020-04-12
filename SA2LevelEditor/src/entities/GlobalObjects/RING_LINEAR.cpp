@@ -97,8 +97,13 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
     numRings = (int)var3;
     ringDelta = var1 + 10.0f;
 
+    #ifdef SAB_MODE
+    numRings = std::max(2, numRings);
+    numRings = std::min(50, numRings);
+    #else
     numRings = std::max(1, numRings);
     numRings = std::min(8, numRings);
+    #endif
 
     if (useDefaultValues)
     {
@@ -148,14 +153,14 @@ void RING_LINEAR::spawnChildren()
     Vector3f yAxis(0, 1, 0);
     Vector3f zAxis(0, 0, 1);
 
-    ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::toRadians(rotationX));
-    ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::toRadians(rotationY));
-    ringDirection = Maths::rotatePoint(&ringDirection, &zAxis, Maths::toRadians(rotationZ));
+    ringDirection = Maths::rotatePoint(&ringDirection, &xAxis, Maths::bamsToRad(rotationX));
+    ringDirection = Maths::rotatePoint(&ringDirection, &yAxis, Maths::bamsToRad(rotationY));
+    ringDirection = Maths::rotatePoint(&ringDirection, &zAxis, Maths::bamsToRad(rotationZ));
     ringDirection.setLength(ringDelta);
 
-    relativeUp = Maths::rotatePoint(&relativeUp, &xAxis, Maths::toRadians(rotationX));
-    relativeUp = Maths::rotatePoint(&relativeUp, &yAxis, Maths::toRadians(rotationY));
-    relativeUp = Maths::rotatePoint(&relativeUp, &zAxis, Maths::toRadians(rotationZ));
+    relativeUp = Maths::rotatePoint(&relativeUp, &xAxis, Maths::bamsToRad(rotationX));
+    relativeUp = Maths::rotatePoint(&relativeUp, &yAxis, Maths::bamsToRad(rotationY));
+    relativeUp = Maths::rotatePoint(&relativeUp, &zAxis, Maths::bamsToRad(rotationZ));
 
     for (int i = 0; i < numRings; i++)
     {
@@ -250,6 +255,7 @@ void RING_LINEAR::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -309,10 +315,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            signed short newRotX = Hex::stohshort(text);
-            rotationX = (int)newRotX;
+            float newRotX = std::stof(text);
+            rotationX = Maths::degToBams(newRotX);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], Hex::to_string_short((signed short)rotationX).c_str());
+            SetWindowTextA(Global::windowValues[5], std::to_string(Maths::bamsToDeg((signed short)rotationX)).c_str());
             remakeRings = true;
             break;
         }
@@ -323,10 +329,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            signed short newRotY = Hex::stohshort(text);
-            rotationY = (int)newRotY;
+            float newRotY = std::stof(text);
+            rotationY = Maths::degToBams(newRotY);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], Hex::to_string_short((signed short)rotationY).c_str());
+            SetWindowTextA(Global::windowValues[6], std::to_string(Maths::bamsToDeg((signed short)rotationY)).c_str());
             remakeRings = true;
             break;
         }
@@ -337,10 +343,10 @@ void RING_LINEAR::updateValue(int btnIndex)
     {
         try
         {
-            signed short newRotZ = Hex::stohshort(text);
-            rotationZ = (int)newRotZ;
+            float newRotZ = std::stof(text);
+            rotationZ = Maths::degToBams(newRotZ);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], Hex::to_string_short((signed short)rotationZ).c_str());
+            SetWindowTextA(Global::windowValues[7], std::to_string(Maths::bamsToDeg((signed short)rotationZ)).c_str());
             remakeRings = true;
             break;
         }
@@ -418,9 +424,9 @@ void RING_LINEAR::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], Hex::to_string_short((signed short)rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], Hex::to_string_short((signed short)rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], Hex::to_string_short((signed short)rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], std::to_string(Maths::bamsToDeg((signed short)rotationX)).c_str());
+    SetWindowTextA(Global::windowValues[ 6], std::to_string(Maths::bamsToDeg((signed short)rotationY)).c_str());
+    SetWindowTextA(Global::windowValues[ 7], std::to_string(Maths::bamsToDeg((signed short)rotationZ)).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(ringDelta).c_str());
     SetWindowTextA(Global::windowValues[ 9], std::to_string(curveHeight).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(numRings).c_str());
@@ -501,6 +507,26 @@ void RING_LINEAR::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
+}
+
+std::string RING_LINEAR::toSabString()
+{
+    int nRings = (int)rings.size();
+    Vector3f pos1 = rings[0]->position;
+    Vector3f pos2 = rings[nRings-1]->position;
+    Vector3f diff = pos2-pos1;
+    diff.normalize();
+    diff.scale((nRings-1)*ringDelta);
+    pos2 = pos1+diff;
+
+    return "98 " + 
+        std::to_string(pos1.x) + " " +
+        std::to_string(pos1.y) + " " +
+        std::to_string(pos1.z) + " " +
+        std::to_string(pos2.x) + " " +
+        std::to_string(pos2.y) + " " +
+        std::to_string(pos2.z) + " " +
+        std::to_string(nRings);
 }
 
 bool RING_LINEAR::isSA2Object()

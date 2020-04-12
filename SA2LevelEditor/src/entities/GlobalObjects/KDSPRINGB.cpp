@@ -205,6 +205,7 @@ void KDSPRINGB::updateValue(int btnIndex)
                 SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, newid, data, true);
                 if (newObject != nullptr)
                 {
+                    newObject->lvlLineNum = lvlLineNum;
                     Global::addEntity(newObject);
                     Global::selectedSA2Object = newObject;
                     newObject->updateEditorWindows();
@@ -432,8 +433,8 @@ void KDSPRINGB::spawnGuides()
     Vector3f dir(0, 10, 0);
     Vector3f xAxis(1, 0, 0);
     Vector3f zAxis(0, 0, 1);
-    dir = Maths::rotatePoint(&dir, &xAxis, Maths::toRadians(rotationX));
-    dir = Maths::rotatePoint(&dir, &zAxis, Maths::toRadians(rotationZ));
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX));
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
     
     for (int i = 0; i < 30; i++)
     {

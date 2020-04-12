@@ -2,6 +2,11 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
+#include <Windows.h>
+#include <commdlg.h>
+#include <tchar.h>
+#include <tlhelp32.h>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -74,14 +79,8 @@
 #include "../entities/GlobalObjects/itemboxballoon.h"
 #include "../entities/GlobalObjects/savepoint.h"
 #include "../entities/GlobalObjects/3spring.h"
-
-#ifdef _WIN32
-#include <Windows.h>
-#include <commdlg.h>
-#include <tchar.h>
-#include <tlhelp32.h>
-#endif
-
+#include "../entities/GlobalObjects/ekumi.h"
+#include "../entities/GlobalObjects/eai.h"
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -606,6 +605,8 @@ int Global::main()
     ITEMBOXBALLOON::loadStaticModels();
     SAVEPOINT::loadStaticModels();
     THREESPRING::loadStaticModels();
+    E_KUMI::loadStaticModels();
+    E_AI::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -645,13 +646,21 @@ int Global::main()
         if (Global::shouldLoadNewLevel)
         {
             Global::shouldLoadNewLevel = false;
+            #ifndef SAB_MODE
             LevelLoader::promptUserForLevel();
+            #else
+            LevelLoader::promptUserForLevelSAB();
+            #endif
         }
 
         if (Global::shouldExportLevel)
         {
             Global::shouldExportLevel = false;
+            #ifndef SAB_MODE
             LevelLoader::exportLevel();
+            #else
+            LevelLoader::exportLevelSAB();
+            #endif
         }
 
         if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
@@ -1164,8 +1173,8 @@ void Global::updateCamFromSA2()
             Global::gameCamera->eye.x = camX;
             Global::gameCamera->eye.y = camY;
             Global::gameCamera->eye.z = camZ;
-            Global::gameCamera->yaw = -Maths::toDegrees(yaw);
-            Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+            Global::gameCamera->yaw = -Maths::bamsToDeg(yaw);
+            Global::gameCamera->pitch = -Maths::bamsToDeg(pitch);
         }
 
         //0x019ED3FC = global position copy
@@ -1342,8 +1351,8 @@ void Global::updateCamFromSA2()
                 Global::gameCamera->eye.x = camX;
                 Global::gameCamera->eye.y = camY;
                 Global::gameCamera->eye.z = camZ;
-                Global::gameCamera->yaw = -Maths::toDegrees(yaw);
-                Global::gameCamera->pitch = -Maths::toDegrees(pitch);
+                Global::gameCamera->yaw = -Maths::bamsToDeg(yaw);
+                Global::gameCamera->pitch = -Maths::bamsToDeg(pitch);
             }
         }
 

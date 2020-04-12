@@ -23,13 +23,13 @@ public:
 
 	static float toRadians(float deg);
 
-    static float toRadians(int bams);
+    static float bamsToRad(int bams);
 
-    static float toRadians(signed short bams);
+    static float bamsToRad(signed short bams);
 
 	static float toDegrees(float rad);
 
-    static float toDegrees(int bams);
+    static float bamsToDeg(int bams);
 
     static int radToBams(float rad);
 

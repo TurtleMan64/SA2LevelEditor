@@ -1,0 +1,77 @@
+# Material Count: 15
+
+newmtl kd_so_sekizo2.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_sekizo2.png
+
+newmtl kd_so_kabe3.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_kabe3.png
+
+newmtl kd_so_hasira2.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_hasira2.png
+
+newmtl kd_so_hasira4.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_hasira4.png
+
+newmtl kd_so_sekihi1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_sekihi1.png
+
+newmtl kd_so_sekizo1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_sekizo1.png
+
+newmtl kd_so_door1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_door1.png
+
+newmtl kd_so_mado1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_mado1.png
+
+newmtl kd_so_kabe1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_kabe1.png
+
+newmtl kd_so_yuka2.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_yuka2.png
+
+newmtl kd_so_kabe2.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_kabe2.png
+
+newmtl kd_so_sekizo3.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_sekizo3.png
+
+newmtl kd_so_hasira5.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_hasira5.png
+
+newmtl kd_so_hasira1.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_hasira1.png
+
+newmtl kd_so_hasira3.png
+Ns 20
+Ni 0.0
+map_Kd kd_so_hasira3.png
+

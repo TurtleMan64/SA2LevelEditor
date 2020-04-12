@@ -1,0 +1,20 @@
+# Material Count: 3
+
+newmtl m22d92d1d7_dds
+Ns 17.647059
+Ni 1.000000
+d 1.000000
+map_Kd 2d92d1d7.png
+
+newmtl m113e384a7_dds
+Ns 17.647059
+Ni 1.000000
+d 1.000000
+map_Kd 13e384a7.png
+
+newmtl m0ef8678d1_dds
+Ns 17.647059
+Ni 1.000000
+d 1.000000
+map_Kd ef8678d1.png
+

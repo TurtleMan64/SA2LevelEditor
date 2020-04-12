@@ -63,14 +63,16 @@
 #include "../entities/GlobalObjects/savepoint.h"
 #include "../entities/GlobalObjects/3spring.h"
 #include "../entities/LevelSpecific/PyramidCave/spiderweb.h"
+#include "../entities/GlobalObjects/ekumi.h"
+#include "../toolbox/maths.h"
+#include "../entities/GlobalObjects/eai.h"
 
-#ifdef _WIN32
-#include <windows.h>
+#include <Windows.h>
 #include <commdlg.h>
 #include <tchar.h>
-#endif
 
 int LevelLoader::numLevels = 0;
+std::vector<std::string> LevelLoader::lvlFile;
 
 void LevelLoader::loadTitle()
 {
@@ -255,6 +257,93 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
 	//previousTime = 0.0;
 }
 
+void LevelLoader::loadLevelSAB(std::string fileLvl, std::string fileObj)
+{
+    freeAllStaticModels();
+
+	Global::deleteAllEntites();
+	Global::deleteAllEntitesPass2();
+	Global::deleteAllEntitesPass3();
+	Global::deleteAllTransparentEntites();
+
+	Stage::deleteStaticModels();
+	StagePass2::deleteStaticModels();
+	StagePass3::deleteStaticModels();
+	StageTransparent::deleteStaticModels();
+
+    StageCollision::deleteStaticModels();
+    StageKillplanes::deleteStaticModels();
+    StageSky::deleteStaticModels();
+
+    CollisionChecker::deleteAllCollideModels();
+
+    Global::gameCamera->reset();
+    Global::selectedSA2Object = nullptr;
+    Global::resetObjectWindow();
+
+    LevelLoader::lvlFile.clear();
+
+    Global::levelID = Global::Custom_Level;
+
+    int idx  = (int)fileObj.find_last_of('\\');
+    int idx2 = (int)fileObj.find_last_of('.');
+    std::string objDir = fileObj.substr(0, idx+1);
+    std::string objName = fileObj.substr(idx+1, (idx2-idx)-1);
+
+    //printf("objDir  = '%s'\n", objDir.c_str());
+    //printf("objName = '%s'\n", objName.c_str());
+
+    Stage::loadModels(objDir.c_str(), objName.c_str());
+
+	std::ifstream file(fileLvl);
+	if (!file.is_open())
+	{
+		std::fprintf(stdout, "Error: Cannot load file '%s'\n", (fileLvl).c_str());
+		file.close();
+		return;
+	}
+
+    std::string line;
+    bool objectsStarted = false;
+
+	while (!file.eof())
+	{
+		getlineSafe(file, line);
+        LevelLoader::lvlFile.push_back(line);
+
+		char lineBuf[512]; //Buffer to copy line into
+		memcpy(lineBuf, line.c_str(), line.size()+1);
+
+		int splitLength = 0;
+		char** lineSplit = split(lineBuf, ' ', &splitLength);
+
+        if (splitLength == 0)
+        {
+            objectsStarted = true; //header is done
+        }
+		else if (objectsStarted && splitLength > 0)
+		{
+			processLine(lineSplit, splitLength);
+		}
+		free(lineSplit);
+	}
+	file.close();
+}
+
+void fillFloat(float value, char* buf)
+{
+    char* ptr = (char*)(&value);
+    buf[0] = (char)(*(ptr + 3));
+    buf[1] = (char)(*(ptr + 2));
+    buf[2] = (char)(*(ptr + 1));
+    buf[3] = (char)(*(ptr + 0));
+}
+
+void fillShort(int value, char* buf)
+{
+    buf[0] = (char)((value >> 8) & 0xFF);
+    buf[1] = (char)((value >> 0) & 0xFF);
+}
 
 void LevelLoader::processLine(char** dat, int /*datLength*/)
 {
@@ -265,8 +354,22 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
 
 	int id = std::stoi(dat[0]);
 
+    char buf[32] = {0};
+    buf[1] = (char)id;
+
 	switch (id)
 	{
+        case 0: //Ring
+        {
+            fillFloat(toFloat(dat[1]), &buf[8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            RING* ring = new RING(buf, false); INCR_NEW("Entity");
+            ring->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(ring);
+            return;
+        }
+
 		case 2: //Stage Pass 2
 		{
 			StagePass2* pass2 = new StagePass2(dat[1], dat[2]); INCR_NEW("Entity");
@@ -287,6 +390,176 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
 			Global::addTransparentEntity(trans);
 			return;
 		}
+
+        //case 8: //Boostpad
+        //{
+        //    KASOKU::loadStaticModels();
+        //    KASOKU* pad = new KASOKU(
+        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),
+        //        toFloat(dat[4]), toFloat(dat[5]),
+        //        toFloat(dat[6]), toFloat(dat[7]), toFloat(dat[8])); INCR_NEW("Entity");
+        //    Global::addEntity(pad);
+        //    return;
+        //}
+
+        //case 10: //Checkpoint
+        //{
+        //    Checkpoint::loadStaticModels();
+        //    Checkpoint* checkpoint = new Checkpoint(
+        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),
+        //        toFloat(dat[4])); INCR_NEW("Entity");
+        //    Global::addEntity(checkpoint);
+        //    return;
+        //}
+
+        //case 11: //JumpPad
+        //{
+        //    SpeedRamp::loadStaticModels();
+        //    SpeedRamp* ramp = new SpeedRamp(
+        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]), //position
+        //        toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]), //rotation direction
+        //        toFloat(dat[7]), toFloat(dat[8]));                 //power, input lock time
+        //    INCR_NEW("Entity");
+        //    Global::addEntity(ramp);
+        //    return;
+        //}
+
+        case 12: //Spring
+        {
+            //calculation rotations in XZ order
+            Vector3f zAxis(0, 0, 1);
+
+            Vector3f dir(toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]));
+            dir.normalize();
+
+            float zrot = atan2f(dir.x, dir.y);
+            dir = Maths::rotatePoint(&dir, &zAxis, zrot);
+            float xrot = atan2f(dir.z, dir.y);
+
+            int zrotBam = Maths::radToBams(-zrot);
+            int xrotBam = Maths::radToBams(xrot);
+
+            //fill in to buffer
+            fillShort(xrotBam, &buf[2]); //rotations
+            fillShort(zrotBam, &buf[6]);
+            fillFloat(toFloat(dat[1]), &buf[8]);  //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(toFloat(dat[8])*60,     &buf[20]); //vars
+            fillFloat((toFloat(dat[7])/60)-5, &buf[24]);
+            fillFloat(toFloat(dat[9]),        &buf[28]);
+
+            SPRB* spring = new SPRB(buf, false); INCR_NEW("Entity");
+            spring->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(spring);
+            return;
+        }
+
+        //case 13: //SpringTriple
+        //{
+        //    SpringTriple::loadStaticModels();
+        //    SpringTriple* spring = new SpringTriple(
+        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]), //position
+        //        toFloat(dat[4]), toFloat(dat[5]),                  //rotation direction
+        //        toFloat(dat[6]), toFloat(dat[7]));                 //power, time
+        //    INCR_NEW("Entity");
+        //    Global::addEntity(spring);
+        //    return;
+        //}
+
+        //case 27: //Item Capsule
+        //{
+        //    ItemCapsule::loadStaticModels();
+        //    ItemCapsule* capsule = new ItemCapsule(
+        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),   //position
+        //        toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]),   //relative up direction
+        //        toInt(dat[7]), toInt(dat[8]), chunkedEntities);      //item type, box type
+        //    INCR_NEW("Entity");
+        //    Global::addEntity(capsule);
+        //    return;
+        //}
+
+        case 28: //Beetle
+        {
+            fillFloat(toFloat(dat[1]), &buf[8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            E_KUMI* beetle = new E_KUMI(buf, false); INCR_NEW("Entity");
+            beetle->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(beetle);
+            return;
+        }
+
+        case 30: //Hunter
+        {
+            float yrot = atan2f(-toFloat(dat[5]), toFloat(dat[4]));
+
+            fillShort(Maths::radToBams(yrot), &buf[4]);
+            fillFloat(toFloat(dat[1]), &buf[8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            E_AI* hunter = new E_AI(buf, false); INCR_NEW("Entity");
+            hunter->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(hunter);
+            return;
+        }
+        
+        case 98: //Line of rings
+        {
+            Vector3f pos1(toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]));
+            Vector3f pos2(toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]));
+            Vector3f dir = pos2 - pos1;
+            int numRings = toInt(dat[7]);
+            float totalDist = dir.length();
+            float spacing = totalDist/(numRings-1);
+
+            Vector3f yAxis(0, 1, 0);
+            float yRot = atan2f(-dir.x, -dir.z);
+            dir = Maths::rotatePoint(&dir, &yAxis, -yRot);
+            float xRot = atan2f(dir.y, -dir.z);
+
+        
+            fillShort(Maths::radToBams(xRot), &buf[2]);
+            fillShort(Maths::radToBams(yRot), &buf[4]);
+            fillFloat(toFloat(dat[1]), &buf[8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(spacing-10.0f,   &buf[20]);
+            fillFloat(0.0f,            &buf[24]);
+            fillFloat((float)numRings, &buf[28]);
+            RING_LINEAR* line = new RING_LINEAR(buf, false); INCR_NEW("Entity");
+            line->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(line);
+            return;
+        }
+
+        //case 99: //Circle of rings
+        //{
+        //    Ring::loadStaticModels();
+        //    Vector3f centerPos(toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]));
+        //    float ringRadius = toFloat(dat[4]);
+        //    int numRings = toInt(dat[5]);
+        //
+        //    if (numRings > 1)
+        //    {
+        //        float degreeSegment = 360.0f / numRings;
+        //        Vector3f newPoint(0, centerPos.y, 0);
+        //
+        //        for (int i = 0; i < numRings; i++)
+        //        {
+        //            newPoint.x = centerPos.x + ringRadius*cosf(Maths::toRadians(degreeSegment*i));
+        //            newPoint.z = centerPos.z + ringRadius*sinf(Maths::toRadians(degreeSegment*i));
+        //            Ring* ring = new Ring(newPoint.x, newPoint.y, newPoint.z); INCR_NEW("Entity");
+        //            Global::addEntity(ring);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Ring* ring = new Ring(centerPos.x, centerPos.y, centerPos.z); INCR_NEW("Entity");
+        //        Global::addEntity(ring);
+        //    }
+        //    return;
+        //}
 
 		default:
 		{
@@ -346,6 +619,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x3A: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x43: return new SWDRNGL	    (data, useDefaultValues);
                 case 0x44: return new SWDRNGC	    (data, useDefaultValues);
@@ -380,6 +654,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x41: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x5A: return new LINKLINK      (data, useDefaultValues);
                 default:   return new Unknown       (data, useDefaultValues);
@@ -399,6 +674,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    8: return new IRONBALL2	    (data, useDefaultValues);
                 case 0x0A: return new BIGJUMP       (data, useDefaultValues);
                 case 0x0B: return new ROCKET        (data, useDefaultValues);
+                case 0x0C: return new E_KUMI        (data, useDefaultValues);
                 case 0x19: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x1E: return new ITEMBOXBALLOON(data, useDefaultValues);
                 case 0x21: return new BUNCHIN	    (data, useDefaultValues);
@@ -479,6 +755,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x2E: return new CCUBE         (data, useDefaultValues);
                 case 0x34: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x35: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x36: return new E_KUMI        (data, useDefaultValues);
                 case 0x38: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x39: return new SWDRNGL	    (data, useDefaultValues);
                 case 0x3A: return new SWDRNGC	    (data, useDefaultValues);
@@ -513,6 +790,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x3D: return new LINKLINK      (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
@@ -547,6 +825,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x5B: return new STOPLOCKON    (data, useDefaultValues);
                 case 0x5D: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x60: return new LINKLINK      (data, useDefaultValues);
@@ -581,6 +860,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x3D: return new LINKLINK      (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
@@ -615,6 +895,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x3D: return new LINKLINK      (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
@@ -652,6 +933,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN       (data, useDefaultValues);
                 case 0x37: return new IRONBALL2     (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x4B: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x50: return new LINKLINK      (data, useDefaultValues);
                 default:   return new Unknown       (data, useDefaultValues);
@@ -671,6 +953,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    8: return new IRONBALL2	    (data, useDefaultValues);
                 case 0x0A: return new BIGJUMP       (data, useDefaultValues);
                 case 0x0B: return new ROCKET        (data, useDefaultValues);
+                case 0x0C: return new E_KUMI        (data, useDefaultValues);
                 case 0x1B: return new ITEMBOXBALLOON(data, useDefaultValues);
                 case 0x1D: return new EMERALD       (data, useDefaultValues);
                 case 0x1E: return new BUNCHIN	    (data, useDefaultValues);
@@ -703,6 +986,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case    8: return new IRONBALL2	    (data, useDefaultValues);
                 case    9: return new BIGJUMP       (data, useDefaultValues);
                 case 0x0A: return new ROCKET        (data, useDefaultValues);
+                case 0x0B: return new E_KUMI        (data, useDefaultValues);
                 case 0x0D: return new ITEMBOXBALLOON(data, useDefaultValues);
                 case 0x10: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x11: return new RING_LINEAR   (data, useDefaultValues);
@@ -747,6 +1031,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2     (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x3D: return new LINKLINK      (data, useDefaultValues);
                 case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
@@ -781,9 +1066,42 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x33: return new SPHERE        (data, useDefaultValues);
                 case 0x34: return new CCYL          (data, useDefaultValues);
                 case 0x35: return new CCUBE         (data, useDefaultValues);
+                case 0x47: return new E_KUMI        (data, useDefaultValues);
                 case 0x54: return new STOPLOCKON    (data, useDefaultValues);
                 case 0x55: return new LIGHT_SW      (data, useDefaultValues);
                 case 0x57: return new LINKLINK      (data, useDefaultValues);
+                default:   return new Unknown       (data, useDefaultValues);
+            }
+
+        case Global::Levels::Lost_Colony:
+            switch (objectID)
+            {
+                case    0: return new RING          (data, useDefaultValues);
+                case    1: return new RING_LINEAR   (data, useDefaultValues);
+                case    2: return new RING_CIRCLE   (data, useDefaultValues);
+                case    3: return new SPRA          (data, useDefaultValues);
+                case    4: return new SPRB          (data, useDefaultValues);
+                case    5: return new THREESPRING   (data, useDefaultValues);
+                case    6: return new BIGJUMP       (data, useDefaultValues);
+                case    7: return new KASOKU        (data, useDefaultValues);
+                case    8: return new SAVEPOINT     (data, useDefaultValues);
+                case    9: return new SWITCH        (data, useDefaultValues);
+                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
+                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
+                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
+                case 0x15: return new ROCKET        (data, useDefaultValues);
+                case 0x25: return new KNUDAI        (data, useDefaultValues);
+                case 0x2A: return new KDDRNGL	    (data, useDefaultValues);
+                case 0x2B: return new KDDRNGC	    (data, useDefaultValues);
+                case 0x2C: return new KDSPRING	    (data, useDefaultValues);
+                case 0x2D: return new KDSPRINGB	    (data, useDefaultValues);
+                case 0x2E: return new SPHERE        (data, useDefaultValues);
+                case 0x2F: return new CCYL          (data, useDefaultValues);
+                case 0x30: return new CCUBE         (data, useDefaultValues);
+                case 0x36: return new BUNCHIN	    (data, useDefaultValues);
+                case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
+                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
                 default:   return new Unknown       (data, useDefaultValues);
             }
 
@@ -883,6 +1201,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 case 0x30: return new CCUBE         (data, useDefaultValues);
                 case 0x36: return new BUNCHIN	    (data, useDefaultValues);
                 case 0x37: return new IRONBALL2	    (data, useDefaultValues);
+                case 0x38: return new E_KUMI        (data, useDefaultValues);
                 case 0x4A: return new LINKLINK      (data, useDefaultValues);
                 case 0x50: return new SG_RING	    (data, useDefaultValues);
                 case 0x51: return new SG_SPRA       (data, useDefaultValues);
@@ -926,13 +1245,31 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
                 default:   return new Unknown       (data, useDefaultValues);
             }
 
+        case Global::Levels::Custom_Level:
+            switch (objectID)
+            {
+                case    0: return new RING          (data, useDefaultValues);
+                case   98: return new RING_LINEAR   (data, useDefaultValues);
+                //case   99: return new RING_CIRCLE   (data, useDefaultValues);
+                case   12: return new SPRB          (data, useDefaultValues);
+                //case   13: return new THREESPRING   (data, useDefaultValues);
+                //case   11: return new BIGJUMP       (data, useDefaultValues);
+                //case    8: return new KASOKU        (data, useDefaultValues);
+                //case   10: return new SAVEPOINT     (data, useDefaultValues);
+                //case   27: return new ITEMBOX       (data, useDefaultValues);
+                case   28: return new E_KUMI        (data, useDefaultValues);
+                //case   97: return new ROCKET        (data, useDefaultValues);
+                default:   return new RING          (data, useDefaultValues);
+            }
+
         default:
-            INCR_DEL("Entity");
-            std::fprintf(stdout, "Error: level not supported yet.\n");
+            switch (objectID)
+            {
+                case  0: return new RING   (data, useDefaultValues);
+                default: return new Unknown(data, useDefaultValues);
+            }
             break;
     }
-
-    return nullptr;
 }
 
 void LevelLoader::loadLevelData()
@@ -962,58 +1299,58 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set_chao_neut.bin"]    = "";
     Global::levelSetToLVL2["set_chao_neut_s.bin"]  = "";
     Global::levelSetToLVL2["set_chao_neut_u.bin"]  = "";
-    Global::levelSetToLVL2["SET0000_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0000_U.bin"]        = "";
+    Global::levelSetToLVL2["SET0000_S.BIN"]        = "BasicTest.lvl2";
+    Global::levelSetToLVL2["SET0000_U.BIN"]        = "BasicTest.lvl2";
     Global::levelSetToLVL2["set0001_s.bin"]        = "";
     Global::levelSetToLVL2["set0001_u.bin"]        = "";
-    Global::levelSetToLVL2["set0003_2p_s.bin"]     = "GreenForest.lvl2";
-    Global::levelSetToLVL2["set0003_2p_u.bin"]     = "GreenForest.lvl2";
-    Global::levelSetToLVL2["set0003_hd_s.bin"]     = "GreenForest.lvl2";
-    Global::levelSetToLVL2["set0003_hd_u.bin"]     = "GreenForest.lvl2";
+    Global::levelSetToLVL2["set0003_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0003_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0003_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0003_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0003_s.bin"]        = "GreenForest.lvl2";
     Global::levelSetToLVL2["set0003_u.bin"]        = "GreenForest.lvl2";
-    Global::levelSetToLVL2["set0004_2p_s.bin"]     = "WhiteJungle.lvl2";
-    Global::levelSetToLVL2["set0004_2p_u.bin"]     = "WhiteJungle.lvl2";
-    Global::levelSetToLVL2["set0004_hd_s.bin"]     = "WhiteJungle.lvl2";
+    Global::levelSetToLVL2["set0004_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0004_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0004_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0004_s.bin"]        = "WhiteJungle.lvl2";
     Global::levelSetToLVL2["set0004_u.bin"]        = "WhiteJungle.lvl2";
     Global::levelSetToLVL2["set0005_2P_s.bin"]     = "";
     Global::levelSetToLVL2["set0005_2P_u.bin"]     = "";
     Global::levelSetToLVL2["set0005_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0005_s.bin"]        = "";
-    Global::levelSetToLVL2["set0005_u.bin"]        = "";
-    Global::levelSetToLVL2["set0006_2p_s.bin"]     = "SkyRail.lvl2";
-    Global::levelSetToLVL2["set0006_2p_u.bin"]     = "SkyRail.lvl2";
-    Global::levelSetToLVL2["set0006_hd_s.bin"]     = "SkyRail.lvl2";
-    Global::levelSetToLVL2["set0006_hd_u.bin"]     = "SkyRail.lvl2";
+    Global::levelSetToLVL2["set0005_s.bin"]        = "PumpkinHill.lvl2";
+    Global::levelSetToLVL2["set0005_u.bin"]        = "PumpkinHill.lvl2";
+    Global::levelSetToLVL2["set0006_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0006_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0006_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0006_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0006_s.bin"]        = "SkyRail.lvl2";
     Global::levelSetToLVL2["set0006_u.bin"]        = "SkyRail.lvl2";
     Global::levelSetToLVL2["set0007_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0007_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0007_s.bin"]        = "";
-    Global::levelSetToLVL2["set0007_u.bin"]        = "";
-    Global::levelSetToLVL2["set0008_2p_s.bin"]     = "SecurityHall.lvl2";
-    Global::levelSetToLVL2["set0008_2p_u.bin"]     = "SecurityHall.lvl2";
-    Global::levelSetToLVL2["set0008_hd_s.bin"]     = "SecurityHall.lvl2";
+    Global::levelSetToLVL2["set0007_s.bin"]        = "AquaticMine.lvl2";
+    Global::levelSetToLVL2["set0007_u.bin"]        = "AquaticMine.lvl2";
+    Global::levelSetToLVL2["set0008_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0008_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0008_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0008_s.bin"]        = "SecurityHall.lvl2";
     Global::levelSetToLVL2["set0008_u.bin"]        = "SecurityHall.lvl2";
     Global::levelSetToLVL2["set0009_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0009_s.bin"]        = "PrisonLane.lvl2";
     Global::levelSetToLVL2["set0009_u.bin"]        = "PrisonLane.lvl2";
-    Global::levelSetToLVL2["set0010_2p_u.bin"]     = "MetalHarbor.lvl2";
-    Global::levelSetToLVL2["set0010_hd_s.bin"]     = "MetalHarbor.lvl2";
-    Global::levelSetToLVL2["set0010_hd_u.bin"]     = "MetalHarbor.lvl2";
+    Global::levelSetToLVL2["set0010_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0010_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0010_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0010_s.bin"]        = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0010_u.bin"]        = "MetalHarbor.lvl2";
     Global::levelSetToLVL2["set0011_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0011_hd_s.bin"]     = "IronGate.lvl2";
-    Global::levelSetToLVL2["set0011_hd_u.bin"]     = "IronGate.lvl2";
+    Global::levelSetToLVL2["set0011_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0011_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0011_s.bin"]        = "IronGate.lvl2";
     Global::levelSetToLVL2["set0011_u.bin"]        = "IronGate.lvl2";
     Global::levelSetToLVL2["set0012_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0012_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0012_s.bin"]        = "";
-    Global::levelSetToLVL2["set0012_u.bin"]        = "";
+    Global::levelSetToLVL2["set0012_s.bin"]        = "WeaponsBed.lvl2";
+    Global::levelSetToLVL2["set0012_u.bin"]        = "WeaponsBed.lvl2";
     Global::levelSetToLVL2["set0013_2p_s.bin"]     = "";
     Global::levelSetToLVL2["set0013_2p_u.bin"]     = "";
     Global::levelSetToLVL2["set0013_hd_s.bin"]     = "";
@@ -1024,134 +1361,134 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0014_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0014_s.bin"]        = "RadicalHighway.lvl2";
     Global::levelSetToLVL2["set0014_u.bin"]        = "RadicalHighway.lvl2";
-    Global::levelSetToLVL2["set0015_s.bin"]        = "";
-    Global::levelSetToLVL2["set0015_u.bin"]        = "";
+    Global::levelSetToLVL2["set0015_s.bin"]        = "WeaponsBed2P.lvl2";
+    Global::levelSetToLVL2["set0015_u.bin"]        = "WeaponsBed2P.lvl2";
     Global::levelSetToLVL2["set0016_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0016_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0016_s.bin"]        = "";
-    Global::levelSetToLVL2["set0016_u.bin"]        = "";
+    Global::levelSetToLVL2["set0016_s.bin"]        = "WildCanyon.lvl2";
+    Global::levelSetToLVL2["set0016_u.bin"]        = "WildCanyon.lvl2";
     Global::levelSetToLVL2["set0017_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0017_s.bin"]        = "";
-    Global::levelSetToLVL2["set0017_u.bin"]        = "";
-    Global::levelSetToLVL2["set0018_hd_s.bin"]     = "DryLagoon.lvl2";
-    Global::levelSetToLVL2["set0018_hd_u.bin"]     = "DryLagoon.lvl2";
+    Global::levelSetToLVL2["set0017_s.bin"]        = "MissionStreet.lvl2";
+    Global::levelSetToLVL2["set0017_u.bin"]        = "MissionStreet.lvl2";
+    Global::levelSetToLVL2["set0018_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0018_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0018_s.bin"]        = "DryLagoon.lvl2";
     Global::levelSetToLVL2["set0018_u.bin"]        = "DryLagoon.lvl2";
-    Global::levelSetToLVL2["set0019_s.bin"]        = "";
-    Global::levelSetToLVL2["SET0019_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0020_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0020_U.bin"]        = "";
+    Global::levelSetToLVL2["set0019_s.bin"]        = "SonicVsShadow1.lvl2";
+    Global::levelSetToLVL2["SET0019_U.BIN"]        = "SonicVsShadow1.lvl2";
+    Global::levelSetToLVL2["SET0020_S.BIN"]        = "TailsVsEggman1.lvl2";
+    Global::levelSetToLVL2["SET0020_U.BIN"]        = "TailsVsEggman1.lvl2";
     Global::levelSetToLVL2["set0021_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0021_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0021_s.bin"]        = "";
-    Global::levelSetToLVL2["set0021_u.bin"]        = "";
-    Global::levelSetToLVL2["set0022_hd_s.bin"]     = "CrazyGadget.lvl2";
+    Global::levelSetToLVL2["set0021_s.bin"]        = "SandOcean.lvl2";
+    Global::levelSetToLVL2["set0021_u.bin"]        = "SandOcean.lvl2";
+    Global::levelSetToLVL2["set0022_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0022_s.bin"]        = "CrazyGadget.lvl2";
     Global::levelSetToLVL2["set0022_u.bin"]        = "CrazyGadget.lvl2";
     Global::levelSetToLVL2["set0023_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0023_hd_u.bin"]     = "";
-    Global::levelSetToLVL2["set0023_s.bin"]        = "";
-    Global::levelSetToLVL2["set0023_u.bin"]        = "";
-    Global::levelSetToLVL2["set0024_hd_s.bin"]     = "EternalEngine.lvl2";
+    Global::levelSetToLVL2["set0023_s.bin"]        = "HiddenBase.lvl2";
+    Global::levelSetToLVL2["set0023_u.bin"]        = "HiddenBase.lvl2";
+    Global::levelSetToLVL2["set0024_hd_s.bin"]     = "";
     Global::levelSetToLVL2["set0024_s.bin"]        = "EternalEngine.lvl2";
     Global::levelSetToLVL2["SET0024_U.BIN"]        = "EternalEngine.lvl2";
     Global::levelSetToLVL2["set0025_2p_s.bin"]     = "";
     Global::levelSetToLVL2["set0025_2p_u.bin"]     = "";
     Global::levelSetToLVL2["set0025_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0025_s.bin"]        = "";
-    Global::levelSetToLVL2["set0025_u.bin"]        = "";
+    Global::levelSetToLVL2["set0025_s.bin"]        = "DeathChamber.lvl2";
+    Global::levelSetToLVL2["set0025_u.bin"]        = "DeathChamber.lvl2";
     Global::levelSetToLVL2["set0026_2p_s.bin"]     = "";
     Global::levelSetToLVL2["set0026_2p_u.bin"]     = "";
     Global::levelSetToLVL2["set0026_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0026_s.bin"]        = "";
-    Global::levelSetToLVL2["set0026_u.bin"]        = "";
+    Global::levelSetToLVL2["set0026_s.bin"]        = "EggQuarters.lvl2";
+    Global::levelSetToLVL2["set0026_u.bin"]        = "EggQuarters.lvl2";
     Global::levelSetToLVL2["set0027_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0027_s.bin"]        = "";
-    Global::levelSetToLVL2["set0027_u.bin"]        = "";
-    Global::levelSetToLVL2["set0028_hd_s.bin"]     = "PyramidCave.lvl2";
-    Global::levelSetToLVL2["set0028_hd_u.bin"]     = "PyramidCave.lvl2";
+    Global::levelSetToLVL2["set0027_s.bin"]        = "LostColony.lvl2";
+    Global::levelSetToLVL2["set0027_u.bin"]        = "LostColony.lvl2";
+    Global::levelSetToLVL2["set0028_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0028_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0028_s.bin"]        = "PyramidCave.lvl2";
     Global::levelSetToLVL2["set0028_u.bin"]        = "PyramidCave.lvl2";
-    Global::levelSetToLVL2["set0029_s.bin"]        = "";
-    Global::levelSetToLVL2["set0029_u.bin"]        = "";
-    Global::levelSetToLVL2["set0030_2p_s.bin"]     = "FinalRush.lvl2";
-    Global::levelSetToLVL2["set0030_2p_u.bin"]     = "FinalRush.lvl2";
-    Global::levelSetToLVL2["set0030_hd_s.bin"]     = "FinalRush.lvl2";
-    Global::levelSetToLVL2["set0030_hd_u.bin"]     = "FinalRush.lvl2";
+    Global::levelSetToLVL2["set0029_s.bin"]        = "TailsVsEggman2.lvl2";
+    Global::levelSetToLVL2["set0029_u.bin"]        = "TailsVsEggman2.lvl2";
+    Global::levelSetToLVL2["set0030_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0030_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0030_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0030_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0030_s.bin"]        = "FinalRush.lvl2";
     Global::levelSetToLVL2["set0030_u.bin"]        = "FinalRush.lvl2";
-    Global::levelSetToLVL2["set0031_s.bin"]        = "";
-    Global::levelSetToLVL2["set0031_u.bin"]        = "";
-    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "MeteorHerd.lvl2";
-    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "MeteorHerd.lvl2";
-    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "MeteorHerd.lvl2";
-    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0031_s.bin"]        = "GreenHill.lvl2";
+    Global::levelSetToLVL2["set0031_u.bin"]        = "GreenHill.lvl2";
+    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0032_s.bin"]        = "MeteorHerd.lvl2";
     Global::levelSetToLVL2["set0032_u.bin"]        = "MeteorHerd.lvl2";
-    Global::levelSetToLVL2["set0033_s.bin"]        = "";
-    Global::levelSetToLVL2["set0033_u.bin"]        = "";
+    Global::levelSetToLVL2["set0033_s.bin"]        = "KnucklesVsRouge.lvl2";
+    Global::levelSetToLVL2["set0033_u.bin"]        = "KnucklesVsRouge.lvl2";
     Global::levelSetToLVL2["set0034_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0034_s.bin"]        = "";
-    Global::levelSetToLVL2["set0034_u.bin"]        = "";
+    Global::levelSetToLVL2["set0034_s.bin"]        = "CannonsCoreSonic.lvl2";
+    Global::levelSetToLVL2["set0034_u.bin"]        = "CannonsCoreSonic.lvl2";
     Global::levelSetToLVL2["set0035_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0035_s.bin"]        = "";
-    Global::levelSetToLVL2["set0035_u.bin"]        = "";
+    Global::levelSetToLVL2["set0035_s.bin"]        = "CannonsCoreEggman.lvl2";
+    Global::levelSetToLVL2["set0035_u.bin"]        = "CannonsCoreEggman.lvl2";
     Global::levelSetToLVL2["set0036_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0036_s.bin"]        = "";
-    Global::levelSetToLVL2["set0036_u.bin"]        = "";
+    Global::levelSetToLVL2["set0036_s.bin"]        = "CannonsCoreTails.lvl2";
+    Global::levelSetToLVL2["set0036_u.bin"]        = "CannonsCoreTails.lvl2";
     Global::levelSetToLVL2["set0037_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0037_s.bin"]        = "";
-    Global::levelSetToLVL2["set0037_u.bin"]        = "";
+    Global::levelSetToLVL2["set0037_s.bin"]        = "CannonsCoreRouge.lvl2";
+    Global::levelSetToLVL2["set0037_u.bin"]        = "CannonsCoreRouge.lvl2";
     Global::levelSetToLVL2["set0038_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0038_s.bin"]        = "";
-    Global::levelSetToLVL2["set0038_u.bin"]        = "";
-    Global::levelSetToLVL2["set0039_s.bin"]        = "";
-    Global::levelSetToLVL2["SET0039_U.bin"]        = "";
-    Global::levelSetToLVL2["set0040_2p_s.bin"]     = "FinalChase.lvl2";
-    Global::levelSetToLVL2["set0040_2p_u.bin"]     = "FinalChase.lvl2";
-    Global::levelSetToLVL2["set0040_hd_s.bin"]     = "FinalChase.lvl2";
-    Global::levelSetToLVL2["set0040_hd_u.bin"]     = "FinalChase.lvl2";
+    Global::levelSetToLVL2["set0038_s.bin"]        = "CannonsCoreKnuckles.lvl2";
+    Global::levelSetToLVL2["set0038_u.bin"]        = "CannonsCoreKnuckles.lvl2";
+    Global::levelSetToLVL2["set0039_s.bin"]        = "MissionStreet2P.lvl2";
+    Global::levelSetToLVL2["SET0039_U.BIN"]        = "MissionStreet2P.lvl2";
+    Global::levelSetToLVL2["set0040_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0040_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0040_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0040_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0040_s.bin"]        = "FinalChase.lvl2";
     Global::levelSetToLVL2["set0040_u.bin"]        = "FinalChase.lvl2";
-    Global::levelSetToLVL2["SET0041_2P_S.bin"]     = "";
+    Global::levelSetToLVL2["SET0041_2P_S.BIN"]     = "";
     Global::levelSetToLVL2["set0041_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["SET0042_S.bin"]        = "";
+    Global::levelSetToLVL2["SET0042_S.BIN"]        = "";
     Global::levelSetToLVL2["set0042_u.bin"]        = "";
-    Global::levelSetToLVL2["set0043_hd_s.bin"]     = "CosmicWall.lvl2";
-    Global::levelSetToLVL2["set0043_hd_u.bin"]     = "CosmicWall.lvl2";
+    Global::levelSetToLVL2["set0043_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0043_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0043_s.bin"]        = "CosmicWall.lvl2";
     Global::levelSetToLVL2["set0043_u.bin"]        = "CosmicWall.lvl2";
-    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "MadSpace.lvl2";
-    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "MadSpace.lvl2";
-    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "MadSpace.lvl2";
-    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "";
+    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "";
+    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "";
+    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "";
     Global::levelSetToLVL2["set0044_s.bin"]        = "MadSpace.lvl2";
     Global::levelSetToLVL2["set0044_u.bin"]        = "MadSpace.lvl2";
-    Global::levelSetToLVL2["set0045_s.bin"]        = "";
-    Global::levelSetToLVL2["set0045_u.bin"]        = "";
-    Global::levelSetToLVL2["SET0046_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0046_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0046_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0046_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0047_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0047_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0047_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0047_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0048_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0048_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0048_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0048_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0049_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0049_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0049_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0049_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0050_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0050_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0050_S.bin"]        = "";
-    Global::levelSetToLVL2["SET0050_U.bin"]        = "";
-    Global::levelSetToLVL2["SET0051_2P_S.bin"]     = "";
-    Global::levelSetToLVL2["SET0051_2P_U.bin"]     = "";
-    Global::levelSetToLVL2["SET0051_S.bin"]        = "";
+    Global::levelSetToLVL2["set0045_s.bin"]        = "SandOcean2P.lvl2";
+    Global::levelSetToLVL2["set0045_u.bin"]        = "SandOcean2P.lvl2";
+    Global::levelSetToLVL2["SET0046_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0046_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0046_S.BIN"]        = "";
+    Global::levelSetToLVL2["SET0046_U.BIN"]        = "";
+    Global::levelSetToLVL2["SET0047_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0047_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0047_S.BIN"]        = "";
+    Global::levelSetToLVL2["SET0047_U.BIN"]        = "";
+    Global::levelSetToLVL2["SET0048_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0048_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0048_S.BIN"]        = "";
+    Global::levelSetToLVL2["SET0048_U.BIN"]        = "";
+    Global::levelSetToLVL2["SET0049_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0049_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0049_S.BIN"]        = "";
+    Global::levelSetToLVL2["SET0049_U.BIN"]        = "";
+    Global::levelSetToLVL2["SET0050_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0050_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0050_S.BIN"]        = "";
+    Global::levelSetToLVL2["SET0050_U.BIN"]        = "";
+    Global::levelSetToLVL2["SET0051_2P_S.BIN"]     = "";
+    Global::levelSetToLVL2["SET0051_2P_U.BIN"]     = "";
+    Global::levelSetToLVL2["SET0051_S.BIN"]        = "";
     Global::levelSetToLVL2["SET0051_U.bin"]        = "";
     Global::levelSetToLVL2["set0052_s.bin"]        = "";
     Global::levelSetToLVL2["set0052_u.bin"]        = "";
@@ -1332,6 +1669,62 @@ void LevelLoader::promptUserForLevel()
     #endif
 }
 
+void LevelLoader::promptUserForLevelSAB()
+{
+    int response = MessageBox(NULL, 
+                              "Load a new level? Unsaved progress will be lost!", 
+                              "Load New Level", 
+                              MB_YESNO);
+    if (response != IDYES)
+    {
+        return;
+    }
+
+    const int BUFSIZE = 1024;
+    char filePaths[BUFSIZE] = {0};
+    OPENFILENAME ofns = {0};
+    ofns.lStructSize = sizeof(OPENFILENAME);
+    ofns.lpstrFile = filePaths;
+    ofns.nMaxFile = BUFSIZE;
+    ofns.lpstrInitialDir = "E:\\CWorkspace\\NewSonicThing\\NewSonicThing\\res\\Levels";
+    ofns.lpstrFilter = "LVL files (*.lvl)\0*.lvl\0";
+    ofns.nFilterIndex = 1; //default filter to show
+    ofns.lpstrTitle = "Select the .lvl file";
+    ofns.Flags = OFN_NOCHANGEDIR | OFN_EXPLORER;
+
+    bool opened = GetOpenFileName(&ofns);
+    if (!opened)
+    {
+        return;
+    }
+
+    std::string lvlFilename = &filePaths[0];
+
+
+
+    char filePaths2[BUFSIZE] = {0};
+    OPENFILENAME ofns2 = {0};
+    ofns2.lStructSize = sizeof(OPENFILENAME);
+    ofns2.lpstrFile = filePaths2;
+    ofns2.nMaxFile = BUFSIZE;
+    ofns2.lpstrInitialDir = "E:\\CWorkspace\\NewSonicThing\\NewSonicThing\\res\\Models\\Levels\\";
+    ofns2.lpstrFilter = "OBJ files (*.obj)\0*.obj\0";
+    ofns2.nFilterIndex = 1; //default filter to show
+    ofns2.lpstrTitle = "Select the .obj file";
+    ofns2.Flags = OFN_NOCHANGEDIR | OFN_EXPLORER;
+
+    bool opened2 = GetOpenFileName(&ofns2);
+    if (!opened2)
+    {
+        return;
+    }
+
+    std::string objFile = &filePaths2[0];
+
+    LevelLoader::loadLevelSAB(lvlFilename, objFile);
+    Global::redrawWindow = true;
+}
+
 void LevelLoader::exportLevel()
 {
     const int BUFSIZE = 1024;
@@ -1483,4 +1876,75 @@ void LevelLoader::exportLevel()
     }
 
     myfileS.close();
+}
+
+void LevelLoader::exportLevelSAB()
+{
+    const int BUFSIZE = 1024;
+    char filePaths[BUFSIZE] = {0};
+    OPENFILENAME ofns = {0};
+    ofns.lStructSize = sizeof(OPENFILENAME);
+    ofns.lpstrFile = filePaths;
+    ofns.nMaxFile = BUFSIZE;
+    ofns.lpstrInitialDir = "E:\\CWorkspace\\NewSonicThing\\NewSonicThing\\res\\Levels";
+    ofns.lpstrFilter = "LVL files (*.lvl)\0*.lvl\0";
+    ofns.nFilterIndex = 1; //default filter to show
+    ofns.lpstrTitle = "Select the .lvl file to export to";
+    ofns.Flags = OFN_NOCHANGEDIR | OFN_EXPLORER;
+
+    bool opened = GetOpenFileName(&ofns);
+    if (!opened)
+    {
+        return;
+    }
+
+    std::string lvlFilename = &filePaths[0];
+
+    std::ofstream out(lvlFilename, std::ios::out);
+    if (!out.is_open())
+    {
+        MessageBox(NULL, (("Cannot open file '"+lvlFilename)+"' for writing.").c_str(), "silly", MB_OK);
+        return;
+    }
+
+    std::vector<SA2Object*> sa2Objects;
+    for (Entity* e : Global::gameEntities)
+    {
+        if (e->isSA2Object())
+        {
+            if (SA2Object* o = dynamic_cast<SA2Object*>(e))
+            {
+                sa2Objects.push_back(o);
+            }
+            else
+            {
+                std::fprintf(stdout, "Warning: object lied about being an sa2object\n");
+            }
+        }
+    }
+
+    //complete lvl file structuree
+    for (int i = 0; i < (int)sa2Objects.size(); i++)
+    {
+        SA2Object* o = sa2Objects[i];
+
+        if (o->lvlLineNum >= 0)
+        {
+            lvlFile[o->lvlLineNum] = o->toSabString();
+        }
+        else
+        {
+            lvlFile.push_back(o->toSabString());
+            o->lvlLineNum = (int)lvlFile.size()-1;
+        }
+    }
+
+    //write to the file
+    for (int i = 0; i < lvlFile.size(); i++)
+    {
+        std::string line = lvlFile[i] + "\n";
+        out.write(line.c_str(), line.size());
+    }
+
+    out.close();
 }

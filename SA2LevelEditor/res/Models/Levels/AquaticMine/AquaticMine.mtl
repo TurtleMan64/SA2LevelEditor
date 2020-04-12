@@ -1,0 +1,127 @@
+# Material Count: 25
+
+newmtl pum256_6.png
+Ns 20
+Ni 0.0
+map_Kd pum256_6.png
+
+newmtl pum128_20.png
+Ns 20
+Ni 0.0
+map_Kd pum128_20.png
+
+newmtl pum128_7.png
+Ns 20
+Ni 0.0
+map_Kd pum128_7.png
+
+newmtl pum128_17.png
+Ns 20
+Ni 0.0
+map_Kd pum128_17.png
+
+newmtl pum256_1.png
+Ns 20
+Ni 0.0
+map_Kd pum256_1.png
+
+newmtl pum64_2.png
+Ns 20
+Ni 0.0
+map_Kd pum64_2.png
+
+newmtl aqua64_1.png
+Ns 20
+Ni 0.0
+map_Kd aqua64_1.png
+
+newmtl aqua128_1.png
+Ns 20
+Ni 0.0
+map_Kd aqua128_1.png
+
+newmtl pum128_4.png
+Ns 20
+Ni 0.0
+map_Kd pum128_4.png
+
+newmtl aqua256_1.png
+Ns 20
+Ni 0.0
+map_Kd aqua256_1.png
+
+newmtl pum128_22.png
+Ns 20
+Ni 0.0
+map_Kd pum128_22.png
+
+newmtl pum64_4.png
+Ns 20
+Ni 0.0
+map_Kd pum64_4.png
+
+newmtl aqua128_2.png
+Ns 20
+Ni 0.0
+map_Kd aqua128_2.png
+
+newmtl pum128_13.png
+Ns 20
+Ni 0.0
+map_Kd pum128_13.png
+
+newmtl pum128_19.png
+Ns 20
+Ni 0.0
+map_Kd pum128_19.png
+
+newmtl aqua256_2.png
+Ns 20
+Ni 0.0
+map_Kd aqua256_2.png
+
+newmtl pum128_10.png
+Ns 20
+Ni 0.0
+map_Kd pum128_10.png
+
+newmtl aqua256_3.png
+Ns 20
+Ni 0.0
+map_Kd aqua256_3.png
+
+newmtl pum128_5.png
+Ns 20
+Ni 0.0
+map_Kd pum128_5.png
+
+newmtl pum64_8.png
+Ns 20
+Ni 0.0
+map_Kd pum64_8.png
+
+newmtl pum128_18.png
+Ns 20
+Ni 0.0
+map_Kd pum128_18.png
+
+newmtl pum256_2.png
+Ns 20
+Ni 0.0
+map_Kd pum256_2.png
+
+newmtl pum128_2.png
+Ns 20
+Ni 0.0
+map_Kd pum128_2.png
+
+newmtl miu64_loco005.png
+Ns 20
+Ni 0.0
+map_Kd miu64_loco005.png
+
+newmtl pum128_14.png
+Ns 20
+Ni 0.0
+map_Kd pum128_14.png
+
