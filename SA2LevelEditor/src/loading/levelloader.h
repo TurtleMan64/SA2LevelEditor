@@ -19,6 +19,8 @@ private:
 
     static void processObjectSET(char data[32]);
 
+    static void processCameraTrigger(char** data, int dataLength);
+
     static void loadLevel(std::string setDir, std::string setS, std::string setU);
 
     static void loadLevelSAB(std::string fileLvl, std::string fileObj);

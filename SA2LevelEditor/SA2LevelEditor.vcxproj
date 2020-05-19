@@ -152,6 +152,7 @@
     <ClCompile Include="src\collision\CollisionModel.cpp" />
     <ClCompile Include="src\collision\Triangle3D.cpp" />
     <ClCompile Include="src\entities\Camera.cpp" />
+    <ClCompile Include="src\entities\CameraTrigger.cpp" />
     <ClCompile Include="src\entities\CollideableObject.cpp" />
     <ClCompile Include="src\entities\Cursor3D.cpp" />
     <ClCompile Include="src\entities\Dummy.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="src\collision\collisionmodel.h" />
     <ClInclude Include="src\collision\triangle3d.h" />
     <ClInclude Include="src\entities\camera.h" />
+    <ClInclude Include="src\entities\cameratrigger.h" />
     <ClInclude Include="src\entities\collideableobject.h" />
     <ClInclude Include="src\entities\cursor3d.h" />
     <ClInclude Include="src\entities\dummy.h" />

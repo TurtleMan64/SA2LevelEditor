@@ -31,6 +31,8 @@ StageSky::StageSky()
 
 void StageSky::step()
 {
+    visible = Global::displayStageSky;
+
     position.set(&Global::gameCamera->eye);
 
     //some stages have ths sky not always be in the center of the camera.

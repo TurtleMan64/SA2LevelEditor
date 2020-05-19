@@ -33,6 +33,7 @@ StageKillplanes::StageKillplanes()
 
 void StageKillplanes::step()
 {
+    visible = Global::displayStageKillplanes;
     if (StageKillplanes::collisionModel != nullptr)
     {
         StageKillplanes::collisionModel->isVisible = visible;

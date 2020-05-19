@@ -66,6 +66,7 @@
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../toolbox/maths.h"
 #include "../entities/GlobalObjects/eai.h"
+#include "../entities/cameratrigger.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -244,6 +245,35 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
     for (int i = 32; i < (int)objectsSetU.size(); i+=32)
     {
         processObjectSET(&objectsSetU[i]);
+    }
+
+    //now go through the camera file
+    std::string camFilename = "res/Camera/stg" + std::to_string(Global::levelID) + "cam.txt";
+    std::ifstream camFile(camFilename);
+	if (!camFile.is_open())
+	{
+		std::fprintf(stdout, "Error: Cannot load camera file '%s'\n", (camFilename).c_str());
+		camFile.close();
+	}
+    else
+    {
+        while (!camFile.eof())
+	    {
+		    getlineSafe(camFile, line);
+
+		    char lineBuf[512]; //Buffer to copy line into
+		    memcpy(lineBuf, line.c_str(), line.size()+1);
+
+		    int splitLength = 0;
+		    char** lineSplit = split(lineBuf, ' ', &splitLength);
+
+		    if (splitLength > 0)
+		    {
+			    processCameraTrigger(lineSplit, splitLength);
+		    }
+		    free(lineSplit);
+	    }
+	    camFile.close();
     }
 
     //Loader::printInfo();
@@ -566,6 +596,23 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
 			return;
 		}
 	}
+}
+
+void LevelLoader::processCameraTrigger(char** dat, int dataLength)
+{
+    if (dataLength != 16)
+	{
+		return;
+	}
+
+    CameraTrigger* trigger = new CameraTrigger(std::stoi(dat[ 0]), 
+                                               std::stof(dat[ 1]), std::stof(dat[ 2]), std::stof(dat[ 3]),
+                                               std::stof(dat[ 4]), std::stof(dat[ 5]), std::stof(dat[ 6]),
+                                               std::stof(dat[ 7]), std::stof(dat[ 8]), std::stof(dat[ 9]),
+                                               std::stof(dat[10]), std::stof(dat[11]), std::stof(dat[12]),
+                                               std::stof(dat[13]), std::stof(dat[14]), std::stof(dat[15])); INCR_NEW("Entity");
+    
+    Global::addTransparentEntity(trigger);
 }
 
 void LevelLoader::processObjectSET(char data[32])

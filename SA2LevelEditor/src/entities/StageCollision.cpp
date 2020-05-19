@@ -33,6 +33,7 @@ StageCollision::StageCollision()
 
 void StageCollision::step()
 {
+    visible = Global::displayStageCollision;
     if (StageCollision::collisionModel != nullptr)
     {
         StageCollision::collisionModel->isVisible = visible;

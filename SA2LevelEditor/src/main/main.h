@@ -37,6 +37,8 @@ class Dummy;
 class Global
 {
 public:
+    static std::string version;
+
     static std::unordered_set<Entity*> gameEntities;
     static std::list<Entity*> gameEntitiesToAdd;
     static std::list<Entity*> gameEntitiesToDelete;
@@ -54,7 +56,6 @@ public:
 
     static void teleportSA2PlayerToCursor3D();
 
-public:
     static int main();
 
     static int initWin32GUI(HINSTANCE hInstance);
@@ -96,6 +97,11 @@ public:
 	static int countNew;
 	static int countDelete;
 	static int gameState;
+    static bool displayCameraTriggers;
+    static bool displayStage;
+    static bool displayStageCollision;
+    static bool displayStageKillplanes;
+    static bool displayStageSky;
     static bool renderWithCulling;
 
     //if this is true, the editor will try to attach to a running SA2 process

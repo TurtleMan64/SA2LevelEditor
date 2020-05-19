@@ -82,6 +82,8 @@
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../entities/GlobalObjects/eai.h"
 
+std::string Global::version = "0.0.5";
+
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
 std::list<Entity*> Global::gameEntitiesToDelete;
@@ -134,6 +136,11 @@ bool Global::shouldLoadNewLevel = false;
 bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
 bool Global::gameIsFollowingSA2NoCam = false;
+bool Global::displayCameraTriggers = false;
+bool Global::displayStage = true;
+bool Global::displayStageCollision = false;
+bool Global::displayStageKillplanes = false;
+bool Global::displayStageSky = false;
 bool Global::renderWithCulling = false;
 int Global::sa2Type = Global::SA2Type::None;
 
@@ -173,18 +180,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
     return Global::main();
 }
 
-#define CMD_FILE_LOAD          1
-#define CMD_FILE_EXPORT        2
-#define CMD_FILE_EXIT          3
-#define CMD_VIEW_STAGE         4
-#define CMD_VIEW_COLLISION     5
-#define CMD_VIEW_KILLPLANES    6
-#define CMD_VIEW_BACKGROUND    7
-#define CMD_VIEW_CULLING       8
-#define CMD_SA2_FOLLOW         9
-#define CMD_SA2_FOLLOW_NO_CAM 10
-#define CMD_SA2_TELEPORT      11
-#define CMD_HELP              12
+#define CMD_FILE_LOAD           1
+#define CMD_FILE_EXPORT         2
+#define CMD_FILE_EXIT           3
+#define CMD_VIEW_STAGE          4
+#define CMD_VIEW_COLLISION      5
+#define CMD_VIEW_KILLPLANES     6
+#define CMD_VIEW_BACKGROUND     7
+#define CMD_VIEW_CAMERA_TRIGGER 8
+#define CMD_VIEW_CULLING        9
+#define CMD_SA2_FOLLOW         10
+#define CMD_SA2_FOLLOW_NO_CAM  11
+#define CMD_SA2_TELEPORT       12
+#define CMD_HELP               13
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -210,16 +218,18 @@ void addMenus(HWND window)
     AppendMenu(Global::mainMenuFile, MF_SEPARATOR, 0, "");
     AppendMenu(Global::mainMenuFile, MF_STRING, CMD_FILE_EXIT, "Exit");
 
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_STAGE     , "View Stage");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION , "View Collision");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES, "View Killplanes");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND, "View Background");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING   , "Backface Culling");
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE     , MF_CHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION , MF_CHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_CHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING   , MF_UNCHECKED);
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_STAGE         , "View Stage");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION     , "View Collision");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES    , "View Killplanes");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND    , "View Background");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CAMERA_TRIGGER, "View Camera Triggers");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING       , "Backface Culling");
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE         , MF_CHECKED); 
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION     , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES    , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND    , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING       , MF_UNCHECKED);
 
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,        "Follow SA2 in Real Time");
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM, "Follow SA2 in Real Time (No Camera)");
@@ -314,33 +324,41 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 
         case CMD_VIEW_STAGE:
         {
-            Global::gameStage->visible = !Global::gameStage->visible;
-            if (Global::gameStage->visible) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_CHECKED  ); }
-            else                            { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_UNCHECKED); }
+            Global::displayStage = !Global::displayStage;
+            if (Global::displayStage) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_CHECKED  ); }
+            else                      { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
         case CMD_VIEW_COLLISION:
         {
-            Global::gameStageCollision->visible = !Global::gameStageCollision->visible;
-            if (Global::gameStageCollision->visible) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_CHECKED  ); }
-            else                                     { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_UNCHECKED); }
+            Global::displayStageCollision = !Global::displayStageCollision;
+            if (Global::displayStageCollision) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_CHECKED  ); }
+            else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
         case CMD_VIEW_KILLPLANES:
         {
-            Global::gameStageKillplanes->visible = !Global::gameStageKillplanes->visible;
-            if (Global::gameStageKillplanes->visible) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_CHECKED  ); }
-            else                                      { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_UNCHECKED); }
+            Global::displayStageKillplanes = !Global::displayStageKillplanes;
+            if (Global::displayStageKillplanes) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_CHECKED  ); }
+            else                                { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
         case CMD_VIEW_BACKGROUND:
         {
-            Global::gameStageSky->visible = !Global::gameStageSky->visible;
-            if (Global::gameStageSky->visible) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED  ); }
-            else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_UNCHECKED); }
+            Global::displayStageSky = !Global::displayStageSky;
+            if (Global::displayStageSky) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_CHECKED  ); }
+            else                         { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND, MF_UNCHECKED); }
+            Global::redrawWindow = true;
+            break;
+        }
+        case CMD_VIEW_CAMERA_TRIGGER:
+        {
+            Global::displayCameraTriggers = !Global::displayCameraTriggers;
+            if (Global::displayCameraTriggers) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_CHECKED  ); }
+            else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
@@ -381,7 +399,8 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         }
         case CMD_SA2_TELEPORT: Global::teleportSA2PlayerToCursor3D(); break;
         
-        case CMD_HELP: MessageBox(NULL, 
+        case CMD_HELP: MessageBox(NULL,
+                (("Version " + Global::version) + "\n\n"
                 "Load the U and S setfile in and the rest of the stage models will load automatically.\n" 
                 "Controls:\n"
                 "    Mouse scroll to move camera forward/backward\n"
@@ -389,7 +408,7 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
                 "    Mouse middle click + mouse move to rotate camera\n"
                 "    Mouse middle click + mouse move + Shift to pan camera\n"
                 "    Mouse middle click + mouse move + Alt to rotate camera around 3D Cursor\n"
-                "    Mouse middle click + mouse move + Shift + Alt to pan camera relative to 3D Cursor\n"
+                "    Mouse middle click + mouse move + Shift + Alt to pan camera relative to 3D Cursor\n").c_str()
                 , "Help", MB_OK); break;
         
         case CMD_BTN_1:  if (Global::selectedSA2Object != nullptr) { Global::selectedSA2Object->updateValue(CMD_BTN_1 -CMD_BTN_1); } break;
@@ -533,6 +552,8 @@ void Global::resetObjectWindow()
 
 int Global::main()
 {
+    MessageBox(NULL, (("Version " + Global::version) +"\nProgram is still a work in progress.").c_str(), "SA2 Level Editor", MB_OK);
+
 	Global::countNew = 0;
 	Global::countDelete = 0;
 
