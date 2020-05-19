@@ -84,15 +84,15 @@ CCYL::CCYL(char data[32], bool useDefaultValues)
     rotationX = 0;
     rotationY = 0;
     rotationZ = 0;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = CCYL::cmBase;
-	collideModelTransformed = CCYL::cmBase->duplicateMe();
+    collideModelTransformed = CCYL::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool CCYL::isSA2Object()
@@ -114,35 +114,35 @@ void CCYL::step()
 
 std::list<TexturedModel*>* CCYL::getModels()
 {
-	return &CCYL::models;
+    return &CCYL::models;
 }
 
 void CCYL::loadStaticModels()
 {
-	if (CCYL::models.size() > 0)
-	{
-		return;
-	}
+    if (CCYL::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading CCYL static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading CCYL static models...\n");
+    #endif
 
-	loadModel(&CCYL::models, "res/Models/GlobalObjects/Collision/", "Cylinder");
+    loadModel(&CCYL::models, "res/Models/GlobalObjects/Collision/", "Cylinder");
 
     if (CCYL::cmBase == nullptr)
-	{
-		CCYL::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Cylinder");
-	}
+    {
+        CCYL::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Cylinder");
+    }
 }
 
 void CCYL::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting CCYL static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting CCYL static models...\n");
+    #endif
 
-	Entity::deleteModels(&CCYL::models);
+    Entity::deleteModels(&CCYL::models);
     Entity::deleteCollisionModel(&CCYL::cmBase);
 }
 

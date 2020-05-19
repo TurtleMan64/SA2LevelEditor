@@ -46,14 +46,14 @@ IRONBALL2::IRONBALL2(char data[32], bool useDefaultValues)
     std::memcpy(rawData, data, 32);
 
     ID = data[1];
-	signed short rZ;
+    signed short rZ;
 
-	char* ptr = (char*)(&rZ);
-	memset(ptr, data[7], 1);
-	memset(ptr + 1, data[6], 1);
+    char* ptr = (char*)(&rZ);
+    memset(ptr, data[7], 1);
+    memset(ptr + 1, data[6], 1);
 
-	rotZ = (int)rZ;
-	oscillates = rotZ / 2 % 2; //result is either 0 or 1, which are falsy and truthy and the results we want.
+    rotZ = (int)rZ;
+    oscillates = rotZ / 2 % 2; //result is either 0 or 1, which are falsy and truthy and the results we want.
 
     char* x = (char*)&position.x;
     x[3] = data[8];
@@ -73,57 +73,57 @@ IRONBALL2::IRONBALL2(char data[32], bool useDefaultValues)
     z[1] = data[18];
     z[0] = data[19];
 
-	float var1;
+    float var1;
     char* v1 = (char*)&var1;
     v1[3] = data[20];
     v1[2] = data[21];
     v1[1] = data[22];
     v1[0] = data[23];
-	radius = var1;
+    radius = var1;
 
-	float var2;
+    float var2;
     char* v2 = (char*)&var2;
     v2[3] = data[24];
     v2[2] = data[25];
     v2[1] = data[26];
     v2[0] = data[27];
-	rotSpeed = var2;
+    rotSpeed = var2;
 
-	float var3;
-	char* v3 = (char*)&var3;
-	v3[3] = data[24];
-	v3[2] = data[25];
-	v3[1] = data[26];
-	v3[0] = data[27];
-	oscillation = var3;
+    float var3;
+    char* v3 = (char*)&var3;
+    v3[3] = data[24];
+    v3[2] = data[25];
+    v3[1] = data[26];
+    v3[0] = data[27];
+    oscillation = var3;
 
     if (useDefaultValues)
     {
         radius = 0.0f;
         rotSpeed = 0.0f;
-		oscillates = false;
-		oscillation = 0.0f;
-		rotZ = 0;
+        oscillates = false;
+        oscillation = 0.0f;
+        rotZ = 0;
     }
 
     rotationX = 0;
     rotationY = 0;
     rotationZ = 0;
-	scaleX = 1;
-	scaleY = 1;
-	scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
-	//base model
+    //base model
     collideModelOriginal = IRONBALL2::cmBase;
-	collideModelTransformed = IRONBALL2::cmBase->duplicateMe();
+    collideModelTransformed = IRONBALL2::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 
-	createModel();
+    createModel();
 }
 
 bool IRONBALL2::isSA2Object()
@@ -136,183 +136,183 @@ void IRONBALL2::step()
     if (Global::selectedSA2Object == this)
     {
         baseColour.set(1.75f, 1.75f, 1.75f);
-		std::get<0>(*rod)->baseColour.set(1.75f, 1.75f, 1.75f);
-		std::get<0>(*ball1)->baseColour.set(1.75f, 1.75f, 1.75f);
-		std::get<0>(*ball2)->baseColour.set(1.75f, 1.75f, 1.75f);
+        std::get<0>(*rod)->baseColour.set(1.75f, 1.75f, 1.75f);
+        std::get<0>(*ball1)->baseColour.set(1.75f, 1.75f, 1.75f);
+        std::get<0>(*ball2)->baseColour.set(1.75f, 1.75f, 1.75f);
     }
     else
     {
         baseColour.set(1.0f, 1.0f, 1.0f);
-		std::get<0>(*rod)->baseColour.set(1.0f, 1.0f, 1.0f);
-		std::get<0>(*ball1)->baseColour.set(1.0f, 1.0f, 1.0f);
-		std::get<0>(*ball2)->baseColour.set(1.0f, 1.0f, 1.0f);
-		if (guides.size() > 0)
-		{
-			despawnGuides();
-			Global::redrawWindow = true;
-		}
+        std::get<0>(*rod)->baseColour.set(1.0f, 1.0f, 1.0f);
+        std::get<0>(*ball1)->baseColour.set(1.0f, 1.0f, 1.0f);
+        std::get<0>(*ball2)->baseColour.set(1.0f, 1.0f, 1.0f);
+        if (guides.size() > 0)
+        {
+            despawnGuides();
+            Global::redrawWindow = true;
+        }
     }
 }
 
 std::list<TexturedModel*>* IRONBALL2::getModels()
 {
-	return &IRONBALL2::baseModels;
+    return &IRONBALL2::baseModels;
 }
 
 void IRONBALL2::loadStaticModels()
 {
-	if (IRONBALL2::baseModels.size() > 0 && IRONBALL2::rodModels.size() > 0 && IRONBALL2::ballModels.size() > 0)
-	{
-		return;
-	}
+    if (IRONBALL2::baseModels.size() > 0 && IRONBALL2::rodModels.size() > 0 && IRONBALL2::ballModels.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading IRONBALL2 static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading IRONBALL2 static models...\n");
+    #endif
 
-	loadModel(&IRONBALL2::baseModels, "res/Models/GlobalObjects/IronBall2/", "Base");
-	loadModel(&IRONBALL2::rodModels,  "res/Models/GlobalObjects/IronBall2/", "Rod");
-	loadModel(&IRONBALL2::ballModels, "res/Models/GlobalObjects/IronBall2/", "Ball");
+    loadModel(&IRONBALL2::baseModels, "res/Models/GlobalObjects/IronBall2/", "Base");
+    loadModel(&IRONBALL2::rodModels,  "res/Models/GlobalObjects/IronBall2/", "Rod");
+    loadModel(&IRONBALL2::ballModels, "res/Models/GlobalObjects/IronBall2/", "Ball");
 
     if (IRONBALL2::cmBase == nullptr)
-	{
-		IRONBALL2::cmBase = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Base");
-	}
-	if (IRONBALL2::cmRod == nullptr)
-	{
-		IRONBALL2::cmRod = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Rod");
-	}
-	if (IRONBALL2::cmBall == nullptr)
-	{
-		IRONBALL2::cmBall = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Ball");
-	}
+    {
+        IRONBALL2::cmBase = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Base");
+    }
+    if (IRONBALL2::cmRod == nullptr)
+    {
+        IRONBALL2::cmRod = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Rod");
+    }
+    if (IRONBALL2::cmBall == nullptr)
+    {
+        IRONBALL2::cmBall = loadCollisionModel("res/Models/GlobalObjects/IronBall2/", "Ball");
+    }
 }
 
 void IRONBALL2::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting IRONBALL2 static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting IRONBALL2 static models...\n");
+    #endif
 
-	Entity::deleteModels(&IRONBALL2::baseModels);
-	Entity::deleteModels(&IRONBALL2::rodModels);
-	Entity::deleteModels(&IRONBALL2::ballModels);
+    Entity::deleteModels(&IRONBALL2::baseModels);
+    Entity::deleteModels(&IRONBALL2::rodModels);
+    Entity::deleteModels(&IRONBALL2::ballModels);
     Entity::deleteCollisionModel(&IRONBALL2::cmBase);
-	Entity::deleteCollisionModel(&IRONBALL2::cmRod);
-	Entity::deleteCollisionModel(&IRONBALL2::cmBall);
+    Entity::deleteCollisionModel(&IRONBALL2::cmRod);
+    Entity::deleteCollisionModel(&IRONBALL2::cmBall);
 }
 
 void IRONBALL2::createModel() {
-	float unitRadius = 20 * (radius + 1);
-	//Rod
-	rod = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
+    float unitRadius = 20 * (radius + 1);
+    //Rod
+    rod = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
 
-	Dummy* rodDummy = new Dummy(&rodModels); INCR_NEW("Entity");
-	rodDummy->setPosition(&position);
-	rodDummy->increasePosition(0, 3.f, 0);
-	rodDummy->scaleX = unitRadius;
-	rodDummy->visible = true;
-	rodDummy->updateTransformationMatrixYXZ();
-	Global::addEntity(rodDummy);
-	std::get<0>(*rod) = rodDummy;
+    Dummy* rodDummy = new Dummy(&rodModels); INCR_NEW("Entity");
+    rodDummy->setPosition(&position);
+    rodDummy->increasePosition(0, 3.f, 0);
+    rodDummy->scaleX = unitRadius;
+    rodDummy->visible = true;
+    rodDummy->updateTransformationMatrixYXZ();
+    Global::addEntity(rodDummy);
+    std::get<0>(*rod) = rodDummy;
 
-	CollisionModel* rodCM = IRONBALL2::cmRod->duplicateMe();
-	rodCM->parent = this;
+    CollisionModel* rodCM = IRONBALL2::cmRod->duplicateMe();
+    rodCM->parent = this;
     Vector3f pos(position.x,position.y + 3.f,position.z);
-	IRONBALL2::cmRod->transformModelYXZ(rodCM, &pos, 0, 0, 0, unitRadius, 1, 1);
-	updateCollisionModelYXZ();
-	CollisionChecker::addCollideModel(rodCM);
-	std::get<1>(*rod) = rodCM;
+    IRONBALL2::cmRod->transformModelYXZ(rodCM, &pos, 0, 0, 0, unitRadius, 1, 1);
+    updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(rodCM);
+    std::get<1>(*rod) = rodCM;
 
-	//Ball 1 (+X)
-	ball1 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
+    //Ball 1 (+X)
+    ball1 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
 
-	Dummy* ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
-	ballDummy->setPosition(&position);
-	ballDummy->increasePosition(unitRadius, 0, 0);
-	ballDummy->visible = true;
-	ballDummy->updateTransformationMatrixYXZ();
-	Global::addEntity(ballDummy);
-	std::get<0>(*ball1) = ballDummy;
+    Dummy* ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
+    ballDummy->setPosition(&position);
+    ballDummy->increasePosition(unitRadius, 0, 0);
+    ballDummy->visible = true;
+    ballDummy->updateTransformationMatrixYXZ();
+    Global::addEntity(ballDummy);
+    std::get<0>(*ball1) = ballDummy;
 
-	CollisionModel* ballCM = IRONBALL2::cmBall->duplicateMe();
-	ballCM->parent = this;
+    CollisionModel* ballCM = IRONBALL2::cmBall->duplicateMe();
+    ballCM->parent = this;
     pos.set(position.x + unitRadius, position.y, position.z);
-	IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
-	updateCollisionModelYXZ();
-	CollisionChecker::addCollideModel(ballCM);
-	std::get<1>(*ball1) = rodCM;
+    IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
+    updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(ballCM);
+    std::get<1>(*ball1) = rodCM;
 
-	//Ball 2 (-X)
-	ball2 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
-	ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
-	ballDummy->setPosition(&position);
-	ballDummy->increasePosition(-unitRadius, 0, 0);
-	ballDummy->visible = true;
-	ballDummy->updateTransformationMatrixYXZ();
-	Global::addEntity(ballDummy);
-	std::get<0>(*ball2) = ballDummy;
+    //Ball 2 (-X)
+    ball2 = new std::tuple<Dummy*, CollisionModel*>(); INCR_NEW("tuple");
+    ballDummy = new Dummy(&ballModels); INCR_NEW("Entity");
+    ballDummy->setPosition(&position);
+    ballDummy->increasePosition(-unitRadius, 0, 0);
+    ballDummy->visible = true;
+    ballDummy->updateTransformationMatrixYXZ();
+    Global::addEntity(ballDummy);
+    std::get<0>(*ball2) = ballDummy;
 
-	ballCM = IRONBALL2::cmBall->duplicateMe();
-	ballCM->parent = this;
+    ballCM = IRONBALL2::cmBall->duplicateMe();
+    ballCM->parent = this;
     pos.set(position.x - unitRadius, position.y, position.z);
-	IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
-	updateCollisionModelYXZ();
-	CollisionChecker::addCollideModel(ballCM);
-	std::get<1>(*ball2) = rodCM;
+    IRONBALL2::cmBall->transformModelYXZ(ballCM, &pos, 0, 0, 0, 1, 1, 1);
+    updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(ballCM);
+    std::get<1>(*ball2) = rodCM;
 }
 
 void IRONBALL2::destroyModel() {
-	Global::deleteEntity(std::get<0>(*rod));
-	Global::deleteEntity(std::get<0>(*ball1));
-	Global::deleteEntity(std::get<0>(*ball2));
+    Global::deleteEntity(std::get<0>(*rod));
+    Global::deleteEntity(std::get<0>(*ball1));
+    Global::deleteEntity(std::get<0>(*ball2));
 
-	CollisionChecker::deleteCollideModel(std::get<1>(*rod));
-	CollisionChecker::deleteCollideModel(std::get<1>(*ball1));
-	CollisionChecker::deleteCollideModel(std::get<1>(*ball2));
+    CollisionChecker::deleteCollideModel(std::get<1>(*rod));
+    CollisionChecker::deleteCollideModel(std::get<1>(*ball1));
+    CollisionChecker::deleteCollideModel(std::get<1>(*ball2));
 
-	delete rod;   INCR_DEL("tuple");
-	delete ball1; INCR_DEL("tuple");
-	delete ball2; INCR_DEL("tuple");
+    delete rod;   INCR_DEL("tuple");
+    delete ball1; INCR_DEL("tuple");
+    delete ball2; INCR_DEL("tuple");
 }
 
 void IRONBALL2::spawnGuides() {
-	despawnGuides();
+    despawnGuides();
 
-	if (oscillates) { //Spawns guides to show oscillation
-		Vector3f pos(&position);
-		pos.y -= oscillation;
+    if (oscillates) { //Spawns guides to show oscillation
+        Vector3f pos(&position);
+        pos.y -= oscillation;
 
-		for (int i = 0; i < 10; i++) //TODO hard coded value for number of frames
-		{
-			Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
-			guide->setPosition(&pos);
-			guide->visible = true;
-			guide->updateTransformationMatrixYXZ();
-			Global::addEntity(guide);
-			guides.push_back(guide);
+        for (int i = 0; i < 10; i++) //TODO hard coded value for number of frames
+        {
+            Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
+            guide->setPosition(&pos);
+            guide->visible = true;
+            guide->updateTransformationMatrixYXZ();
+            Global::addEntity(guide);
+            guides.push_back(guide);
 
-			pos.y += oscillation / 5;
-		}
-	}
+            pos.y += oscillation / 5;
+        }
+    }
 
-	//Spawns cylinder to show range of motion
-	swingCylinder = new Dummy(&Unknown::modelsTriggerCylinder); INCR_NEW("Entity");
-	swingCylinder->setPosition(&position);
-	swingCylinder->setScale(std::get<0>(*rod)->scaleX + 13.5f, 13.5f, std::get<0>(*rod)->scaleX + 13.5f);
-	swingCylinder->visible = true;
-	swingCylinder->updateTransformationMatrixYXZ();
-	Global::addTransparentEntity(swingCylinder);
+    //Spawns cylinder to show range of motion
+    swingCylinder = new Dummy(&Unknown::modelsTriggerCylinder); INCR_NEW("Entity");
+    swingCylinder->setPosition(&position);
+    swingCylinder->setScale(std::get<0>(*rod)->scaleX + 13.5f, 13.5f, std::get<0>(*rod)->scaleX + 13.5f);
+    swingCylinder->visible = true;
+    swingCylinder->updateTransformationMatrixYXZ();
+    Global::addTransparentEntity(swingCylinder);
 }
 
 void IRONBALL2::despawnGuides() {
-	for (Dummy* guide : guides)
-	{
-		Global::deleteEntity(guide);
-	}
-	guides.clear();
-	Global::deleteTransparentEntity(swingCylinder);
-	swingCylinder = nullptr;
+    for (Dummy* guide : guides)
+    {
+        Global::deleteEntity(guide);
+    }
+    guides.clear();
+    Global::deleteTransparentEntity(swingCylinder);
+    swingCylinder = nullptr;
 }
 
 void IRONBALL2::updateValue(int btnIndex)
@@ -410,26 +410,26 @@ void IRONBALL2::updateValue(int btnIndex)
         catch (...) { break; }
     }
 
-	case 7:
-	{
-		try
-		{
-			int newRotZ = std::stoi(text);
-			rotZ = newRotZ;
-			oscillates = (int)rotZ / 2 % 2;
-			updateTransformationMatrixYXZ();
-			SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+    case 7:
+    {
+        try
+        {
+            int newRotZ = std::stoi(text);
+            rotZ = newRotZ;
+            oscillates = (int)rotZ / 2 % 2;
+            updateTransformationMatrixYXZ();
+            SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
 
     case 8:
     {
         try
         {
             float newRadius = std::stof(text);
-			radius = newRadius;
+            radius = newRadius;
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(radius).c_str());
             break;
@@ -442,34 +442,34 @@ void IRONBALL2::updateValue(int btnIndex)
         try
         {
             float newSpeed = std::stof(text);
-			rotSpeed = newSpeed;
+            rotSpeed = newSpeed;
             SetWindowTextA(Global::windowValues[9], std::to_string(rotSpeed).c_str());
             break;
         }
         catch (...) { break; }
     }
 
-	case 10:
-	{
-		try
-		{
-			float newOscillation = std::stof(text);
-			oscillation = newOscillation;
-			updateTransformationMatrixYXZ();
-			updateCollisionModelYXZ();
-			Global::redrawWindow = true;
-			SetWindowTextA(Global::windowValues[9], std::to_string(rotSpeed).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+    case 10:
+    {
+        try
+        {
+            float newOscillation = std::stof(text);
+            oscillation = newOscillation;
+            updateTransformationMatrixYXZ();
+            updateCollisionModelYXZ();
+            Global::redrawWindow = true;
+            SetWindowTextA(Global::windowValues[9], std::to_string(rotSpeed).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
 
     default: break;
     }
 
-	destroyModel();
-	createModel();
-	spawnGuides();
+    destroyModel();
+    createModel();
+    spawnGuides();
 }
 
 void IRONBALL2::updateEditorWindows()
@@ -524,15 +524,15 @@ void IRONBALL2::updateEditorWindows()
 
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
-	spawnGuides();
+    spawnGuides();
 }
 
 void IRONBALL2::fillData(char data[32])
 {
     data[1] = (char)ID;
 
-	data[6] = (char)((rotZ >> 8) & 0xFF);
-	data[7] = (char)((rotZ >> 0) & 0xFF);
+    data[6] = (char)((rotZ >> 8) & 0xFF);
+    data[7] = (char)((rotZ >> 0) & 0xFF);
 
     char* ptr = (char*)(&position.x);
     data[ 8] = (char)(*(ptr + 3));
@@ -566,10 +566,10 @@ void IRONBALL2::fillData(char data[32])
     data[26] = (char)(*(ptr + 1));
     data[27] = (char)(*(ptr + 0));
 
-	float var3 = oscillation;
-	ptr = (char*)(&var3);
-	data[28] = (char)(*(ptr + 3));
-	data[29] = (char)(*(ptr + 2));
-	data[30] = (char)(*(ptr + 1));
-	data[31] = (char)(*(ptr + 0));
+    float var3 = oscillation;
+    ptr = (char*)(&var3);
+    data[28] = (char)(*(ptr + 3));
+    data[29] = (char)(*(ptr + 2));
+    data[30] = (char)(*(ptr + 1));
+    data[31] = (char)(*(ptr + 0));
 }

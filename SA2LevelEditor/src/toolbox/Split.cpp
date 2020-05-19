@@ -7,58 +7,58 @@
 
 char** split(char* line, char delim, int* length)
 {
-	/* Scan through line to find the number of tokens */
-	int numTokens = 0;
-	int index = 0;
-	int inToken = 0;
+    /* Scan through line to find the number of tokens */
+    int numTokens = 0;
+    int index = 0;
+    int inToken = 0;
 
-	while (line[index] != 0)
-	{
-		if (line[index] != delim && inToken == 0)
-		{
-			inToken = 1;
-			numTokens += 1;
-		}
-		else if (line[index] == delim)
-		{
-			inToken = 0;
-		}
-		index += 1;
-	}
+    while (line[index] != 0)
+    {
+        if (line[index] != delim && inToken == 0)
+        {
+            inToken = 1;
+            numTokens += 1;
+        }
+        else if (line[index] == delim)
+        {
+            inToken = 0;
+        }
+        index += 1;
+    }
 
-	/* Get memory to store the data */
-	char ** parsedData = (char**)malloc(sizeof(char*)*(numTokens + 1));
+    /* Get memory to store the data */
+    char ** parsedData = (char**)malloc(sizeof(char*)*(numTokens + 1));
 
-	/* Scan through line to fill parsedData
-	and set 0 characters after tokens*/
-	index = 0;
-	inToken = 0;
-	int tokenNum = 0;
+    /* Scan through line to fill parsedData
+    and set 0 characters after tokens*/
+    index = 0;
+    inToken = 0;
+    int tokenNum = 0;
 
-	while (line[index] != 0)
-	{
-		if (line[index] != delim && inToken == 0)
-		{
-			parsedData[tokenNum] = &line[index];
-			tokenNum += 1;
-			inToken = 1;
-		}
-		else if (line[index] == delim)
-		{
-			if (inToken == 1)
-			{
-				line[index] = 0;
-			}
-			inToken = 0;
-		}
-		index += 1;
-	}
+    while (line[index] != 0)
+    {
+        if (line[index] != delim && inToken == 0)
+        {
+            parsedData[tokenNum] = &line[index];
+            tokenNum += 1;
+            inToken = 1;
+        }
+        else if (line[index] == delim)
+        {
+            if (inToken == 1)
+            {
+                line[index] = 0;
+            }
+            inToken = 0;
+        }
+        index += 1;
+    }
 
-	parsedData[numTokens] = NULL;
+    parsedData[numTokens] = NULL;
 
-	*length = numTokens;
+    *length = numTokens;
 
-	return parsedData;
+    return parsedData;
 }
 
 //given a string, split the string into a vector of strings
@@ -80,11 +80,11 @@ std::vector<std::string> split(std::string line, char delim)
         return list;
     }
 
-	char lineBuf[1024];
-	memset(lineBuf, 0, 1024);
-	memcpy(lineBuf, line.c_str(), line.size());
+    char lineBuf[1024];
+    memset(lineBuf, 0, 1024);
+    memcpy(lineBuf, line.c_str(), line.size());
 
-	// Scan through line to find the number of tokens
+    // Scan through line to find the number of tokens
     int numTokens = 0;
     int index = 0;
     int inToken = 0;
@@ -133,14 +133,14 @@ std::vector<std::string> split(std::string line, char delim)
 
     parsedData[numTokens] = nullptr;
 
-	std::vector<std::string> dat;
+    std::vector<std::string> dat;
 
-	for (int i = 0; i < numTokens; i++)
-	{
-		dat.push_back(parsedData[i]);
-	}
+    for (int i = 0; i < numTokens; i++)
+    {
+        dat.push_back(parsedData[i]);
+    }
 
-	free(parsedData);
+    free(parsedData);
 
-	return dat;
+    return dat;
 }

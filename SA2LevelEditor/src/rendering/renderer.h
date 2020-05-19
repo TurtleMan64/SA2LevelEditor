@@ -14,21 +14,21 @@ class TexturedModel;
 class EntityRenderer
 {
 private:
-	float clockTime;
-	ShaderProgram* shader;
+    float clockTime;
+    ShaderProgram* shader;
 
-	void prepareTexturedModel(TexturedModel* model);
+    void prepareTexturedModel(TexturedModel* model);
 
-	void unbindTexturedModel();
+    void unbindTexturedModel();
 
-	void prepareInstance(Entity* entity);
+    void prepareInstance(Entity* entity);
 
 public:
-	EntityRenderer(ShaderProgram* shader, Matrix4f* projectionMatrix);
+    EntityRenderer(ShaderProgram* shader, Matrix4f* projectionMatrix);
 
-	void renderNEW(std::unordered_map<TexturedModel*, std::list<Entity*>>* entities);
+    void renderNEW(std::unordered_map<TexturedModel*, std::list<Entity*>>* entities);
 
-	void updateProjectionMatrix(Matrix4f* projectionMatrix);
+    void updateProjectionMatrix(Matrix4f* projectionMatrix);
 
 };
 #endif

@@ -103,7 +103,7 @@ SWDRNGC::SWDRNGC(char data[32], bool useDefaultValues)
 
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void SWDRNGC::spawnChildren()
@@ -152,18 +152,18 @@ void SWDRNGC::spawnChildren()
 
 void SWDRNGC::despawnChildren()
 {
-	for (Dummy* ring : rings)
-	{
-		Global::deleteEntity(ring);
-	}
+    for (Dummy* ring : rings)
+    {
+        Global::deleteEntity(ring);
+    }
 
-	for (CollisionModel* cm : cms)
-	{
-		CollisionChecker::deleteCollideModel(cm);
-	}
+    for (CollisionModel* cm : cms)
+    {
+        CollisionChecker::deleteCollideModel(cm);
+    }
 
-	rings.clear();
-	cms.clear();
+    rings.clear();
+    cms.clear();
 }
 
 void SWDRNGC::step()
@@ -178,34 +178,34 @@ void SWDRNGC::step()
     else
     {
 
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(1.5f, 1.5f, 2.0f);
-			}
-		}
-		else {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(0.5f, 0.5f, 1.0f);
-			}
-		}
+        if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(1.5f, 1.5f, 2.0f);
+            }
+        }
+        else {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(0.5f, 0.5f, 1.0f);
+            }
+        }
     }
 }
 
 std::list<TexturedModel*>* SWDRNGC::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void SWDRNGC::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void SWDRNGC::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void SWDRNGC::updateValue(int btnIndex)

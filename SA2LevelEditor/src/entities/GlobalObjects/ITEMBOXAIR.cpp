@@ -102,7 +102,7 @@ ITEMBOXAIR::ITEMBOXAIR(char data[32], bool useDefaultValues)
     z[1] = data[18];
     z[0] = data[19];
 
-	float var1;
+    float var1;
     char* v1 = (char*)&var1;
     v1[3] = data[20];
     v1[2] = data[21];
@@ -120,8 +120,8 @@ ITEMBOXAIR::ITEMBOXAIR(char data[32], bool useDefaultValues)
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
-	
-	itemType = (int)var1;
+    
+    itemType = (int)var1;
 
     if (useDefaultValues)
     {
@@ -130,26 +130,26 @@ ITEMBOXAIR::ITEMBOXAIR(char data[32], bool useDefaultValues)
         var3 = 0.0f;
         rotationX = 0;
         rotationY = 0;
-	    rotationZ = 0; 
+        rotationZ = 0; 
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	updateTransformationMatrixZY();
+    visible = true;
+    updateTransformationMatrixZY();
 
-	collideModelOriginal         = ITEMBOXAIR::cmBaseBase;
-	collideModelTransformed      = ITEMBOXAIR::cmBaseBase->duplicateMe();
+    collideModelOriginal         = ITEMBOXAIR::cmBaseBase;
+    collideModelTransformed      = ITEMBOXAIR::cmBaseBase->duplicateMe();
     collideModelShellTransformed = ITEMBOXAIR::cmBaseShell->duplicateMe();
 
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelZY();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelZY();
 
     collideModelShellTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelShellTransformed);
-	updateCollisionModelZY(ITEMBOXAIR::cmBaseShell, collideModelShellTransformed);
+    CollisionChecker::addCollideModel(collideModelShellTransformed);
+    updateCollisionModelZY(ITEMBOXAIR::cmBaseShell, collideModelShellTransformed);
 
     shell = new Dummy(&ITEMBOXAIR::modelsShell); INCR_NEW("Entity");
     shell->setPosition(&position);
@@ -190,21 +190,21 @@ void ITEMBOXAIR::step()
 
 std::list<TexturedModel*>* ITEMBOXAIR::getModels()
 {
-	return &ITEMBOXAIR::modelsBase;
+    return &ITEMBOXAIR::modelsBase;
 }
 
 void ITEMBOXAIR::loadStaticModels()
 {
-	if (ITEMBOXAIR::modelsBase.size() > 0)
-	{
-		return;
-	}
+    if (ITEMBOXAIR::modelsBase.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading ITEMBOXAIR static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading ITEMBOXAIR static models...\n");
+    #endif
 
-	loadModel(&ITEMBOXAIR::modelsBase,  "res/Models/GlobalObjects/ItemBox/", "ItemBoxAirBase");
+    loadModel(&ITEMBOXAIR::modelsBase,  "res/Models/GlobalObjects/ItemBox/", "ItemBoxAirBase");
     loadModel(&ITEMBOXAIR::modelsShell, "res/Models/GlobalObjects/ItemBox/", "ItemBoxAirShell");
 
     ITEMBOXAIR::loadNewItemModel("res/Models/GlobalObjects/ItemBox/Items/", "ItemSpeedUp");
@@ -220,13 +220,13 @@ void ITEMBOXAIR::loadStaticModels()
     ITEMBOXAIR::loadNewItemModel("res/Models/GlobalObjects/ItemBox/Items/", "ItemInvincible");
 
     if (ITEMBOXAIR::cmBaseBase == nullptr)
-	{
-		ITEMBOXAIR::cmBaseBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxAirBase");
-	}
+    {
+        ITEMBOXAIR::cmBaseBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxAirBase");
+    }
     if (ITEMBOXAIR::cmBaseShell == nullptr)
-	{
-		ITEMBOXAIR::cmBaseShell = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxAirShell");
-	}
+    {
+        ITEMBOXAIR::cmBaseShell = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxAirShell");
+    }
 }
 
 void ITEMBOXAIR::loadNewItemModel(std::string folder, std::string filename)
@@ -238,11 +238,11 @@ void ITEMBOXAIR::loadNewItemModel(std::string folder, std::string filename)
 
 void ITEMBOXAIR::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting ITEMBOXAIR static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting ITEMBOXAIR static models...\n");
+    #endif
 
-	Entity::deleteModels(&ITEMBOXAIR::modelsBase);
+    Entity::deleteModels(&ITEMBOXAIR::modelsBase);
     Entity::deleteModels(&ITEMBOXAIR::modelsShell);
     for (int i = 0; i < (int)ITEMBOXAIR::modelsItem.size(); i++)
     {
@@ -528,7 +528,7 @@ void ITEMBOXAIR::fillData(char data[32])
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
 
-	float var1 = (float)itemType;
+    float var1 = (float)itemType;
     ptr = (char*)(&var1);
     data[20] = (char)(*(ptr + 3));
     data[21] = (char)(*(ptr + 2));

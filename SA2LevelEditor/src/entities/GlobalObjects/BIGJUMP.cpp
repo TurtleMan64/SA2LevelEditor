@@ -113,23 +113,23 @@ BIGJUMP::BIGJUMP(char data[32], bool useDefaultValues)
         powerV = 5.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
+    visible = true;
+    baseColour.set(1, 1, 1);
 
     collideModelOriginal = BIGJUMP::cmBase;
-	collideModelTransformed = BIGJUMP::cmBase->duplicateMe();
+    collideModelTransformed = BIGJUMP::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
+    CollisionChecker::addCollideModel(collideModelTransformed);
 
     #ifndef SAB_MODE
     updateTransformationMatrixYXZ();
-	updateCollisionModelYXZ();
+    updateCollisionModelYXZ();
     #else
     updateTransformationMatrixXY();
-	updateCollisionModelXY();
+    updateCollisionModelXY();
     #endif
 }
 
@@ -157,34 +157,34 @@ void BIGJUMP::step()
 
 std::list<TexturedModel*>* BIGJUMP::getModels()
 {
-	return &BIGJUMP::models;
+    return &BIGJUMP::models;
 }
 
 void BIGJUMP::loadStaticModels()
 {
-	if (BIGJUMP::models.size() > 0)
-	{
-		return;
-	}
+    if (BIGJUMP::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading BIGJUMP static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading BIGJUMP static models...\n");
+    #endif
 
-	loadModel(&BIGJUMP::models, "res/Models/GlobalObjects/BigJump/", "BigJump");
+    loadModel(&BIGJUMP::models, "res/Models/GlobalObjects/BigJump/", "BigJump");
     if (BIGJUMP::cmBase == nullptr)
-	{
-		BIGJUMP::cmBase = loadCollisionModel("res/Models/GlobalObjects/BigJump/", "BigJump");
-	}
+    {
+        BIGJUMP::cmBase = loadCollisionModel("res/Models/GlobalObjects/BigJump/", "BigJump");
+    }
 }
 
 void BIGJUMP::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting BIGJUMP static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting BIGJUMP static models...\n");
+    #endif
 
-	Entity::deleteModels(&BIGJUMP::models);
+    Entity::deleteModels(&BIGJUMP::models);
     Entity::deleteCollisionModel(&BIGJUMP::cmBase);
 }
 
@@ -361,10 +361,10 @@ void BIGJUMP::updateValue(int btnIndex)
 
     #ifndef SAB_MODE
     updateTransformationMatrixYXZ();
-	updateCollisionModelYXZ();
+    updateCollisionModelYXZ();
     #else
     updateTransformationMatrixXY();
-	updateCollisionModelXY();
+    updateCollisionModelXY();
     #endif
 
     spawnGuides();
@@ -428,10 +428,10 @@ void BIGJUMP::updateEditorWindows()
 
     #ifndef SAB_MODE
     updateTransformationMatrixYXZ();
-	updateCollisionModelYXZ();
+    updateCollisionModelYXZ();
     #else
     updateTransformationMatrixXY();
-	updateCollisionModelXY();
+    updateCollisionModelXY();
     #endif
 
     spawnGuides();
@@ -541,13 +541,13 @@ void BIGJUMP::spawnGuides()
 
         const float airNeutralFriction = 1.25f;
         float storedVelY = vel.y;
-		vel.y = 0;
-		vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
-		vel.y = storedVelY;
+        vel.y = 0;
+        vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
+        vel.y = storedVelY;
 
         const float gravityForce = 280.0f;
-	    const float gravityTerminal = -650.0f;
-	    const float gravityApproach = 0.45f;
+        const float gravityTerminal = -650.0f;
+        const float gravityApproach = 0.45f;
         vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
 
         timeLeft -= dt;

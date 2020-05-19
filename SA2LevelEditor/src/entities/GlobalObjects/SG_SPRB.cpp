@@ -111,18 +111,18 @@ SG_SPRB::SG_SPRB(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = SPRB::cmBase;
-	collideModelTransformed = SPRB::cmBase->duplicateMe();
+    collideModelTransformed = SPRB::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool SG_SPRB::isSA2Object()
@@ -149,17 +149,17 @@ void SG_SPRB::step()
 
 std::list<TexturedModel*>* SG_SPRB::getModels()
 {
-	return &SPRB::models;
+    return &SPRB::models;
 }
 
 void SG_SPRB::loadStaticModels()
 {
-	//We just use SPRB models
+    //We just use SPRB models
 }
 
 void SG_SPRB::deleteStaticModels()
 {
-	//We just use SPRB models
+    //We just use SPRB models
 }
 
 void SG_SPRB::updateValue(int btnIndex)

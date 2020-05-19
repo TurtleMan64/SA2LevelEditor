@@ -8,7 +8,7 @@ class Level
 public:
     std::string displayName;
 
-	Level();
+    Level();
 
     Level(std::string displayName);
 };

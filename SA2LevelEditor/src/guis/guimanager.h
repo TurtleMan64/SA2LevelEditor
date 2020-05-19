@@ -8,18 +8,18 @@ class GuiTexture;
 class GuiManager
 {
 private:
-	static std::list<GuiTexture*> guisToRender;
+    static std::list<GuiTexture*> guisToRender;
 
 public:
-	static void init();
+    static void init();
 
-	static void renderAll();
+    static void renderAll();
 
-	static void addGuiToRender(GuiTexture* newImage);
+    static void addGuiToRender(GuiTexture* newImage);
 
-	static void removeGui(GuiTexture* newImage);
+    static void removeGui(GuiTexture* newImage);
 
-	static void clearGuisToRender();
+    static void clearGuisToRender();
 };
 
 #endif

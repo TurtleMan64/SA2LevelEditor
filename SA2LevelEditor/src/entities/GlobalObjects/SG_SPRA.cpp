@@ -111,18 +111,18 @@ SG_SPRA::SG_SPRA(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = SPRA::cmBase;
-	collideModelTransformed = SPRA::cmBase->duplicateMe();
+    collideModelTransformed = SPRA::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool SG_SPRA::isSA2Object()
@@ -149,17 +149,17 @@ void SG_SPRA::step()
 
 std::list<TexturedModel*>* SG_SPRA::getModels()
 {
-	return &SPRA::models;
+    return &SPRA::models;
 }
 
 void SG_SPRA::loadStaticModels()
 {
-	//We just use SPRA models
+    //We just use SPRA models
 }
 
 void SG_SPRA::deleteStaticModels()
 {
-	//We just use SPRA models
+    //We just use SPRA models
 }
 
 void SG_SPRA::updateValue(int btnIndex)

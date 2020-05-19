@@ -10,18 +10,18 @@ class CollisionModel;
 class StageKillplanes : public Entity
 {
 private:
-	static std::list<TexturedModel*> models;
+    static std::list<TexturedModel*> models;
     static CollisionModel* collisionModel;
 
 public:
-	StageKillplanes();
+    StageKillplanes();
 
-	void step();
+    void step();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
     static void loadModels(const char* objFolder, const char* objFilename);
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

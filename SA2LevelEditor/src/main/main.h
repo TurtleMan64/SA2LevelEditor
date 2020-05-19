@@ -27,11 +27,11 @@ class Dummy;
 //#define SAB_MODE
 
 #ifdef DEV_MODE
-	#define INCR_NEW(NAME) Global::debugNew(NAME);
-	#define INCR_DEL(NAME) Global::debugDel(NAME);
+    #define INCR_NEW(NAME) Global::debugNew(NAME);
+    #define INCR_DEL(NAME) Global::debugDel(NAME);
 #else
-	#define INCR_NEW(NAME) ;
-	#define INCR_DEL(NAME) ;
+    #define INCR_NEW(NAME) ;
+    #define INCR_DEL(NAME) ;
 #endif
 
 class Global
@@ -87,16 +87,16 @@ public:
     static bool isHoldingShift;
     static bool isHoldingClickRight;
 
-	static Camera* gameCamera;
-	static Stage* gameStage;
+    static Camera* gameCamera;
+    static Stage* gameStage;
     static StageCollision* gameStageCollision;
     static StageKillplanes* gameStageKillplanes;
-	static StageSky* gameStageSky;
+    static StageSky* gameStageSky;
     static Cursor3D* gameCursor3D;
     static Dummy* gamePlayer;
-	static int countNew;
-	static int countDelete;
-	static int gameState;
+    static int countNew;
+    static int countDelete;
+    static int gameState;
     static bool displayCameraTriggers;
     static bool displayStage;
     static bool displayStageCollision;
@@ -167,11 +167,11 @@ public:
         Custom_Level            = 420
     };
 
-	static int levelID;
+    static int levelID;
     static bool shouldLoadNewLevel;
     static bool shouldExportLevel;
 
-	static int gameMissionNumber;
+    static int gameMissionNumber;
     static std::string dirSA2Root;
     static std::string dirProgRoot;
     static std::string dirSet;

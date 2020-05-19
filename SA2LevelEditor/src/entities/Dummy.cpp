@@ -5,9 +5,9 @@
 
 Dummy::Dummy(std::list<TexturedModel*>* models)
 {
-	myModels = models;
-	
-	visible = true;
+    myModels = models;
+    
+    visible = true;
 }
 
 void Dummy::step()
@@ -17,17 +17,17 @@ void Dummy::step()
 
 void Dummy::setRotation(int xr, int yr, int zr)
 {
-	rotationX = xr;
-	rotationY = yr;
-	rotationZ = zr;
+    rotationX = xr;
+    rotationY = yr;
+    rotationZ = zr;
 }
 
 std::list<TexturedModel*>* Dummy::getModels()
 {
-	return myModels;
+    return myModels;
 }
 
 void Dummy::setModels(std::list<TexturedModel*>* newModels)
 {
-	myModels = newModels;
+    myModels = newModels;
 }

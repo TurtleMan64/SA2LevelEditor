@@ -11,53 +11,53 @@
 
 CollisionModel::CollisionModel()
 {
-	wasCollidedWith = false;
-	treeMaxDepth = -1;
+    wasCollidedWith = false;
+    treeMaxDepth = -1;
     isVisible = true;
     parent = nullptr;
 }
 
 void CollisionModel::generateMinMaxValues()
 {
-	if (triangles.size() == 0)
-	{
-		return;
-	}
+    if (triangles.size() == 0)
+    {
+        return;
+    }
 
-	minX = triangles.front()->minX;
-	maxX = triangles.front()->maxX;
-	minY = triangles.front()->minY;
-	maxY = triangles.front()->maxY;
-	minZ = triangles.front()->minZ;
-	maxZ = triangles.front()->maxZ;
+    minX = triangles.front()->minX;
+    maxX = triangles.front()->maxX;
+    minY = triangles.front()->minY;
+    maxY = triangles.front()->maxY;
+    minZ = triangles.front()->minZ;
+    maxZ = triangles.front()->maxZ;
 
-	for (Triangle3D* tri : triangles)
-	{
-		minX = fmin(minX, tri->minX);
-		maxX = fmax(maxX, tri->maxX);
-		minY = fmin(minY, tri->minY);
-		maxY = fmax(maxY, tri->maxY);
-		minZ = fmin(minZ, tri->minZ);
-		maxZ = fmax(maxZ, tri->maxZ);
-	}
+    for (Triangle3D* tri : triangles)
+    {
+        minX = fmin(minX, tri->minX);
+        maxX = fmax(maxX, tri->maxX);
+        minY = fmin(minY, tri->minY);
+        maxY = fmax(maxY, tri->maxY);
+        minZ = fmin(minZ, tri->minZ);
+        maxZ = fmax(maxZ, tri->maxZ);
+    }
 }
 
 bool CollisionModel::hasQuadTree()
 {
-	return (false);
+    return (false);
 }
 
 //makes a collision model be the transformed version of this collision model
 void CollisionModel::transformModelYXZ(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
     float angleRadX = Maths::bamsToRad(bamsXRot);
-	float angleRadY = Maths::bamsToRad(bamsYRot);
-	float angleRadZ = Maths::bamsToRad(bamsZRot);
+    float angleRadY = Maths::bamsToRad(bamsYRot);
+    float angleRadZ = Maths::bamsToRad(bamsZRot);
 
-	targetModel->deleteMe();
+    targetModel->deleteMe();
 
-	for (Triangle3D* tri : triangles)
-	{
+    for (Triangle3D* tri : triangles)
+    {
         Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
         Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
         Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
@@ -83,24 +83,24 @@ void CollisionModel::transformModelYXZ(CollisionModel* targetModel, Vector3f* tr
         newP2 = newP2 + translate;
         newP3 = newP3 + translate;
 
-		Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
+        Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
 
-		targetModel->triangles.push_back(newTri);
-	}
+        targetModel->triangles.push_back(newTri);
+    }
 
-	targetModel->generateMinMaxValues();
+    targetModel->generateMinMaxValues();
 }
 
 void CollisionModel::transformModelZXY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
     float angleRadX = Maths::bamsToRad(bamsXRot);
-	float angleRadY = Maths::bamsToRad(bamsYRot);
-	float angleRadZ = Maths::bamsToRad(bamsZRot);
+    float angleRadY = Maths::bamsToRad(bamsYRot);
+    float angleRadZ = Maths::bamsToRad(bamsZRot);
 
-	targetModel->deleteMe();
+    targetModel->deleteMe();
 
-	for (Triangle3D* tri : triangles)
-	{
+    for (Triangle3D* tri : triangles)
+    {
         Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
         Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
         Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
@@ -126,23 +126,23 @@ void CollisionModel::transformModelZXY(CollisionModel* targetModel, Vector3f* tr
         newP2 = newP2 + translate;
         newP3 = newP3 + translate;
 
-		Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
+        Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
 
-		targetModel->triangles.push_back(newTri);
-	}
+        targetModel->triangles.push_back(newTri);
+    }
 
-	targetModel->generateMinMaxValues();
+    targetModel->generateMinMaxValues();
 }
 
 void CollisionModel::transformModelZY(CollisionModel* targetModel, Vector3f* translate, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
     float angleRadY = Maths::bamsToRad(bamsYRot);
-	float angleRadZ = Maths::bamsToRad(bamsZRot);
+    float angleRadZ = Maths::bamsToRad(bamsZRot);
 
-	targetModel->deleteMe();
+    targetModel->deleteMe();
 
-	for (Triangle3D* tri : triangles)
-	{
+    for (Triangle3D* tri : triangles)
+    {
         Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
         Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
         Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
@@ -163,23 +163,23 @@ void CollisionModel::transformModelZY(CollisionModel* targetModel, Vector3f* tra
         newP2 = newP2 + translate;
         newP3 = newP3 + translate;
 
-		Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
+        Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
 
-		targetModel->triangles.push_back(newTri);
-	}
+        targetModel->triangles.push_back(newTri);
+    }
 
-	targetModel->generateMinMaxValues();
+    targetModel->generateMinMaxValues();
 }
 
 void CollisionModel::transformModelXY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, float xScale, float yScale, float zScale)
 {
     float angleRadY = Maths::bamsToRad(bamsYRot);
-	float angleRadX = Maths::bamsToRad(bamsXRot);
+    float angleRadX = Maths::bamsToRad(bamsXRot);
 
-	targetModel->deleteMe();
+    targetModel->deleteMe();
 
-	for (Triangle3D* tri : triangles)
-	{
+    for (Triangle3D* tri : triangles)
+    {
         Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
         Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
         Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
@@ -200,23 +200,23 @@ void CollisionModel::transformModelXY(CollisionModel* targetModel, Vector3f* tra
         newP2 = newP2 + translate;
         newP3 = newP3 + translate;
 
-		Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
+        Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
 
-		targetModel->triangles.push_back(newTri);
-	}
+        targetModel->triangles.push_back(newTri);
+    }
 
-	targetModel->generateMinMaxValues();
+    targetModel->generateMinMaxValues();
 }
 
 void CollisionModel::deleteMe()
 {
-	//Delete triangles 
-	for (Triangle3D* tri : triangles)
-	{
-		delete tri; INCR_DEL("Triangle3D");
-	}
+    //Delete triangles 
+    for (Triangle3D* tri : triangles)
+    {
+        delete tri; INCR_DEL("Triangle3D");
+    }
 
-	triangles.clear();
+    triangles.clear();
 }
 
 CollisionModel* CollisionModel::duplicateMe()
@@ -225,15 +225,15 @@ CollisionModel* CollisionModel::duplicateMe()
 
     copy->wasCollidedWith = this->wasCollidedWith;
     copy->isVisible       = this->isVisible;
-	copy->treeMaxDepth    = this->treeMaxDepth;
+    copy->treeMaxDepth    = this->treeMaxDepth;
     copy->leafNodeWidth   = this->leafNodeWidth;
     copy->leafNodeHeight  = this->leafNodeHeight;
-	copy->maxX            = this->maxX;
-	copy->minX            = this->minX;
-	copy->maxY            = this->maxY;
-	copy->minY            = this->minY;
-	copy->maxZ            = this->maxZ;
-	copy->minZ            = this->minZ;
+    copy->maxX            = this->maxX;
+    copy->minX            = this->minX;
+    copy->maxY            = this->maxY;
+    copy->minY            = this->minY;
+    copy->maxZ            = this->maxZ;
+    copy->minZ            = this->minZ;
 
     for (Triangle3D* tri : triangles)
     {

@@ -101,10 +101,10 @@ KDDRNGC::KDDRNGC(char data[32], bool useDefaultValues)
         ringRadius = 40.0f;
     }
 
-	rotationZ = 0;
+    rotationZ = 0;
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void KDDRNGC::spawnChildren()
@@ -153,18 +153,18 @@ void KDDRNGC::spawnChildren()
 
 void KDDRNGC::despawnChildren()
 {
-	for (Dummy* ring : rings)
-	{
-		Global::deleteEntity(ring);
-	}
+    for (Dummy* ring : rings)
+    {
+        Global::deleteEntity(ring);
+    }
 
-	for (CollisionModel* cm : cms)
-	{
-		CollisionChecker::deleteCollideModel(cm);
-	}
+    for (CollisionModel* cm : cms)
+    {
+        CollisionChecker::deleteCollideModel(cm);
+    }
 
-	rings.clear();
-	cms.clear();
+    rings.clear();
+    cms.clear();
 }
 
 void KDDRNGC::step()
@@ -178,34 +178,34 @@ void KDDRNGC::step()
     }
     else
     {
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(2.0f, 1.5f, 1.5f);
-			}
-		}
-		else {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(1.0f, 0.5f, 0.5f);
-			}
-		}
+        if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(2.0f, 1.5f, 1.5f);
+            }
+        }
+        else {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(1.0f, 0.5f, 0.5f);
+            }
+        }
     }
 }
 
 std::list<TexturedModel*>* KDDRNGC::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void KDDRNGC::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void KDDRNGC::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void KDDRNGC::updateValue(int btnIndex)

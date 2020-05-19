@@ -111,15 +111,15 @@ CCUBE::CCUBE(char data[32], bool useDefaultValues)
 
     rotationX = 0;
     rotationZ = 0;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = CCUBE::cmBase;
-	collideModelTransformed = CCUBE::cmBase->duplicateMe();
+    collideModelTransformed = CCUBE::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool CCUBE::isSA2Object()
@@ -141,35 +141,35 @@ void CCUBE::step()
 
 std::list<TexturedModel*>* CCUBE::getModels()
 {
-	return &CCUBE::models;
+    return &CCUBE::models;
 }
 
 void CCUBE::loadStaticModels()
 {
-	if (CCUBE::models.size() > 0)
-	{
-		return;
-	}
+    if (CCUBE::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading CCUBE static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading CCUBE static models...\n");
+    #endif
 
-	loadModel(&CCUBE::models, "res/Models/GlobalObjects/Collision/", "Cube");
+    loadModel(&CCUBE::models, "res/Models/GlobalObjects/Collision/", "Cube");
 
     if (CCUBE::cmBase == nullptr)
-	{
-		CCUBE::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Cube");
-	}
+    {
+        CCUBE::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Cube");
+    }
 }
 
 void CCUBE::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting CCUBE static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting CCUBE static models...\n");
+    #endif
 
-	Entity::deleteModels(&CCUBE::models);
+    Entity::deleteModels(&CCUBE::models);
     Entity::deleteCollisionModel(&CCUBE::cmBase);
 }
 

@@ -11,18 +11,18 @@
 class TexturedModel
 {
 private:
-	RawModel rawModel;
-	ModelTexture texture;
+    RawModel rawModel;
+    ModelTexture texture;
 
 public:
-	TexturedModel(RawModel*, ModelTexture*);
+    TexturedModel(RawModel*, ModelTexture*);
 
-	TexturedModel();
+    TexturedModel();
 
-	RawModel* getRawModel();
+    RawModel* getRawModel();
 
-	ModelTexture* getTexture();
+    ModelTexture* getTexture();
 
-	void deleteMe();
+    void deleteMe();
 };
 #endif

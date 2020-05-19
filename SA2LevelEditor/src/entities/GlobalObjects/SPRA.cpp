@@ -113,18 +113,18 @@ SPRA::SPRA(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = SPRA::cmBase;
-	collideModelTransformed = SPRA::cmBase->duplicateMe();
+    collideModelTransformed = SPRA::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool SPRA::isSA2Object()
@@ -151,35 +151,35 @@ void SPRA::step()
 
 std::list<TexturedModel*>* SPRA::getModels()
 {
-	return &SPRA::models;
+    return &SPRA::models;
 }
 
 void SPRA::loadStaticModels()
 {
-	if (SPRA::models.size() > 0)
-	{
-		return;
-	}
+    if (SPRA::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading SPRA static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading SPRA static models...\n");
+    #endif
 
-	loadModel(&SPRA::models, "res/Models/GlobalObjects/Spring/", "SpringA");
+    loadModel(&SPRA::models, "res/Models/GlobalObjects/Spring/", "SpringA");
 
     if (SPRA::cmBase == nullptr)
-	{
-		SPRA::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "SpringA");
-	}
+    {
+        SPRA::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "SpringA");
+    }
 }
 
 void SPRA::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting SPRA static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting SPRA static models...\n");
+    #endif
 
-	Entity::deleteModels(&SPRA::models);
+    Entity::deleteModels(&SPRA::models);
     Entity::deleteCollisionModel(&SPRA::cmBase);
 }
 

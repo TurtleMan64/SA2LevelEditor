@@ -46,9 +46,9 @@ float MasterRenderer::BLUE  = 0.2f;
 
 void MasterRenderer::init()
 {
-	shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
-	projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
-	renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
+    shader = new ShaderProgram("res/Shaders/entity/vertexShader.txt", "res/Shaders/entity/fragmentShader.txt"); INCR_NEW("ShaderProgram");
+    projectionMatrix = new Matrix4f; INCR_NEW("Matrix4f");
+    renderer = new EntityRenderer(shader, projectionMatrix); INCR_NEW("EntityRenderer");
 
     #ifdef OBS_MODE
     MasterRenderer::setVFOV(55.404052734375f);
@@ -56,138 +56,138 @@ void MasterRenderer::init()
     MasterRenderer::setVFOV(MasterRenderer::DEFAULT_VFOV);
     #endif
 
-	MasterRenderer::makeProjectionMatrix();
-	MasterRenderer::disableCulling();
+    MasterRenderer::makeProjectionMatrix();
+    MasterRenderer::disableCulling();
 }
 
 void MasterRenderer::render(Camera* camera)
 {
-	prepare();
-	shader->start();
-	//shader->loadClipPlane(clipX, clipY, clipZ, clipW);
+    prepare();
+    shader->start();
+    //shader->loadClipPlane(clipX, clipY, clipZ, clipW);
 
-	//calc behind clipm plane based on camera
-	Vector3f camDir = camera->calcForward();
-	camDir.normalize();
-	camDir.neg();
-	Vector3f startPos(&camera->eye);
-	//startPos = startPos + camDir.scaleCopy(-100);
-	Vector4f plane = Maths::calcPlaneValues(&startPos, &camDir);
-	shader->loadClipPlaneBehind(plane.x, plane.y, plane.z, plane.w);
+    //calc behind clipm plane based on camera
+    Vector3f camDir = camera->calcForward();
+    camDir.normalize();
+    camDir.neg();
+    Vector3f startPos(&camera->eye);
+    //startPos = startPos + camDir.scaleCopy(-100);
+    Vector4f plane = Maths::calcPlaneValues(&startPos, &camDir);
+    shader->loadClipPlaneBehind(plane.x, plane.y, plane.z, plane.w);
 
-	//RED = SkyManager::getFogRed();
-	//GREEN = SkyManager::getFogGreen();
-	//BLUE = SkyManager::getFogBlue();
-	//shader->loadLight(Global::gameLightSun);
-	shader->loadViewMatrix(camera);
-	shader->connectTextureUnits();
+    //RED = SkyManager::getFogRed();
+    //GREEN = SkyManager::getFogGreen();
+    //BLUE = SkyManager::getFogBlue();
+    //shader->loadLight(Global::gameLightSun);
+    shader->loadViewMatrix(camera);
+    shader->connectTextureUnits();
 
-	renderer->renderNEW(&entitiesMap);
-	renderer->renderNEW(&entitiesMapPass2);
-	renderer->renderNEW(&entitiesMapPass3);
+    renderer->renderNEW(&entitiesMap);
+    renderer->renderNEW(&entitiesMapPass2);
+    renderer->renderNEW(&entitiesMapPass3);
 
-	prepareTransparentRender();
-	renderer->renderNEW(&entitiesTransparentMap);
-	prepareTransparentRenderDepthOnly();
-	renderer->renderNEW(&entitiesTransparentMap);
+    prepareTransparentRender();
+    renderer->renderNEW(&entitiesTransparentMap);
+    prepareTransparentRenderDepthOnly();
+    renderer->renderNEW(&entitiesTransparentMap);
 
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-	shader->stop();
+    shader->stop();
 }
 
 void MasterRenderer::processEntity(Entity* entity)
 {
-	if (entity->visible == false)
-	{
-		return;
-	}
+    if (entity->visible == false)
+    {
+        return;
+    }
 
-	std::list<TexturedModel*>* modellist = entity->getModels();
-	for (TexturedModel* entityModel : (*modellist))
-	{
-		std::list<Entity*>* list = &entitiesMap[entityModel];
-		list->push_back(entity);
-	}
+    std::list<TexturedModel*>* modellist = entity->getModels();
+    for (TexturedModel* entityModel : (*modellist))
+    {
+        std::list<Entity*>* list = &entitiesMap[entityModel];
+        list->push_back(entity);
+    }
 }
 
 void MasterRenderer::processEntityPass2(Entity* entity)
 {
-	if (entity->visible == false)
-	{
-		return;
-	}
+    if (entity->visible == false)
+    {
+        return;
+    }
 
-	std::list<TexturedModel*>* modellist = entity->getModels();
-	for (TexturedModel* entityModel : (*modellist))
-	{
-		std::list<Entity*>* list = &entitiesMapPass2[entityModel];
-		list->push_back(entity);
-	}
+    std::list<TexturedModel*>* modellist = entity->getModels();
+    for (TexturedModel* entityModel : (*modellist))
+    {
+        std::list<Entity*>* list = &entitiesMapPass2[entityModel];
+        list->push_back(entity);
+    }
 }
 
 void MasterRenderer::processEntityPass3(Entity* entity)
 {
-	if (entity->visible == false)
-	{
-		return;
-	}
+    if (entity->visible == false)
+    {
+        return;
+    }
 
-	std::list<TexturedModel*>* modellist = entity->getModels();
-	for (TexturedModel* entityModel : (*modellist))
-	{
-		std::list<Entity*>* list = &entitiesMapPass3[entityModel];
-		list->push_back(entity);
-	}
+    std::list<TexturedModel*>* modellist = entity->getModels();
+    for (TexturedModel* entityModel : (*modellist))
+    {
+        std::list<Entity*>* list = &entitiesMapPass3[entityModel];
+        list->push_back(entity);
+    }
 }
 
 void MasterRenderer::processTransparentEntity(Entity* entity)
 {
-	if (entity->visible == false)
-	{
-		return;
-	}
+    if (entity->visible == false)
+    {
+        return;
+    }
 
-	std::list<TexturedModel*>* modellist = entity->getModels();
-	for (TexturedModel* entityModel : (*modellist))
-	{
-		std::list<Entity*>* list = &entitiesTransparentMap[entityModel];
-		list->push_back(entity);
-	}
+    std::list<TexturedModel*>* modellist = entity->getModels();
+    for (TexturedModel* entityModel : (*modellist))
+    {
+        std::list<Entity*>* list = &entitiesTransparentMap[entityModel];
+        list->push_back(entity);
+    }
 }
 
 void MasterRenderer::clearEntities()
 {
-	entitiesMap.clear();
+    entitiesMap.clear();
 }
 
 void MasterRenderer::clearEntitiesPass2()
 {
-	entitiesMapPass2.clear();
+    entitiesMapPass2.clear();
 }
 
 void MasterRenderer::clearEntitiesPass3()
 {
-	entitiesMapPass3.clear();
+    entitiesMapPass3.clear();
 }
 
 void MasterRenderer::clearTransparentEntities()
 {
-	entitiesTransparentMap.clear();
+    entitiesTransparentMap.clear();
 }
 
 void MasterRenderer::prepare()
 {
-	glEnable(GL_MULTISAMPLE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(true);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(RED, GREEN, BLUE, 1);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(true);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(RED, GREEN, BLUE, 1);
 
     if (Global::renderWithCulling)
     {
@@ -201,11 +201,11 @@ void MasterRenderer::prepare()
 
 void MasterRenderer::prepareTransparentRender()
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(false);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(false);
 
     if (Global::renderWithCulling)
     {
@@ -219,13 +219,13 @@ void MasterRenderer::prepareTransparentRender()
 
 void MasterRenderer::prepareTransparentRenderDepthOnly()
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(true);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(true);
 
     if (Global::renderWithCulling)
     {
@@ -239,60 +239,60 @@ void MasterRenderer::prepareTransparentRenderDepthOnly()
 
 void MasterRenderer::cleanUp()
 {
-	shader->cleanUp();
-	delete shader; INCR_DEL("ShaderProgram");
-	delete renderer; INCR_DEL("EntityRenderer");
-	delete projectionMatrix; INCR_DEL("Matrix4f");
+    shader->cleanUp();
+    delete shader; INCR_DEL("ShaderProgram");
+    delete renderer; INCR_DEL("EntityRenderer");
+    delete projectionMatrix; INCR_DEL("Matrix4f");
 }
 
 void MasterRenderer::enableCulling()
 {
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 }
 
 void MasterRenderer::disableCulling()
 {
-	glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 }
 
 void MasterRenderer::makeProjectionMatrix()
 {
-	int displayWidth;
-	int displayHeight;
-	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+    int displayWidth;
+    int displayHeight;
+    glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
 
-	float aspectRatio = (float)displayWidth / (float)displayHeight;
+    float aspectRatio = (float)displayWidth / (float)displayHeight;
 
-	float y_scale = 1.0f / tanf(Maths::toRadians((VFOV) / 2.0f));
-	float x_scale = y_scale / aspectRatio;
+    float y_scale = 1.0f / tanf(Maths::toRadians((VFOV) / 2.0f));
+    float x_scale = y_scale / aspectRatio;
 
-	float frustum_length = FAR_PLANE - NEAR_PLANE;
+    float frustum_length = FAR_PLANE - NEAR_PLANE;
 
-	projectionMatrix->m00 = x_scale;
-	projectionMatrix->m11 = y_scale;
-	projectionMatrix->m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-	projectionMatrix->m23 = -1;
-	projectionMatrix->m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-	projectionMatrix->m33 = 0;
+    projectionMatrix->m00 = x_scale;
+    projectionMatrix->m11 = y_scale;
+    projectionMatrix->m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
+    projectionMatrix->m23 = -1;
+    projectionMatrix->m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
+    projectionMatrix->m33 = 0;
 
-	renderer->updateProjectionMatrix(projectionMatrix);
+    renderer->updateProjectionMatrix(projectionMatrix);
 
-	//ParticleMaster::updateProjectionMatrix(projectionMatrix);
+    //ParticleMaster::updateProjectionMatrix(projectionMatrix);
 }
 
 Matrix4f* MasterRenderer::getProjectionMatrix()
 {
-	return projectionMatrix;
+    return projectionMatrix;
 }
 
 void MasterRenderer::setVFOV(float newVFOV)
 {
     int displayWidth;
-	int displayHeight;
-	glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
+    int displayHeight;
+    glfwGetWindowSize(DisplayManager::getWindow(), &displayWidth, &displayHeight);
 
-	float aspectRatio = (float)displayWidth / (float)displayHeight;
+    float aspectRatio = (float)displayWidth / (float)displayHeight;
 
     float heightOfFrustrum = 2*getNearPlane()*tanf(Maths::toRadians(newVFOV/2));
     float widthOfFrustrum = aspectRatio*heightOfFrustrum;
@@ -303,7 +303,7 @@ void MasterRenderer::setVFOV(float newVFOV)
 
 float MasterRenderer::getVFOV()
 {
-	return VFOV;
+    return VFOV;
 }
 
 float MasterRenderer::getHFOV()
@@ -313,10 +313,10 @@ float MasterRenderer::getHFOV()
 
 float MasterRenderer::getNearPlane()
 {
-	return NEAR_PLANE;
+    return NEAR_PLANE;
 }
 
 float MasterRenderer::getFarPlane()
 {
-	return FAR_PLANE;
+    return FAR_PLANE;
 }

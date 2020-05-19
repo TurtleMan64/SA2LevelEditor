@@ -92,20 +92,20 @@ STOPLOCKON::STOPLOCKON(char data[32], bool useDefaultValues)
         var3 = 10.0f;
     }
 
-	scaleX = 0;
+    scaleX = 0;
     scaleY = 0;
     scaleZ = 0;
     rotationX = 0;
     rotationY = 0;
     rotationZ = 0; 
-	visible = true;
-	updateTransformationMatrixZY();
+    visible = true;
+    updateTransformationMatrixZY();
 
     collideModelOriginal = STOPLOCKON::cmBase;
-	collideModelTransformed = STOPLOCKON::cmBase->duplicateMe();
+    collideModelTransformed = STOPLOCKON::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelZY(var1, var2, var3);
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelZY(var1, var2, var3);
 
     box = nullptr;
     box = new Dummy(&STOPLOCKON::models); INCR_NEW("Entity");
@@ -152,35 +152,35 @@ void STOPLOCKON::step()
 
 std::list<TexturedModel*>* STOPLOCKON::getModels()
 {
-	return &STOPLOCKON::models;
+    return &STOPLOCKON::models;
 }
 
 void STOPLOCKON::loadStaticModels()
 {
-	if (STOPLOCKON::models.size() > 0)
-	{
-		return;
-	}
+    if (STOPLOCKON::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading STOPLOCKON static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading STOPLOCKON static models...\n");
+    #endif
 
-	loadModel(&STOPLOCKON::models, "res/Models/GlobalObjects/LightVolumes/", "LightBox");
+    loadModel(&STOPLOCKON::models, "res/Models/GlobalObjects/LightVolumes/", "LightBox");
 
     if (STOPLOCKON::cmBase == nullptr)
-	{
-		STOPLOCKON::cmBase = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightBox");
-	}
+    {
+        STOPLOCKON::cmBase = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightBox");
+    }
 }
 
 void STOPLOCKON::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting STOPLOCKON static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting STOPLOCKON static models...\n");
+    #endif
 
-	Entity::deleteModels(&STOPLOCKON::models);
+    Entity::deleteModels(&STOPLOCKON::models);
     Entity::deleteCollisionModel(&STOPLOCKON::cmBase);
 }
 

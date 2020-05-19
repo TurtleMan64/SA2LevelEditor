@@ -12,14 +12,14 @@ class Cursor3D : public Entity
 public:
     static GuiTexture* textureCursor3D;
 
-	Cursor3D();
+    Cursor3D();
 
-	void step();
+    void step();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

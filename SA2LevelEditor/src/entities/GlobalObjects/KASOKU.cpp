@@ -108,18 +108,18 @@ KASOKU::KASOKU(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = KASOKU::cmBase;
-	collideModelTransformed = KASOKU::cmBase->duplicateMe();
+    collideModelTransformed = KASOKU::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool KASOKU::isSA2Object()
@@ -141,35 +141,35 @@ void KASOKU::step()
 
 std::list<TexturedModel*>* KASOKU::getModels()
 {
-	return &KASOKU::models;
+    return &KASOKU::models;
 }
 
 void KASOKU::loadStaticModels()
 {
-	if (KASOKU::models.size() > 0)
-	{
-		return;
-	}
+    if (KASOKU::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading KASOKU static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading KASOKU static models...\n");
+    #endif
 
-	loadModel(&KASOKU::models, "res/Models/GlobalObjects/Dashpad/", "Dashpad");
+    loadModel(&KASOKU::models, "res/Models/GlobalObjects/Dashpad/", "Dashpad");
 
     if (KASOKU::cmBase == nullptr)
-	{
-		KASOKU::cmBase = loadCollisionModel("res/Models/GlobalObjects/Dashpad/", "Dashpad");
-	}
+    {
+        KASOKU::cmBase = loadCollisionModel("res/Models/GlobalObjects/Dashpad/", "Dashpad");
+    }
 }
 
 void KASOKU::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting KASOKU static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting KASOKU static models...\n");
+    #endif
 
-	Entity::deleteModels(&KASOKU::models);
+    Entity::deleteModels(&KASOKU::models);
     Entity::deleteCollisionModel(&KASOKU::cmBase);
 }
 
@@ -422,18 +422,18 @@ void KASOKU::updateEditorWindows()
     while (timeLeft > 0)
     {
         if (vel.lengthSquared() > 35.0f*35.0f) //normal neutral stick friction
-		{
-			Vector3f fr(0, -0.95f, 0); //0.75
-			fr = Maths::projectOntoPlane(&fr, &up);
-			float frictionPower = groundNeutralFriction*(1 - fr.length());
-			vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
+        {
+            Vector3f fr(0, -0.95f, 0); //0.75
+            fr = Maths::projectOntoPlane(&fr, &up);
+            float frictionPower = groundNeutralFriction*(1 - fr.length());
+            vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
         }
         else //when close to no speed, increase friction
-		{
-			Vector3f fr(0, -0.95f, 0); //0.75
-			fr = Maths::projectOntoPlane(&fr, &up);
-			float frictionPower = (groundNeutralFriction*4)*(1 - fr.length()); //multiply by 4, arbitrary
-			vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
+        {
+            Vector3f fr(0, -0.95f, 0); //0.75
+            fr = Maths::projectOntoPlane(&fr, &up);
+            float frictionPower = (groundNeutralFriction*4)*(1 - fr.length()); //multiply by 4, arbitrary
+            vel = Maths::applyDrag(&vel, -frictionPower, dt); //Slow vel down due to friction
         }
 
         timeLeft -= dt;

@@ -6,7 +6,7 @@
 
 SA2Object::SA2Object()
 {
-	
+    
 }
 
 SA2Object::SA2Object(char data[32], bool)
@@ -36,12 +36,12 @@ std::string SA2Object::toSabString()
 
 int SA2Object::getSwitchID()
 {
-	return -1;
+    return -1;
 }
 
 int SA2Object::getShrineID()
 {
-	return -1;
+    return -1;
 }
 
 bool SA2Object::isSA2Object()

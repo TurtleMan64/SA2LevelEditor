@@ -58,21 +58,21 @@ RING::RING(char data[32], bool /*useDefaultValues*/)
     z[1] = data[18];
     z[0] = data[19];
 
-	rotationX = 0;
-	rotationY = 0;
-	rotationZ = 0; 
-	scaleX = 1;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0; 
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = RING::cmBase;
-	collideModelTransformed = RING::cmBase->duplicateMe();
+    collideModelTransformed = RING::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool RING::isSA2Object()
@@ -94,35 +94,35 @@ void RING::step()
 
 std::list<TexturedModel*>* RING::getModels()
 {
-	return &RING::models;
+    return &RING::models;
 }
 
 void RING::loadStaticModels()
 {
-	if (RING::models.size() > 0)
-	{
-		return;
-	}
+    if (RING::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading RING static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading RING static models...\n");
+    #endif
 
-	loadModel(&RING::models, "res/Models/GlobalObjects/Ring/", "Ring");
+    loadModel(&RING::models, "res/Models/GlobalObjects/Ring/", "Ring");
 
     if (RING::cmBase == nullptr)
-	{
-		RING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
-	}
+    {
+        RING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Ring/", "Ring");
+    }
 }
 
 void RING::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting RING static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting RING static models...\n");
+    #endif
 
-	Entity::deleteModels(&RING::models);
+    Entity::deleteModels(&RING::models);
     Entity::deleteCollisionModel(&RING::cmBase);
 }
 

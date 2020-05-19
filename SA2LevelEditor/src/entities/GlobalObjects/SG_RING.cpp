@@ -56,21 +56,21 @@ SG_RING::SG_RING(char data[32], bool /*useDefaultValues*/)
     z[1] = data[18];
     z[0] = data[19];
 
-	rotationX = 0;
-	rotationY = 0;
-	rotationZ = 0; 
-	scaleX = 1;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0; 
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = RING::cmBase;
-	collideModelTransformed = RING::cmBase->duplicateMe();
+    collideModelTransformed = RING::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool SG_RING::isSA2Object()
@@ -92,17 +92,17 @@ void SG_RING::step()
 
 std::list<TexturedModel*>* SG_RING::getModels()
 {
-	return &RING::models;
+    return &RING::models;
 }
 
 void SG_RING::loadStaticModels()
 {
-	//We just use RING models
+    //We just use RING models
 }
 
 void SG_RING::deleteStaticModels()
 {
-	//We just use RING models
+    //We just use RING models
 }
 
 void SG_RING::updateValue(int btnIndex)

@@ -70,21 +70,21 @@ SPHERE::SPHERE(char data[32], bool useDefaultValues)
         radius = 20.0f;
     }
 
-	visible = true;
+    visible = true;
     scaleX = radius;
     scaleY = radius;
     scaleZ = radius;
     rotationX = 0;
     rotationY = 0;
     rotationZ = 0;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = SPHERE::cmBase;
-	collideModelTransformed = SPHERE::cmBase->duplicateMe();
+    collideModelTransformed = SPHERE::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool SPHERE::isSA2Object()
@@ -106,35 +106,35 @@ void SPHERE::step()
 
 std::list<TexturedModel*>* SPHERE::getModels()
 {
-	return &SPHERE::models;
+    return &SPHERE::models;
 }
 
 void SPHERE::loadStaticModels()
 {
-	if (SPHERE::models.size() > 0)
-	{
-		return;
-	}
+    if (SPHERE::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading SPHERE static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading SPHERE static models...\n");
+    #endif
 
-	loadModel(&SPHERE::models, "res/Models/GlobalObjects/Collision/", "Sphere");
+    loadModel(&SPHERE::models, "res/Models/GlobalObjects/Collision/", "Sphere");
 
     if (SPHERE::cmBase == nullptr)
-	{
-		SPHERE::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Sphere");
-	}
+    {
+        SPHERE::cmBase = loadCollisionModel("res/Models/GlobalObjects/Collision/", "Sphere");
+    }
 }
 
 void SPHERE::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting SPHERE static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting SPHERE static models...\n");
+    #endif
 
-	Entity::deleteModels(&SPHERE::models);
+    Entity::deleteModels(&SPHERE::models);
     Entity::deleteCollisionModel(&SPHERE::cmBase);
 }
 

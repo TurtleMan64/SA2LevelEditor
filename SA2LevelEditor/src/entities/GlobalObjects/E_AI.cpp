@@ -103,18 +103,18 @@ E_AI::E_AI(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = E_AI::cmBase;
-	collideModelTransformed = E_AI::cmBase->duplicateMe();
+    collideModelTransformed = E_AI::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool E_AI::isSA2Object()
@@ -136,35 +136,35 @@ void E_AI::step()
 
 std::list<TexturedModel*>* E_AI::getModels()
 {
-	return &E_AI::models;
+    return &E_AI::models;
 }
 
 void E_AI::loadStaticModels()
 {
-	if (E_AI::models.size() > 0)
-	{
-		return;
-	}
+    if (E_AI::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading E_AI static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading E_AI static models...\n");
+    #endif
 
-	loadModel(&E_AI::models, "res/Models/GlobalObjects/Hunter/", "Hunter");
+    loadModel(&E_AI::models, "res/Models/GlobalObjects/Hunter/", "Hunter");
 
     if (E_AI::cmBase == nullptr)
-	{
-		E_AI::cmBase = loadCollisionModel("res/Models/GlobalObjects/Hunter/", "Hunter");
-	}
+    {
+        E_AI::cmBase = loadCollisionModel("res/Models/GlobalObjects/Hunter/", "Hunter");
+    }
 }
 
 void E_AI::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting E_AI static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting E_AI static models...\n");
+    #endif
 
-	Entity::deleteModels(&E_AI::models);
+    Entity::deleteModels(&E_AI::models);
     Entity::deleteCollisionModel(&E_AI::cmBase);
 }
 

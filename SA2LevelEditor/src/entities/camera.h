@@ -6,11 +6,11 @@
 class Camera
 {
 public:
-	Vector3f eye;
+    Vector3f eye;
     float yaw; //in degrees
     float pitch; //in degrees
 
-	Camera();
+    Camera();
 
     Camera(Camera* other);
 

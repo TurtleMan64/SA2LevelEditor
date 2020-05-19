@@ -14,19 +14,19 @@ std::list<TexturedModel*> StageSky::models;
 
 StageSky::StageSky()
 {
-	position.x = 0;
-	position.y = 0;
-	position.z = 0;
-	rotationX = 0;
-	rotationY = 0;
-	rotationZ = 0;
-	scaleX = 1;
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
+    visible = true;
     baseColour.set(1.0f, 1.0f, 1.0f);
-	
-	updateTransformationMatrixYXZ();
+    
+    updateTransformationMatrixYXZ();
 }
 
 void StageSky::step()
@@ -52,26 +52,26 @@ void StageSky::step()
 
 std::list<TexturedModel*>* StageSky::getModels()
 {
-	return &StageSky::models;
+    return &StageSky::models;
 }
 
 void StageSky::loadModels(const char* objFolder, const char* objFilename)
 {
     if (StageSky::models.size() == 0)
-	{
-		#ifdef DEV_MODE
-		std::fprintf(stdout, "Loading StageSky static models...\n");
-		#endif
+    {
+        #ifdef DEV_MODE
+        std::fprintf(stdout, "Loading StageSky static models...\n");
+        #endif
 
-		loadModel(&StageSky::models, objFolder, objFilename);
-	}
+        loadModel(&StageSky::models, objFolder, objFilename);
+    }
 }
 
 void StageSky::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting StageSky static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting StageSky static models...\n");
+    #endif
 
-	Entity::deleteModels(&StageSky::models);
+    Entity::deleteModels(&StageSky::models);
 }

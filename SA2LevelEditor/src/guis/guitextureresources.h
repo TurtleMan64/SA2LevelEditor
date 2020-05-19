@@ -6,8 +6,8 @@ class GuiTexture;
 class GuiTextureResources
 {
 public:
-	//static GuiTexture* textureCursor3D;
+    //static GuiTexture* textureCursor3D;
 
-	static void loadGuiTextures();
+    static void loadGuiTextures();
 };
 #endif

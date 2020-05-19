@@ -102,15 +102,15 @@ Unknown::Unknown(char data[32], bool /*useDefaultValues*/)
     scaleX = 12;
     scaleY = 12;
     scaleZ = 12;
-	visible = true;
-	baseColour.set(1,1,1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1,1,1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = Unknown::cmBase;
-	collideModelTransformed = Unknown::cmBase->duplicateMe();
+    collideModelTransformed = Unknown::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 void Unknown::step()
@@ -187,19 +187,19 @@ std::list<TexturedModel*>* Unknown::getModels()
         return &Unknown::models[0];
     }
 
-	return &Unknown::models[ID];
+    return &Unknown::models[ID];
 }
 
 void Unknown::loadStaticModels()
 {
-	if (Unknown::models.size() > 0)
-	{
-		return;
-	}
+    if (Unknown::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading Unknown static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading Unknown static models...\n");
+    #endif
 
     for (int i = 0; i <= 109; i++)
     {
@@ -207,35 +207,35 @@ void Unknown::loadStaticModels()
         Unknown::models.push_back(list);
     }
 
-	loadObjModel(&Unknown::models[0], "res/Models/GlobalObjects/Unknown/", "Unknown.obj");
+    loadObjModel(&Unknown::models[0], "res/Models/GlobalObjects/Unknown/", "Unknown.obj");
 
     for (int i = 1; i <= 109; i++)
     {
         std::string s = "Unknown"+std::to_string(i);
         s = s + ".obj";
-	    loadObjModel(&Unknown::models[i], "res/Models/GlobalObjects/Unknown/", s);
+        loadObjModel(&Unknown::models[i], "res/Models/GlobalObjects/Unknown/", s);
     }
 
     if (Unknown::cmBase == nullptr)
-	{
-		Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
-	}
+    {
+        Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
+    }
 
-    loadModel(&Unknown::modelsGuide,			"res/Models/GlobalObjects/Guide/",   "Guide");
-    loadModel(&Unknown::modelsTriggerCube,		"res/Models/GlobalObjects/Trigger/", "TriggerCube");
-    loadModel(&Unknown::modelsTriggerSphere,	"res/Models/GlobalObjects/Trigger/", "TriggerSphere");
-	loadModel(&Unknown::modelsTriggerCylinder,	"res/Models/GlobalObjects/Trigger/", "TriggerCylinder");
+    loadModel(&Unknown::modelsGuide,            "res/Models/GlobalObjects/Guide/",   "Guide");
+    loadModel(&Unknown::modelsTriggerCube,        "res/Models/GlobalObjects/Trigger/", "TriggerCube");
+    loadModel(&Unknown::modelsTriggerSphere,    "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+    loadModel(&Unknown::modelsTriggerCylinder,    "res/Models/GlobalObjects/Trigger/", "TriggerCylinder");
 }
 
 void Unknown::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting Unknown static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting Unknown static models...\n");
+    #endif
 
     for (int i = 0; i < (int)Unknown::models.size(); i++)
     {
-	    Entity::deleteModels(&Unknown::models[i]);
+        Entity::deleteModels(&Unknown::models[i]);
     }
     Unknown::models.clear();
     Entity::deleteCollisionModel(&Unknown::cmBase);

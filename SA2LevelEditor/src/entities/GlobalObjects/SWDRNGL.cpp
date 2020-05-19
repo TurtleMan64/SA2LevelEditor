@@ -96,14 +96,14 @@ SWDRNGL::SWDRNGL(char data[32], bool useDefaultValues)
     {
         rotationX = 0;
         rotationY = 0;
-		switchID = 0;
+        switchID = 0;
         numRings = 5;
         ringDelta = 20.0f;
     }
 
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void SWDRNGL::despawnChildren()
@@ -166,34 +166,34 @@ void SWDRNGL::step()
     }
     else
     {
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(1.0f, 1.0f, 2.0f);
-			}
-		}
-		else {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(0.5f, 0.5f, 1.0f);
-			}
-		}
+        if (Global::selectedSA2Object && Global::selectedSA2Object->getSwitchID() == switchID) {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(1.0f, 1.0f, 2.0f);
+            }
+        }
+        else {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(0.5f, 0.5f, 1.0f);
+            }
+        }
     }
 }
 
 std::list<TexturedModel*>* SWDRNGL::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void SWDRNGL::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void SWDRNGL::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void SWDRNGL::updateValue(int btnIndex)

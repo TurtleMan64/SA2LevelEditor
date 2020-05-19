@@ -80,7 +80,7 @@ ITEMBOXBALLOON::ITEMBOXBALLOON(char data[32], bool useDefaultValues)
     z[1] = data[18];
     z[0] = data[19];
 
-	float var1;
+    float var1;
     char* v1 = (char*)&var1;
     v1[3] = data[20];
     v1[2] = data[21];
@@ -98,8 +98,8 @@ ITEMBOXBALLOON::ITEMBOXBALLOON(char data[32], bool useDefaultValues)
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
-	
-	itemType = (int)var1;
+    
+    itemType = (int)var1;
 
     if (useDefaultValues)
     {
@@ -108,20 +108,20 @@ ITEMBOXBALLOON::ITEMBOXBALLOON(char data[32], bool useDefaultValues)
         var3 = 0.0f;
         rotationX = 0;
         rotationY = 0;
-	    rotationZ = 0; 
+        rotationZ = 0; 
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	updateTransformationMatrixYXZ();
+    visible = true;
+    updateTransformationMatrixYXZ();
 
-	collideModelOriginal = ITEMBOXBALLOON::cmBase;
-	collideModelTransformed = ITEMBOXBALLOON::cmBase->duplicateMe();
+    collideModelOriginal = ITEMBOXBALLOON::cmBase;
+    collideModelTransformed = ITEMBOXBALLOON::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool ITEMBOXBALLOON::isSA2Object()
@@ -143,35 +143,35 @@ void ITEMBOXBALLOON::step()
 
 std::list<TexturedModel*>* ITEMBOXBALLOON::getModels()
 {
-	return &ITEMBOXBALLOON::models;
+    return &ITEMBOXBALLOON::models;
 }
 
 void ITEMBOXBALLOON::loadStaticModels()
 {
-	if (ITEMBOXBALLOON::models.size() > 0)
-	{
-		return;
-	}
+    if (ITEMBOXBALLOON::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading ITEMBOXBALLOON static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading ITEMBOXBALLOON static models...\n");
+    #endif
 
-	loadModel(&ITEMBOXBALLOON::models, "res/Models/GlobalObjects/ItemBox/", "ItemBoxBalloon");
+    loadModel(&ITEMBOXBALLOON::models, "res/Models/GlobalObjects/ItemBox/", "ItemBoxBalloon");
 
     if (ITEMBOXBALLOON::cmBase == nullptr)
-	{
-		ITEMBOXBALLOON::cmBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxBalloon");
-	}
+    {
+        ITEMBOXBALLOON::cmBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxBalloon");
+    }
 }
 
 void ITEMBOXBALLOON::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting ITEMBOXBALLOON static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting ITEMBOXBALLOON static models...\n");
+    #endif
 
-	Entity::deleteModels(&ITEMBOXBALLOON::models);
+    Entity::deleteModels(&ITEMBOXBALLOON::models);
     Entity::deleteCollisionModel(&ITEMBOXBALLOON::cmBase);
 }
 
@@ -426,7 +426,7 @@ void ITEMBOXBALLOON::fillData(char data[32])
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
 
-	float var1 = (float)itemType;
+    float var1 = (float)itemType;
     ptr = (char*)(&var1);
     data[20] = (char)(*(ptr + 3));
     data[21] = (char)(*(ptr + 2));

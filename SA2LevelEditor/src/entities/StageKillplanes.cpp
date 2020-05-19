@@ -16,19 +16,19 @@ CollisionModel* StageKillplanes::collisionModel;
 
 StageKillplanes::StageKillplanes()
 {
-	position.x = 0;
-	position.y = 0;
-	position.z = 0;
-	rotationX = 0;
-	rotationY = 0;
-	rotationZ = 0;
-	scaleX = 1;
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
+    visible = true;
     baseColour.set(0.70f, 0.70f, 0.70f);
-	
-	updateTransformationMatrixYXZ();
+    
+    updateTransformationMatrixYXZ();
 }
 
 void StageKillplanes::step()
@@ -42,29 +42,29 @@ void StageKillplanes::step()
 
 std::list<TexturedModel*>* StageKillplanes::getModels()
 {
-	return &StageKillplanes::models;
+    return &StageKillplanes::models;
 }
 
 void StageKillplanes::loadModels(const char* objFolder, const char* objFilename)
 {
     if (StageKillplanes::models.size() == 0)
-	{
-		#ifdef DEV_MODE
-		std::fprintf(stdout, "Loading StageKillplanes static models...\n");
-		#endif
+    {
+        #ifdef DEV_MODE
+        std::fprintf(stdout, "Loading StageKillplanes static models...\n");
+        #endif
 
-		loadModel(&StageKillplanes::models, objFolder, objFilename);
-	}
+        loadModel(&StageKillplanes::models, objFolder, objFilename);
+    }
 
-	StageKillplanes::collisionModel = loadCollisionModel(objFolder, objFilename);
+    StageKillplanes::collisionModel = loadCollisionModel(objFolder, objFilename);
     CollisionChecker::addCollideModel(StageKillplanes::collisionModel);
 }
 
 void StageKillplanes::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting StageKillplanes static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting StageKillplanes static models...\n");
+    #endif
 
-	Entity::deleteModels(&StageKillplanes::models);
+    Entity::deleteModels(&StageKillplanes::models);
 }

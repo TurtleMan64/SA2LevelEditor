@@ -103,18 +103,18 @@ E_KUMI::E_KUMI(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = E_KUMI::cmBase;
-	collideModelTransformed = E_KUMI::cmBase->duplicateMe();
+    collideModelTransformed = E_KUMI::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool E_KUMI::isSA2Object()
@@ -136,35 +136,35 @@ void E_KUMI::step()
 
 std::list<TexturedModel*>* E_KUMI::getModels()
 {
-	return &E_KUMI::models;
+    return &E_KUMI::models;
 }
 
 void E_KUMI::loadStaticModels()
 {
-	if (E_KUMI::models.size() > 0)
-	{
-		return;
-	}
+    if (E_KUMI::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading E_KUMI static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading E_KUMI static models...\n");
+    #endif
 
-	loadModel(&E_KUMI::models, "res/Models/GlobalObjects/Beetle/", "Beetle");
+    loadModel(&E_KUMI::models, "res/Models/GlobalObjects/Beetle/", "Beetle");
 
     if (E_KUMI::cmBase == nullptr)
-	{
-		E_KUMI::cmBase = loadCollisionModel("res/Models/GlobalObjects/Beetle/", "Beetle");
-	}
+    {
+        E_KUMI::cmBase = loadCollisionModel("res/Models/GlobalObjects/Beetle/", "Beetle");
+    }
 }
 
 void E_KUMI::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting E_KUMI static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting E_KUMI static models...\n");
+    #endif
 
-	Entity::deleteModels(&E_KUMI::models);
+    Entity::deleteModels(&E_KUMI::models);
     Entity::deleteCollisionModel(&E_KUMI::cmBase);
 }
 

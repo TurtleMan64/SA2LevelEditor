@@ -103,7 +103,7 @@ RING_CIRCLE::RING_CIRCLE(char data[32], bool useDefaultValues)
 
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void RING_CIRCLE::spawnChildren()
@@ -170,17 +170,17 @@ void RING_CIRCLE::step()
 
 std::list<TexturedModel*>* RING_CIRCLE::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void RING_CIRCLE::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void RING_CIRCLE::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void RING_CIRCLE::updateValue(int btnIndex)

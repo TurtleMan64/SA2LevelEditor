@@ -115,18 +115,18 @@ ROCKET::ROCKET(char data[32], bool useDefaultValues)
     rotationX = 0;
     calculateRotY();
     rotationZ = 0;
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = ROCKET::cmBase;
-	collideModelTransformed = ROCKET::cmBase->duplicateMe();
+    collideModelTransformed = ROCKET::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 void ROCKET::calculateRotY()
@@ -163,35 +163,35 @@ void ROCKET::step()
 
 std::list<TexturedModel*>* ROCKET::getModels()
 {
-	return &ROCKET::models;
+    return &ROCKET::models;
 }
 
 void ROCKET::loadStaticModels()
 {
-	if (ROCKET::models.size() > 0)
-	{
-		return;
-	}
+    if (ROCKET::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading ROCKET static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading ROCKET static models...\n");
+    #endif
 
-	loadModel(&ROCKET::models, "res/Models/GlobalObjects/Rocket/", "Rocket");
+    loadModel(&ROCKET::models, "res/Models/GlobalObjects/Rocket/", "Rocket");
 
     if (ROCKET::cmBase == nullptr)
-	{
-		ROCKET::cmBase = loadCollisionModel("res/Models/GlobalObjects/Rocket/", "Rocket");
-	}
+    {
+        ROCKET::cmBase = loadCollisionModel("res/Models/GlobalObjects/Rocket/", "Rocket");
+    }
 }
 
 void ROCKET::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting ROCKET static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting ROCKET static models...\n");
+    #endif
 
-	Entity::deleteModels(&ROCKET::models);
+    Entity::deleteModels(&ROCKET::models);
     Entity::deleteCollisionModel(&ROCKET::cmBase);
 }
 

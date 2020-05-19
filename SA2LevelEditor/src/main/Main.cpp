@@ -439,7 +439,7 @@ int Global::initWin32GUI(HINSTANCE hInstance)
     WNDCLASSW wc = {0};
 
     wc.hbrBackground = CreateSolidBrush(RGB(200, 200, 200));//(HBRUSH)(COLOR_WINDOW + 1);
-    wc.hCursor		 = LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor         = LoadCursor(NULL, IDC_ARROW);
     wc.hInstance     = hInstance;
     wc.lpszClassName = L"SA2 Level Editor";
     wc.lpfnWndProc   = win32WindowCallback;
@@ -554,39 +554,39 @@ int Global::main()
 {
     MessageBox(NULL, (("Version " + Global::version) +"\nProgram is still a work in progress.").c_str(), "SA2 Level Editor", MB_OK);
 
-	Global::countNew = 0;
-	Global::countDelete = 0;
+    Global::countNew = 0;
+    Global::countDelete = 0;
 
-	srand(0);
+    srand(0);
 
-	#if !defined(DEV_MODE) && defined(_WIN32)
-	//FreeConsole();
-	#endif
+    #if !defined(DEV_MODE) && defined(_WIN32)
+    //FreeConsole();
+    #endif
 
     DisplayManager::createDisplay();
 
-	Input::init();
+    Input::init();
 
     MasterRenderer::init();
 
-	//This camera is never deleted.
-	Camera cam;
-	Global::gameCamera = &cam;
+    //This camera is never deleted.
+    Camera cam;
+    Global::gameCamera = &cam;
 
-	LevelLoader::loadLevelData();
+    LevelLoader::loadLevelData();
 
-	GuiManager::init();
+    GuiManager::init();
     GuiTextureResources::loadGuiTextures();
 
     //This cursor never gets deleted
     Cursor3D cursor;
     Global::gameCursor3D = &cursor;
 
-	CollisionChecker::initChecker();
+    CollisionChecker::initChecker();
 
-	//This stage never gets deleted.
-	Stage stage;
-	Global::gameStage = &stage;
+    //This stage never gets deleted.
+    Stage stage;
+    Global::gameStage = &stage;
 
     //This stage collision never gets deleted.
     StageCollision stageCollision;
@@ -596,9 +596,9 @@ int Global::main()
     StageKillplanes stageKillplanes;
     Global::gameStageKillplanes = &stageKillplanes;
 
-	//This sky never gets deleted.
-	StageSky stageSky;
-	Global::gameStageSky = &stageSky;
+    //This sky never gets deleted.
+    StageSky stageSky;
+    Global::gameStageSky = &stageSky;
 
     //Load all global object models
     #ifndef OBS_MODE
@@ -639,25 +639,25 @@ int Global::main()
     #endif
 
 
-	glfwSetTime(0);
+    glfwSetTime(0);
 
-	int frameCount = 0;
-	double previousTime = 0;
+    int frameCount = 0;
+    double previousTime = 0;
 
-	Global::gameState = STATE_RUNNING;
+    Global::gameState = STATE_RUNNING;
 
-	while (Global::gameState != STATE_EXITING && DisplayManager::displayWantsToClose() == 0)
-	{
-		frameCount++;
-		timeNew = glfwGetTime();
-		dt = (float)(timeNew - timeOld);
-		dt = std::fmaxf(0.001f, dt);
+    while (Global::gameState != STATE_EXITING && DisplayManager::displayWantsToClose() == 0)
+    {
+        frameCount++;
+        timeNew = glfwGetTime();
+        dt = (float)(timeNew - timeOld);
+        dt = std::fmaxf(0.001f, dt);
 
-		timeOld = timeNew;
+        timeOld = timeNew;
 
         if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
         {
-		    Input::waitForInputs();
+            Input::waitForInputs();
         }
         else
         {
@@ -690,12 +690,12 @@ int Global::main()
         }
         Global::redrawWindow = false;
 
-		GLenum err = glGetError();
-		if (err != GL_NO_ERROR)
-		{
-			std::fprintf(stderr, "########  GL ERROR  ########\n");
-			std::fprintf(stderr, "%d\n", err);
-		}
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR)
+        {
+            std::fprintf(stderr, "########  GL ERROR  ########\n");
+            std::fprintf(stderr, "%d\n", err);
+        }
 
         if (Global::gameIsFollowingSA2 || Global::gameIsFollowingSA2NoCam)
         {
@@ -715,90 +715,90 @@ int Global::main()
             //}
         }
 
-		//long double thisTime = std::time(0);
-		//std::fprintf(stdout, "time: %f time\n", thisTime);
+        //long double thisTime = std::time(0);
+        //std::fprintf(stdout, "time: %f time\n", thisTime);
 
-		//entities managment
-		for (auto entityToAdd : gameEntitiesToAdd)
-		{
-			gameEntities.insert(entityToAdd);
-		}
-		gameEntitiesToAdd.clear();
+        //entities managment
+        for (auto entityToAdd : gameEntitiesToAdd)
+        {
+            gameEntities.insert(entityToAdd);
+        }
+        gameEntitiesToAdd.clear();
 
-		for (auto entityToDelete : gameEntitiesToDelete)
-		{
-			gameEntities.erase(entityToDelete);
-			delete entityToDelete; INCR_DEL("Entity");
-		}
-		gameEntitiesToDelete.clear();
-
-
-		//entities pass2 managment
-		for (auto entityToAdd : gameEntitiesPass2ToAdd)
-		{
-			gameEntitiesPass2.insert(entityToAdd);
-		}
-		gameEntitiesPass2ToAdd.clear();
-
-		for (auto entityToDelete : gameEntitiesPass2ToDelete)
-		{
-			gameEntitiesPass2.erase(entityToDelete);
-			delete entityToDelete; INCR_DEL("Entity");
-		}
-		gameEntitiesPass2ToDelete.clear();
+        for (auto entityToDelete : gameEntitiesToDelete)
+        {
+            gameEntities.erase(entityToDelete);
+            delete entityToDelete; INCR_DEL("Entity");
+        }
+        gameEntitiesToDelete.clear();
 
 
-		//entities pass3 managment
-		for (auto entityToAdd : gameEntitiesPass3ToAdd)
-		{
-			gameEntitiesPass3.insert(entityToAdd);
-		}
-		gameEntitiesPass3ToAdd.clear();
+        //entities pass2 managment
+        for (auto entityToAdd : gameEntitiesPass2ToAdd)
+        {
+            gameEntitiesPass2.insert(entityToAdd);
+        }
+        gameEntitiesPass2ToAdd.clear();
 
-		for (auto entityToDelete : gameEntitiesPass3ToDelete)
-		{
-			gameEntitiesPass3.erase(entityToDelete);
-			delete entityToDelete; INCR_DEL("Entity");
-		}
-		gameEntitiesPass3ToDelete.clear();
+        for (auto entityToDelete : gameEntitiesPass2ToDelete)
+        {
+            gameEntitiesPass2.erase(entityToDelete);
+            delete entityToDelete; INCR_DEL("Entity");
+        }
+        gameEntitiesPass2ToDelete.clear();
 
 
-		//transnaprent entities managment
-		for (auto entityToAdd : gameTransparentEntitiesToAdd)
-		{
-			gameTransparentEntities.insert(entityToAdd);
-		}
-		gameTransparentEntitiesToAdd.clear();
+        //entities pass3 managment
+        for (auto entityToAdd : gameEntitiesPass3ToAdd)
+        {
+            gameEntitiesPass3.insert(entityToAdd);
+        }
+        gameEntitiesPass3ToAdd.clear();
 
-		for (auto entityToDelete : gameTransparentEntitiesToDelete)
-		{
-			gameTransparentEntities.erase(entityToDelete);
-			delete entityToDelete; INCR_DEL("Entity");
-		}
-		gameTransparentEntitiesToDelete.clear();
+        for (auto entityToDelete : gameEntitiesPass3ToDelete)
+        {
+            gameEntitiesPass3.erase(entityToDelete);
+            delete entityToDelete; INCR_DEL("Entity");
+        }
+        gameEntitiesPass3ToDelete.clear();
 
-		switch (Global::gameState)
-		{
-			case STATE_RUNNING:
-			{
-				//game logic
 
-				for (Entity* e : gameEntities)
-				{
-					e->step();
-				}
-				for (Entity* e : gameEntitiesPass2)
-				{
-					e->step();
-				}
-				for (Entity* e : gameEntitiesPass3)
-				{
-					e->step();
-				}
-				for (Entity* e : gameTransparentEntities)
-				{
-					e->step();
-				}
+        //transnaprent entities managment
+        for (auto entityToAdd : gameTransparentEntitiesToAdd)
+        {
+            gameTransparentEntities.insert(entityToAdd);
+        }
+        gameTransparentEntitiesToAdd.clear();
+
+        for (auto entityToDelete : gameTransparentEntitiesToDelete)
+        {
+            gameTransparentEntities.erase(entityToDelete);
+            delete entityToDelete; INCR_DEL("Entity");
+        }
+        gameTransparentEntitiesToDelete.clear();
+
+        switch (Global::gameState)
+        {
+            case STATE_RUNNING:
+            {
+                //game logic
+
+                for (Entity* e : gameEntities)
+                {
+                    e->step();
+                }
+                for (Entity* e : gameEntitiesPass2)
+                {
+                    e->step();
+                }
+                for (Entity* e : gameEntitiesPass3)
+                {
+                    e->step();
+                }
+                for (Entity* e : gameTransparentEntities)
+                {
+                    e->step();
+                }
 
                 Global::gameCursor3D->step();
                 Global::gameStage->step();
@@ -806,54 +806,54 @@ int Global::main()
                 Global::gameStageKillplanes->step();
                 Global::gameStageSky->step();
 
-				break;
-			}
+                break;
+            }
 
-			default:
-				break;
-		}
+            default:
+                break;
+        }
 
-		//prepare entities to render
-		for (Entity* e : gameEntities)
-		{
-			MasterRenderer::processEntity(e);
-		}
-		for (Entity* e : gameEntitiesPass2)
-		{
-			MasterRenderer::processEntityPass2(e);
-		}
-		for (Entity* e : gameEntitiesPass3)
-		{
-			MasterRenderer::processEntityPass3(e);
-		}
-		for (Entity* e : gameTransparentEntities)
-		{
-			MasterRenderer::processTransparentEntity(e);
-		}
-		
-		MasterRenderer::processEntity(Global::gameStage);
+        //prepare entities to render
+        for (Entity* e : gameEntities)
+        {
+            MasterRenderer::processEntity(e);
+        }
+        for (Entity* e : gameEntitiesPass2)
+        {
+            MasterRenderer::processEntityPass2(e);
+        }
+        for (Entity* e : gameEntitiesPass3)
+        {
+            MasterRenderer::processEntityPass3(e);
+        }
+        for (Entity* e : gameTransparentEntities)
+        {
+            MasterRenderer::processTransparentEntity(e);
+        }
+        
+        MasterRenderer::processEntity(Global::gameStage);
         MasterRenderer::processEntity(Global::gameStageCollision);
         MasterRenderer::processEntity(Global::gameStageKillplanes);
-		MasterRenderer::processEntity(Global::gameStageSky);
+        MasterRenderer::processEntity(Global::gameStageSky);
         MasterRenderer::processEntity(Global::gamePlayer);
 
-		glEnable(GL_CLIP_DISTANCE1);
-		MasterRenderer::render(&cam);
-		glDisable(GL_CLIP_DISTANCE1);
+        glEnable(GL_CLIP_DISTANCE1);
+        MasterRenderer::render(&cam);
+        glDisable(GL_CLIP_DISTANCE1);
 
 
-		MasterRenderer::clearEntities();
-		MasterRenderer::clearEntitiesPass2();
-		MasterRenderer::clearEntitiesPass3();
-		MasterRenderer::clearTransparentEntities();
+        MasterRenderer::clearEntities();
+        MasterRenderer::clearEntitiesPass2();
+        MasterRenderer::clearEntitiesPass3();
+        MasterRenderer::clearTransparentEntities();
 
-		GuiManager::renderAll();
+        GuiManager::renderAll();
 
         //calculate the total number of sa2 objects there are
         int totalSA2Objects = 0;
         for (Entity* e : gameEntities)
-		{
-			if (e->isSA2Object())
+        {
+            if (e->isSA2Object())
             {
                 if (SA2Object* o = dynamic_cast<SA2Object*>(e))
                 {
@@ -864,155 +864,155 @@ int Global::main()
                     std::fprintf(stdout, "Warning: object lied about being an sa2object\n");
                 }
             }
-		}
+        }
         std::string title = "SA2 Level Editor.  Level ID: "+std::to_string(Global::levelID)+"  Object Count: "+std::to_string(totalSA2Objects);
         glfwSetWindowTitle(DisplayManager::getWindow(), title.c_str());
 
-		DisplayManager::updateDisplay();
+        DisplayManager::updateDisplay();
 
-		if (timeNew - previousTime >= 1.0)
-		{
-			//std::fprintf(stdout, "fps: %f\n", frameCount / (timeNew - previousTime));
-			//std::fprintf(stdout, "diff: %d\n", Global::countNew - Global::countDelete);
-			//Loader::printInfo();
-			//std::fprintf(stdout, "entity counts: %d %d %d\n", gameEntities.size(), gameEntitiesPass2.size(), gameTransparentEntities.size());
-			frameCount = 0;
-			previousTime = timeNew;
-		}
+        if (timeNew - previousTime >= 1.0)
+        {
+            //std::fprintf(stdout, "fps: %f\n", frameCount / (timeNew - previousTime));
+            //std::fprintf(stdout, "diff: %d\n", Global::countNew - Global::countDelete);
+            //Loader::printInfo();
+            //std::fprintf(stdout, "entity counts: %d %d %d\n", gameEntities.size(), gameEntitiesPass2.size(), gameTransparentEntities.size());
+            frameCount = 0;
+            previousTime = timeNew;
+        }
 
-		//std::fprintf(stdout, "dt: %f\n", dt);
-		//std::this_thread::sleep_for(std::chrono::milliseconds(8));
-	}
+        //std::fprintf(stdout, "dt: %f\n", dt);
+        //std::this_thread::sleep_for(std::chrono::milliseconds(8));
+    }
 
-	MasterRenderer::cleanUp();
-	Loader::cleanUp();
-	GuiRenderer::cleanUp();
-	DisplayManager::closeDisplay();
+    MasterRenderer::cleanUp();
+    Loader::cleanUp();
+    GuiRenderer::cleanUp();
+    DisplayManager::closeDisplay();
 
-	return 0;
+    return 0;
 }
 
 //The newEntity should be created with the new keyword, as it will be deleted later
 void Global::addEntity(Entity* entityToAdd)
 {
-	gameEntitiesToAdd.push_back(entityToAdd);
+    gameEntitiesToAdd.push_back(entityToAdd);
 }
 
 void Global::deleteEntity(Entity* entityToDelete)
 {
-	gameEntitiesToDelete.push_back(entityToDelete);
+    gameEntitiesToDelete.push_back(entityToDelete);
 }
 
 void Global::deleteAllEntites()
 {
-	//Make sure no entities get left behind in transition
-	for (Entity* entityToAdd : gameEntitiesToAdd)
-	{
-		gameEntities.insert(entityToAdd);
-	}
-	gameEntitiesToAdd.clear();
+    //Make sure no entities get left behind in transition
+    for (Entity* entityToAdd : gameEntitiesToAdd)
+    {
+        gameEntities.insert(entityToAdd);
+    }
+    gameEntitiesToAdd.clear();
 
-	for (Entity* entityToDelete : gameEntitiesToDelete)
-	{
-		gameEntities.erase(entityToDelete);
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntitiesToDelete.clear();
+    for (Entity* entityToDelete : gameEntitiesToDelete)
+    {
+        gameEntities.erase(entityToDelete);
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntitiesToDelete.clear();
 
 
-	//Delete all the rest
-	for (Entity* entityToDelete : gameEntities)
-	{
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntities.clear();
+    //Delete all the rest
+    for (Entity* entityToDelete : gameEntities)
+    {
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntities.clear();
 }
 
 void Global::addEntityPass2(Entity* entityToAdd)
 {
-	gameEntitiesPass2ToAdd.push_back(entityToAdd);
+    gameEntitiesPass2ToAdd.push_back(entityToAdd);
 }
 
 void Global::deleteEntityPass2(Entity* entityToDelete)
 {
-	gameEntitiesPass2ToDelete.push_back(entityToDelete);
+    gameEntitiesPass2ToDelete.push_back(entityToDelete);
 }
 
 void Global::deleteAllEntitesPass2()
 {
-	//Make sure no entities get left behind in transition
-	for (Entity* entityToAdd : gameEntitiesPass2ToAdd)
-	{
-		gameEntitiesPass2.insert(entityToAdd);
-	}
-	gameEntitiesPass2ToAdd.clear();
+    //Make sure no entities get left behind in transition
+    for (Entity* entityToAdd : gameEntitiesPass2ToAdd)
+    {
+        gameEntitiesPass2.insert(entityToAdd);
+    }
+    gameEntitiesPass2ToAdd.clear();
 
-	for (Entity* entityToDelete : gameEntitiesPass2ToDelete)
-	{
-		gameEntitiesPass2.erase(entityToDelete);
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntitiesPass2ToDelete.clear();
+    for (Entity* entityToDelete : gameEntitiesPass2ToDelete)
+    {
+        gameEntitiesPass2.erase(entityToDelete);
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntitiesPass2ToDelete.clear();
 
-	for (Entity* entityToDelete : gameEntitiesPass2)
-	{
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntitiesPass2.clear();
+    for (Entity* entityToDelete : gameEntitiesPass2)
+    {
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntitiesPass2.clear();
 }
 
 void Global::addEntityPass3(Entity* entityToAdd)
 {
-	gameEntitiesPass3ToAdd.push_back(entityToAdd);
+    gameEntitiesPass3ToAdd.push_back(entityToAdd);
 }
 
 void Global::deleteEntityPass3(Entity* entityToDelete)
 {
-	gameEntitiesPass3ToDelete.push_back(entityToDelete);
+    gameEntitiesPass3ToDelete.push_back(entityToDelete);
 }
 
 void Global::deleteAllEntitesPass3()
 {
-	//Make sure no entities get left behind in transition
-	for (Entity* entityToAdd : gameEntitiesPass3ToAdd)
-	{
-		gameEntitiesPass3.insert(entityToAdd);
-	}
-	gameEntitiesPass3ToAdd.clear();
+    //Make sure no entities get left behind in transition
+    for (Entity* entityToAdd : gameEntitiesPass3ToAdd)
+    {
+        gameEntitiesPass3.insert(entityToAdd);
+    }
+    gameEntitiesPass3ToAdd.clear();
 
-	for (Entity* entityToDelete : gameEntitiesPass3ToDelete)
-	{
-		gameEntitiesPass3.erase(entityToDelete);
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntitiesPass3ToDelete.clear();
+    for (Entity* entityToDelete : gameEntitiesPass3ToDelete)
+    {
+        gameEntitiesPass3.erase(entityToDelete);
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntitiesPass3ToDelete.clear();
 
-	for (Entity* entityToDelete : gameEntitiesPass3)
-	{
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameEntitiesPass3.clear();
+    for (Entity* entityToDelete : gameEntitiesPass3)
+    {
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameEntitiesPass3.clear();
 }
 
 //Transparent entities shouldn't create new transparent entities from within their step function
 void Global::addTransparentEntity(Entity* entityToAdd)
 {
-	gameTransparentEntities.insert(entityToAdd);
+    gameTransparentEntities.insert(entityToAdd);
 }
 
 void Global::deleteTransparentEntity(Entity* entityToDelete)
 {
-	gameTransparentEntities.erase(entityToDelete);
-	delete entityToDelete; INCR_DEL("Entity");
+    gameTransparentEntities.erase(entityToDelete);
+    delete entityToDelete; INCR_DEL("Entity");
 }
 
 void Global::deleteAllTransparentEntites()
 {
-	for (Entity* entityToDelete : gameTransparentEntities)
-	{
-		delete entityToDelete; INCR_DEL("Entity");
-	}
-	gameTransparentEntities.clear();
+    for (Entity* entityToDelete : gameTransparentEntities)
+    {
+        delete entityToDelete; INCR_DEL("Entity");
+    }
+    gameTransparentEntities.clear();
 }
 
 std::unordered_map<std::string, int> heapObjects;
@@ -1069,33 +1069,33 @@ float timeUntilNextProcessAttach = ATTACH_DELAY;
 DWORD getPIDByName(const char* processName)
 {
     PROCESSENTRY32 pe32 = {0};
-	HANDLE hSnapshot = NULL;
+    HANDLE hSnapshot = NULL;
 
-	pe32.dwSize = sizeof(PROCESSENTRY32);
-	hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    pe32.dwSize = sizeof(PROCESSENTRY32);
+    hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
     bool foundProcess = false;
 
-	if (Process32First(hSnapshot, &pe32))
-	{
-		do
+    if (Process32First(hSnapshot, &pe32))
+    {
+        do
         {
-			if (strcmp(pe32.szExeFile, processName) == 0)
+            if (strcmp(pe32.szExeFile, processName) == 0)
             {
                 foundProcess = true;
-				break;
+                break;
             }
-		}
+        }
         while (Process32Next(hSnapshot, &pe32));
-	}
+    }
 
-	if (foundProcess && hSnapshot != INVALID_HANDLE_VALUE)
+    if (foundProcess && hSnapshot != INVALID_HANDLE_VALUE)
     {
-	    CloseHandle(hSnapshot);
+        CloseHandle(hSnapshot);
         return pe32.th32ProcessID;
     }
 
-	return NULL;
+    return NULL;
 }
 
 void Global::updateCamFromSA2()

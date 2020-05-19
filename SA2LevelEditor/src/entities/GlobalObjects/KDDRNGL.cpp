@@ -96,15 +96,15 @@ KDDRNGL::KDDRNGL(char data[32], bool useDefaultValues)
     {
         rotationX = 0;
         rotationY = 0;
-		shrineID = 0;
+        shrineID = 0;
         numRings = 5;
         ringDelta = 20.0f;
     }
 
-	rotationZ = 0;
+    rotationZ = 0;
     spawnChildren();
 
-	visible = false;
+    visible = false;
 }
 
 void KDDRNGL::despawnChildren()
@@ -167,34 +167,34 @@ void KDDRNGL::step()
     }
     else
     {
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(2.0f, 1.0f, 1.0f);
-			}
-		}
-		else {
-			for (Dummy* ring : rings)
-			{
-				ring->setBaseColour(1.0f, 0.5f, 0.5f);
-			}
-		}
+        if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(2.0f, 1.0f, 1.0f);
+            }
+        }
+        else {
+            for (Dummy* ring : rings)
+            {
+                ring->setBaseColour(1.0f, 0.5f, 0.5f);
+            }
+        }
     }
 }
 
 std::list<TexturedModel*>* KDDRNGL::getModels()
 {
-	return nullptr; //our children are visible, not us
+    return nullptr; //our children are visible, not us
 }
 
 void KDDRNGL::loadStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void KDDRNGL::deleteStaticModels()
 {
-	//we just use RING models
+    //we just use RING models
 }
 
 void KDDRNGL::updateValue(int btnIndex)

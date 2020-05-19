@@ -112,7 +112,7 @@ LINKLINK::LINKLINK(char data[32], bool useDefaultValues)
     }
     
     visible = true;
-	baseColour.set(1, 1, 1);
+    baseColour.set(1, 1, 1);
     
     if (isSphere)
     {
@@ -134,9 +134,9 @@ LINKLINK::LINKLINK(char data[32], bool useDefaultValues)
     }
 
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
+    CollisionChecker::addCollideModel(collideModelTransformed);
 
-	updateCollisionModelZY();
+    updateCollisionModelZY();
     updateTransformationMatrixZY();
 }
 
@@ -164,40 +164,40 @@ std::list<TexturedModel*>* LINKLINK::getModels()
         return &LINKLINK::modelsSphere;
     }
     
-	return &LINKLINK::modelsCube;
+    return &LINKLINK::modelsCube;
 }
 
 void LINKLINK::loadStaticModels()
 {
-	if (LINKLINK::modelsSphere.size() > 0)
-	{
-		return;
-	}
+    if (LINKLINK::modelsSphere.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading LINKLINK static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading LINKLINK static models...\n");
+    #endif
 
-	loadModel(&LINKLINK::modelsCube, "res/Models/GlobalObjects/LinkLink/", "Cube");
+    loadModel(&LINKLINK::modelsCube, "res/Models/GlobalObjects/LinkLink/", "Cube");
     loadModel(&LINKLINK::modelsSphere, "res/Models/GlobalObjects/LinkLink/", "Sphere");
 
     if (LINKLINK::cmBaseSphere == nullptr)
-	{
-		LINKLINK::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/LinkLink/", "Sphere");
-	}
+    {
+        LINKLINK::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/LinkLink/", "Sphere");
+    }
     if (LINKLINK::cmBaseCube == nullptr)
-	{
-		LINKLINK::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/LinkLink/", "Cube");
-	}
+    {
+        LINKLINK::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/LinkLink/", "Cube");
+    }
 }
 
 void LINKLINK::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting LINKLINK static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting LINKLINK static models...\n");
+    #endif
 
-	Entity::deleteModels(&LINKLINK::modelsSphere);
+    Entity::deleteModels(&LINKLINK::modelsSphere);
     Entity::deleteModels(&LINKLINK::modelsCube);
     Entity::deleteCollisionModel(&LINKLINK::cmBaseSphere);
     Entity::deleteCollisionModel(&LINKLINK::cmBaseCube);
@@ -340,7 +340,7 @@ void LINKLINK::updateValue(int btnIndex)
                 }
 
                 collideModelTransformed->parent = this;
-	            CollisionChecker::addCollideModel(collideModelTransformed);
+                CollisionChecker::addCollideModel(collideModelTransformed);
             }
 
             rotZ = newRotZ;

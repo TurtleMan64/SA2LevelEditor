@@ -116,21 +116,21 @@ EMERALD::EMERALD(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	rotationX = 0;
+    rotationX = 0;
     rotationY = 0;
-	rotationZ = 0; 
-	scaleX = 1;
+    rotationZ = 0; 
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = EMERALD::cmBase;
-	collideModelTransformed = EMERALD::cmBase->duplicateMe();
+    collideModelTransformed = EMERALD::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 
     hitbox = nullptr;
     hitbox = new Dummy(&Unknown::modelsTriggerSphere); INCR_NEW("Entity");
@@ -161,35 +161,35 @@ void EMERALD::step()
 
 std::list<TexturedModel*>* EMERALD::getModels()
 {
-	return &EMERALD::models;
+    return &EMERALD::models;
 }
 
 void EMERALD::loadStaticModels()
 {
-	if (EMERALD::models.size() > 0)
-	{
-		return;
-	}
+    if (EMERALD::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading EMERALD static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading EMERALD static models...\n");
+    #endif
 
-	loadModel(&EMERALD::models, "res/Models/GlobalObjects/HuntingPieces/", "Shard");
+    loadModel(&EMERALD::models, "res/Models/GlobalObjects/HuntingPieces/", "Shard");
 
     if (EMERALD::cmBase == nullptr)
-	{
-		EMERALD::cmBase = loadCollisionModel("res/Models/GlobalObjects/HuntingPieces/", "Shard");
-	}
+    {
+        EMERALD::cmBase = loadCollisionModel("res/Models/GlobalObjects/HuntingPieces/", "Shard");
+    }
 }
 
 void EMERALD::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting EMERALD static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting EMERALD static models...\n");
+    #endif
 
-	Entity::deleteModels(&EMERALD::models);
+    Entity::deleteModels(&EMERALD::models);
     Entity::deleteCollisionModel(&EMERALD::cmBase);
 }
 

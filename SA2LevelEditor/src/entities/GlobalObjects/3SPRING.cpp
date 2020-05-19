@@ -113,18 +113,18 @@ THREESPRING::THREESPRING(char data[32], bool useDefaultValues)
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = THREESPRING::cmBase;
-	collideModelTransformed = THREESPRING::cmBase->duplicateMe();
+    collideModelTransformed = THREESPRING::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool THREESPRING::isSA2Object()
@@ -151,35 +151,35 @@ void THREESPRING::step()
 
 std::list<TexturedModel*>* THREESPRING::getModels()
 {
-	return &THREESPRING::models;
+    return &THREESPRING::models;
 }
 
 void THREESPRING::loadStaticModels()
 {
-	if (THREESPRING::models.size() > 0)
-	{
-		return;
-	}
+    if (THREESPRING::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading THREESPRING static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading THREESPRING static models...\n");
+    #endif
 
-	loadModel(&THREESPRING::models, "res/Models/GlobalObjects/Spring/", "TripleSpring");
+    loadModel(&THREESPRING::models, "res/Models/GlobalObjects/Spring/", "TripleSpring");
 
     if (THREESPRING::cmBase == nullptr)
-	{
-		THREESPRING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "TripleSpring");
-	}
+    {
+        THREESPRING::cmBase = loadCollisionModel("res/Models/GlobalObjects/Spring/", "TripleSpring");
+    }
 }
 
 void THREESPRING::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting THREESPRING static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting THREESPRING static models...\n");
+    #endif
 
-	Entity::deleteModels(&THREESPRING::models);
+    Entity::deleteModels(&THREESPRING::models);
     Entity::deleteCollisionModel(&THREESPRING::cmBase);
 }
 
@@ -496,13 +496,13 @@ void THREESPRING::spawnGuides()
 
         const float airNeutralFriction = 1.25f;
         float storedVelY = vel.y;
-		vel.y = 0;
-		vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
-		vel.y = storedVelY;
+        vel.y = 0;
+        vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
+        vel.y = storedVelY;
 
         const float gravityForce = 280.0f;
-	    const float gravityTerminal = -650.0f;
-	    const float gravityApproach = 0.45f;
+        const float gravityTerminal = -650.0f;
+        const float gravityApproach = 0.45f;
         vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
 
         timeLeft -= dt;

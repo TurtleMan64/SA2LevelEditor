@@ -96,7 +96,7 @@ ITEMBOX::ITEMBOX(char data[32], bool useDefaultValues)
     z[1] = data[18];
     z[0] = data[19];
 
-	float var1;
+    float var1;
     char* v1 = (char*)&var1;
     v1[3] = data[20];
     v1[2] = data[21];
@@ -114,8 +114,8 @@ ITEMBOX::ITEMBOX(char data[32], bool useDefaultValues)
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
-	
-	itemType = (int)var1;
+    
+    itemType = (int)var1;
 
     if (useDefaultValues)
     {
@@ -123,27 +123,27 @@ ITEMBOX::ITEMBOX(char data[32], bool useDefaultValues)
         var2 = 0.0f;
         var3 = 0.0f;
         rotationY = 0;
-	    rotationZ = 0; 
+        rotationZ = 0; 
     }
 
     rotationX = 0;
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	updateTransformationMatrixZY();
+    visible = true;
+    updateTransformationMatrixZY();
 
-	collideModelOriginal         = ITEMBOX::cmBaseBase;
-	collideModelTransformed      = ITEMBOX::cmBaseBase->duplicateMe();
+    collideModelOriginal         = ITEMBOX::cmBaseBase;
+    collideModelTransformed      = ITEMBOX::cmBaseBase->duplicateMe();
     collideModelShellTransformed = ITEMBOX::cmBaseShell->duplicateMe();
 
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelZY();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelZY();
 
     collideModelShellTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelShellTransformed);
-	updateCollisionModelZY(ITEMBOX::cmBaseShell, collideModelShellTransformed);
+    CollisionChecker::addCollideModel(collideModelShellTransformed);
+    updateCollisionModelZY(ITEMBOX::cmBaseShell, collideModelShellTransformed);
 
     shell = new Dummy(&ITEMBOX::modelsShell); INCR_NEW("Entity");
     shell->setPosition(&position);
@@ -183,21 +183,21 @@ void ITEMBOX::step()
 
 std::list<TexturedModel*>* ITEMBOX::getModels()
 {
-	return &ITEMBOX::modelsBase;
+    return &ITEMBOX::modelsBase;
 }
 
 void ITEMBOX::loadStaticModels()
 {
-	if (ITEMBOX::modelsBase.size() > 0)
-	{
-		return;
-	}
+    if (ITEMBOX::modelsBase.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading ITEMBOX static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading ITEMBOX static models...\n");
+    #endif
 
-	loadModel(&ITEMBOX::modelsBase,  "res/Models/GlobalObjects/ItemBox/", "ItemBoxBase");
+    loadModel(&ITEMBOX::modelsBase,  "res/Models/GlobalObjects/ItemBox/", "ItemBoxBase");
     loadModel(&ITEMBOX::modelsShell, "res/Models/GlobalObjects/ItemBox/", "ItemBoxShell");
 
     ITEMBOX::loadNewItemModel("res/Models/GlobalObjects/ItemBox/Items/", "ItemSpeedUp");
@@ -213,13 +213,13 @@ void ITEMBOX::loadStaticModels()
     ITEMBOX::loadNewItemModel("res/Models/GlobalObjects/ItemBox/Items/", "ItemInvincible");
 
     if (ITEMBOX::cmBaseBase == nullptr)
-	{
-		ITEMBOX::cmBaseBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxBase");
-	}
+    {
+        ITEMBOX::cmBaseBase = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxBase");
+    }
     if (ITEMBOX::cmBaseShell == nullptr)
-	{
-		ITEMBOX::cmBaseShell = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxShell");
-	}
+    {
+        ITEMBOX::cmBaseShell = loadCollisionModel("res/Models/GlobalObjects/ItemBox/", "ItemBoxShell");
+    }
 }
 
 void ITEMBOX::loadNewItemModel(std::string folder, std::string filename)
@@ -231,11 +231,11 @@ void ITEMBOX::loadNewItemModel(std::string folder, std::string filename)
 
 void ITEMBOX::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting ITEMBOX static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting ITEMBOX static models...\n");
+    #endif
 
-	Entity::deleteModels(&ITEMBOX::modelsBase);
+    Entity::deleteModels(&ITEMBOX::modelsBase);
     Entity::deleteModels(&ITEMBOX::modelsShell);
     for (int i = 0; i < (int)ITEMBOX::modelsItem.size(); i++)
     {
@@ -507,7 +507,7 @@ void ITEMBOX::fillData(char data[32])
     data[18] = (char)(*(ptr + 1));
     data[19] = (char)(*(ptr + 0));
 
-	float var1 = (float)itemType;
+    float var1 = (float)itemType;
     ptr = (char*)(&var1);
     data[20] = (char)(*(ptr + 3));
     data[21] = (char)(*(ptr + 2));

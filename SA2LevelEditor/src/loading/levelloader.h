@@ -11,11 +11,11 @@ class SA2Object;
 class LevelLoader
 {
 private:
-	static float toFloat(char* input);
+    static float toFloat(char* input);
 
-	static int toInt(char* input);
+    static int toInt(char* input);
 
-	static void processLine(char** data, int dataLength);
+    static void processLine(char** data, int dataLength);
 
     static void processObjectSET(char data[32]);
 
@@ -25,14 +25,14 @@ private:
 
     static void loadLevelSAB(std::string fileLvl, std::string fileObj);
 
-	static void freeAllStaticModels();
+    static void freeAllStaticModels();
 
-	static int numLevels;
+    static int numLevels;
 
 public:
     static std::vector<std::string> lvlFile;
 
-	static void loadTitle();
+    static void loadTitle();
 
     static SA2Object* newSA2Object(int levelID, int objectID, char data[32], bool useDefaultValues);
 
@@ -40,9 +40,9 @@ public:
 
     static void promptUserForLevelSAB();
 
-	static void loadLevelData();
+    static void loadLevelData();
 
-	static int getNumLevels();
+    static int getNumLevels();
 
     static void exportLevel();
 

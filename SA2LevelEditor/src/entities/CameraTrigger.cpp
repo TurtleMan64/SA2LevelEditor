@@ -100,36 +100,36 @@ std::list<TexturedModel*>* CameraTrigger::getModels()
             break;
     }
 
-	return &CameraTrigger::modelsCube;
+    return &CameraTrigger::modelsCube;
 }
 
 void CameraTrigger::loadStaticModels()
 {
     if (CameraTrigger::modelsCube.size() == 0)
-	{
-		#ifdef DEV_MODE
-	    std::fprintf(stdout, "Loading CameraTrigger cube static models...\n");
-	    #endif
+    {
+        #ifdef DEV_MODE
+        std::fprintf(stdout, "Loading CameraTrigger cube static models...\n");
+        #endif
 
-	    loadModel(&CameraTrigger::modelsCube, "res/Models/GlobalObjects/Trigger/", "TriggerCube");
-	}
+        loadModel(&CameraTrigger::modelsCube, "res/Models/GlobalObjects/Trigger/", "TriggerCube");
+    }
 
     if (CameraTrigger::modelsSphere.size() == 0)
-	{
-		#ifdef DEV_MODE
-	    std::fprintf(stdout, "Loading CameraTrigger sphere static models...\n");
-	    #endif
+    {
+        #ifdef DEV_MODE
+        std::fprintf(stdout, "Loading CameraTrigger sphere static models...\n");
+        #endif
 
-	    loadModel(&CameraTrigger::modelsSphere, "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
-	}
+        loadModel(&CameraTrigger::modelsSphere, "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+    }
 
     if (CameraTrigger::cmBaseCube == nullptr)
-	{
-		CameraTrigger::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/Trigger/", "TriggerCube");
-	}
+    {
+        CameraTrigger::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/Trigger/", "TriggerCube");
+    }
 
     if (CameraTrigger::cmBaseSphere == nullptr)
-	{
-		CameraTrigger::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/Trigger/", "TriggerSphere");
-	}
+    {
+        CameraTrigger::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+    }
 }

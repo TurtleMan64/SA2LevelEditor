@@ -94,37 +94,37 @@ KDSPRINGB::KDSPRINGB(char data[32], bool useDefaultValues)
     v2[0] = data[27];
     power += 5.0f;
 
-	float var3;
+    float var3;
     char* v3 = (char*)&var3;
     v3[3] = data[28];
     v3[2] = data[29];
     v3[1] = data[30];
     v3[0] = data[31];
-	shrineID = (int)var3;
+    shrineID = (int)var3;
 
     if (useDefaultValues)
     {
         rotationX = 0;
         rotationY = 0;
-		rotationZ = 0;
-		shrineID = 0;
+        rotationZ = 0;
+        shrineID = 0;
         controlLockTime = 30;
         power = 8.0f;
         var3 = 0.0f;
     }
 
-	scaleX = 1;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixYXZ();
+    visible = true;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixYXZ();
 
     collideModelOriginal = SPRB::cmBase;
-	collideModelTransformed = SPRB::cmBase->duplicateMe();
+    collideModelTransformed = SPRB::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelYXZ();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelYXZ();
 }
 
 bool KDSPRINGB::isSA2Object()
@@ -134,39 +134,39 @@ bool KDSPRINGB::isSA2Object()
 
 void KDSPRINGB::step()
 {
-	if (Global::selectedSA2Object == this)
-	{
-		baseColour.set(1.75f, 1.75f, 1.75f);
-	}
-	else
-	{
-		if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
-			baseColour.set(2.0f, 1.0f, 1.0f);
-		}
-		else {
-			baseColour.set(1.0f, 0.5f, 0.5f);
-		}
-		if (guides.size() > 0)
-		{
-			despawnGuides();
-			Global::redrawWindow = true;
-		}
-	}
+    if (Global::selectedSA2Object == this)
+    {
+        baseColour.set(1.75f, 1.75f, 1.75f);
+    }
+    else
+    {
+        if (Global::selectedSA2Object && Global::selectedSA2Object->getShrineID() == shrineID) {
+            baseColour.set(2.0f, 1.0f, 1.0f);
+        }
+        else {
+            baseColour.set(1.0f, 0.5f, 0.5f);
+        }
+        if (guides.size() > 0)
+        {
+            despawnGuides();
+            Global::redrawWindow = true;
+        }
+    }
 }
 
 std::list<TexturedModel*>* KDSPRINGB::getModels()
 {
-	return &SPRB::models;
+    return &SPRB::models;
 }
 
 void KDSPRINGB::loadStaticModels()
 {
-	//We just use SPRB models
+    //We just use SPRB models
 }
 
 void KDSPRINGB::deleteStaticModels()
 {
-	//We just use SPRB models
+    //We just use SPRB models
 }
 
 void KDSPRINGB::updateValue(int btnIndex)

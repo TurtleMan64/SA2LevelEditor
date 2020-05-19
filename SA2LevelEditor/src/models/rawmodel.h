@@ -7,25 +7,25 @@
 class RawModel
 {
 private:
-	GLuint vaoID;
-	int vertexCount;
-	std::list<GLuint> vboIDs;
+    GLuint vaoID;
+    int vertexCount;
+    std::list<GLuint> vboIDs;
 
 public:
-	RawModel();
+    RawModel();
 
-	RawModel(GLuint vaoID, int vertexCount, std::list<GLuint>* vboIDs);
+    RawModel(GLuint vaoID, int vertexCount, std::list<GLuint>* vboIDs);
 
-	GLuint getVaoID();
-	void setVaoID(GLuint newID);
+    GLuint getVaoID();
+    void setVaoID(GLuint newID);
 
-	void setVertexCount(int newCount);
-	int getVertexCount();
+    void setVertexCount(int newCount);
+    int getVertexCount();
 
-	void deleteMe();
+    void deleteMe();
 
-	//for use in textured model constructor only
-	std::list<GLuint>* getVboIDs();
+    //for use in textured model constructor only
+    std::list<GLuint>* getVboIDs();
 };
 
 #endif

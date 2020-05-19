@@ -84,13 +84,13 @@ SPIDERWEB::SPIDERWEB(char data[32], bool useDefaultValues)
     z[0] = data[19];
     
     float var1;
-	char* v1 = (char*)&var1;
-	v1[3] = data[20];
-	v1[2] = data[21];
-	v1[1] = data[22];
-	v1[0] = data[23];
+    char* v1 = (char*)&var1;
+    v1[3] = data[20];
+    v1[2] = data[21];
+    v1[1] = data[22];
+    v1[0] = data[23];
 
-	scaleX = var1 + 1.0f; 
+    scaleX = var1 + 1.0f; 
     scaleY = var1 + 1.0f;
     scaleZ = var1 + 1.0f;
 
@@ -101,15 +101,15 @@ SPIDERWEB::SPIDERWEB(char data[32], bool useDefaultValues)
         scaleZ = 1.0f;
     }
 
-	visible = false;
-	baseColour.set(1, 1, 1);
-	updateTransformationMatrixZXY();
+    visible = false;
+    baseColour.set(1, 1, 1);
+    updateTransformationMatrixZXY();
 
     collideModelOriginal = SPIDERWEB::cmBase;
-	collideModelTransformed = SPIDERWEB::cmBase->duplicateMe();
+    collideModelTransformed = SPIDERWEB::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateCollisionModelZXY();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateCollisionModelZXY();
 
     web = new Dummy(&SPIDERWEB::models); INCR_NEW("Entity");
     web->visible = true;
@@ -139,35 +139,35 @@ void SPIDERWEB::step()
 
 std::list<TexturedModel*>* SPIDERWEB::getModels()
 {
-	return &SPIDERWEB::models;
+    return &SPIDERWEB::models;
 }
 
 void SPIDERWEB::loadStaticModels()
 {
-	if (SPIDERWEB::models.size() > 0)
-	{
-		return;
-	}
+    if (SPIDERWEB::models.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading SPIDERWEB static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading SPIDERWEB static models...\n");
+    #endif
 
-	loadModel(&SPIDERWEB::models, "res/Models/LevelObjects/PyramidCave/Spiderweb/", "Spiderweb");
+    loadModel(&SPIDERWEB::models, "res/Models/LevelObjects/PyramidCave/Spiderweb/", "Spiderweb");
 
     if (SPIDERWEB::cmBase == nullptr)
-	{
-		SPIDERWEB::cmBase = loadCollisionModel("res/Models/LevelObjects/PyramidCave/Spiderweb/", "Spiderweb");
-	}
+    {
+        SPIDERWEB::cmBase = loadCollisionModel("res/Models/LevelObjects/PyramidCave/Spiderweb/", "Spiderweb");
+    }
 }
 
 void SPIDERWEB::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting SPIDERWEB static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting SPIDERWEB static models...\n");
+    #endif
 
-	Entity::deleteModels(&SPIDERWEB::models);
+    Entity::deleteModels(&SPIDERWEB::models);
     Entity::deleteCollisionModel(&SPIDERWEB::cmBase);
 }
 
@@ -258,54 +258,54 @@ void SPIDERWEB::updateValue(int btnIndex)
     }
 
     case 5:
-	{
-		try
-		{
-			int newRotX = std::stoi(text);
-			rotationX = newRotX;
-			SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+    {
+        try
+        {
+            int newRotX = std::stoi(text);
+            rotationX = newRotX;
+            SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
 
-	case 6:
-	{
-		try
-		{
-			int newRotY = std::stoi(text);
-			rotationY = newRotY;
-			SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+    case 6:
+    {
+        try
+        {
+            int newRotY = std::stoi(text);
+            rotationY = newRotY;
+            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
 
-	case 7:
-	{
-		try
-		{
-			int newRotZ = std::stoi(text);
-			rotationZ = newRotZ;
-			SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+    case 7:
+    {
+        try
+        {
+            int newRotZ = std::stoi(text);
+            rotationZ = newRotZ;
+            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
 
-	case 8:
-	{
-		try
-		{
-			float newVar1 = std::stof(text);
-			scaleX = newVar1;
+    case 8:
+    {
+        try
+        {
+            float newVar1 = std::stof(text);
+            scaleX = newVar1;
             scaleY = newVar1;
             scaleZ = newVar1;
-			SetWindowTextA(Global::windowValues[8], std::to_string(newVar1).c_str());
-			break;
-		}
-		catch (...) { break; }
-	}
+            SetWindowTextA(Global::windowValues[8], std::to_string(newVar1).c_str());
+            break;
+        }
+        catch (...) { break; }
+    }
     
     default: break;
     }

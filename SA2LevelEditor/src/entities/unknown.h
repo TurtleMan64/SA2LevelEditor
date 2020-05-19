@@ -14,7 +14,7 @@ class Unknown : public SA2Object
 private:
     float var1, var2, var3;
 
-	static std::vector<std::list<TexturedModel*>> models;
+    static std::vector<std::list<TexturedModel*>> models;
 
     static CollisionModel* cmBase;
 
@@ -22,10 +22,10 @@ public:
     static std::list<TexturedModel*> modelsGuide;
     static std::list<TexturedModel*> modelsTriggerCube;
     static std::list<TexturedModel*> modelsTriggerSphere;
-	static std::list<TexturedModel*> modelsTriggerCylinder;
+    static std::list<TexturedModel*> modelsTriggerCylinder;
 
-	Unknown();
-	Unknown(char data[32], bool useDefaultValues);
+    Unknown();
+    Unknown(char data[32], bool useDefaultValues);
 
     void updateEditorWindows();
 
@@ -35,14 +35,14 @@ public:
 
     bool isSA2Object();
 
-	void step();
+    void step();
 
     void cleanUp();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 
-	static void loadStaticModels();
+    static void loadStaticModels();
 
-	static void deleteStaticModels();
+    static void deleteStaticModels();
 };
 #endif

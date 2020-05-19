@@ -31,8 +31,8 @@ void Cursor3D::step()
 {
     Vector2f windowSize = DisplayManager::getResolution();
 
-	float px = 1.0f/(windowSize.x); //1 pixel in x dimension
-	float py = 1.0f/(windowSize.y); //1 pixel in y dimension
+    float px = 1.0f/(windowSize.x); //1 pixel in x dimension
+    float py = 1.0f/(windowSize.y); //1 pixel in y dimension
 
     textureCursor3D->setSize(px*64, py*64);
 
@@ -48,10 +48,10 @@ std::list<TexturedModel*>* Cursor3D::getModels()
 
 void Cursor3D::loadStaticModels()
 {
-	
+    
 }
 
 void Cursor3D::deleteStaticModels()
 {
-	
+    
 }

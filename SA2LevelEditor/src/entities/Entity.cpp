@@ -13,32 +13,32 @@
 
 Entity::Entity()
 {
-	this->position.x = 0;
-	this->position.y = 0;
-	this->position.z = 0;
-	this->rotationX = 0;
-	this->rotationY = 0;
-	this->rotationZ = 0; 
-	this->scaleX = 1;
+    this->position.x = 0;
+    this->position.y = 0;
+    this->position.z = 0;
+    this->rotationX = 0;
+    this->rotationY = 0;
+    this->rotationZ = 0; 
+    this->scaleX = 1;
     this->scaleY = 1;
     this->scaleZ = 1;
-	this->visible = true;
-	this->baseColour.set(1,1,1);
+    this->visible = true;
+    this->baseColour.set(1,1,1);
 }
 
 Entity::Entity(Vector3f* position)
 {
-	this->position.x = position->x;
-	this->position.y = position->y;
-	this->position.z = position->z;
-	this->rotationX = 0;
-	this->rotationY = 0;
-	this->rotationZ = 0;
-	this->scaleX = 1;
+    this->position.x = position->x;
+    this->position.y = position->y;
+    this->position.z = position->z;
+    this->rotationX = 0;
+    this->rotationY = 0;
+    this->rotationZ = 0;
+    this->scaleX = 1;
     this->scaleY = 1;
     this->scaleZ = 1;
-	this->visible = true;
-	this->baseColour.set(1,1,1);
+    this->visible = true;
+    this->baseColour.set(1,1,1);
 }
 
 Entity::~Entity()
@@ -58,21 +58,21 @@ void Entity::cleanUp()
 
 void Entity::increasePosition(float dx, float dy, float dz)
 {
-	position.x += dx;
-	position.y += dy;
-	position.z += dz;
+    position.x += dx;
+    position.y += dy;
+    position.z += dz;
 }
 
 void Entity::increaseRotation(int dx, int dy, int dz)
 {
-	rotationX += dx;
-	rotationY += dy;
-	rotationZ += dz;
+    rotationX += dx;
+    rotationY += dy;
+    rotationZ += dz;
 }
 
 std::list<TexturedModel*>* Entity::getModels()
 {
-	return nullptr;
+    return nullptr;
 }
 
 bool Entity::isSA2Object()
@@ -82,15 +82,15 @@ bool Entity::isSA2Object()
 
 void Entity::setPosition(Vector3f* newPos)
 {
-	this->position.x = newPos->x;
-	this->position.y = newPos->y;
-	this->position.z = newPos->z;
+    this->position.x = newPos->x;
+    this->position.y = newPos->y;
+    this->position.z = newPos->z;
 }
 void Entity::setPosition(float newX, float newY, float newZ)
 {
-	this->position.x = newX;
-	this->position.y = newY;
-	this->position.z = newZ;
+    this->position.x = newX;
+    this->position.y = newY;
+    this->position.z = newZ;
 }
 
 void Entity::setScale(float sclX, float sclY, float sclZ)
@@ -102,70 +102,70 @@ void Entity::setScale(float sclX, float sclY, float sclZ)
 
 void Entity::setBaseColour(float red, float green, float blue)
 {
-	baseColour.set(red, green, blue);
+    baseColour.set(red, green, blue);
 }
 
 void Entity::updateTransformationMatrixYXZ()
 {
-	Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+    Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
 void Entity::updateTransformationMatrixYXZ(float sclX, float sclY, float sclZ)
 {
-	Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+    Maths::createTransformationMatrixYXZ(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
 void Entity::updateTransformationMatrixZXY()
 {
-	Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+    Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
 void Entity::updateTransformationMatrixZXY(float sclX, float sclY, float sclZ)
 {
-	Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+    Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
 void Entity::updateTransformationMatrixZY()
 {
-	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+    Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
 void Entity::updateTransformationMatrixZY(float sclX, float sclY, float sclZ)
 {
-	Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, sclX, sclY, sclZ);
+    Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
 void Entity::updateTransformationMatrixXY()
 {
-	Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, scaleX, scaleY, scaleZ);
+    Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, scaleX, scaleY, scaleZ);
 }
 
 void Entity::updateTransformationMatrixXY(float sclX, float sclY, float sclZ)
 {
-	Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, sclX, sclY, sclZ);
+    Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, sclX, sclY, sclZ);
 }
 
 Matrix4f* Entity::getTransformationMatrix()
 {
-	return &transformationMatrix;
+    return &transformationMatrix;
 }
 
 void Entity::deleteModels(std::list<TexturedModel*>* modelsToDelete)
 {
-	for (auto model : (*modelsToDelete))
-	{
-		model->deleteMe();
-		delete model; INCR_DEL("TexturedModel");
-	}
-	modelsToDelete->clear();
+    for (auto model : (*modelsToDelete))
+    {
+        model->deleteMe();
+        delete model; INCR_DEL("TexturedModel");
+    }
+    modelsToDelete->clear();
 }
 
 void Entity::deleteCollisionModel(CollisionModel** colModelToDelete)
 {
-	if ((*colModelToDelete) != nullptr)
-	{
-		(*colModelToDelete)->deleteMe();
-		delete (*colModelToDelete); INCR_DEL("CollisionModel");
-		(*colModelToDelete) = nullptr;
-	}
+    if ((*colModelToDelete) != nullptr)
+    {
+        (*colModelToDelete)->deleteMe();
+        delete (*colModelToDelete); INCR_DEL("CollisionModel");
+        (*colModelToDelete) = nullptr;
+    }
 }

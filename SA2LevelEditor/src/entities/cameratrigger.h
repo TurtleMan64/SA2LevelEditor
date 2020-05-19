@@ -22,15 +22,15 @@ private:
     Dummy* pointB = nullptr;
 
 public:
-	CameraTrigger(int type,
+    CameraTrigger(int type,
                   float x,  float y,  float z,
                   float xr, float yr, float zr,
                   float xs, float ys, float zs,
                   float ax, float ay, float az,
                   float bx, float by, float bz);
 
-	void step();
+    void step();
 
-	std::list<TexturedModel*>* getModels();
+    std::list<TexturedModel*>* getModels();
 };
 #endif

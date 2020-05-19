@@ -4,9 +4,9 @@
 class Input
 {
 public:
-	static void init();
+    static void init();
 
-	static void waitForInputs();
+    static void waitForInputs();
 };
 
 #endif

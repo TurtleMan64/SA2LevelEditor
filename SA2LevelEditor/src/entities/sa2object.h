@@ -12,8 +12,8 @@ public:
     int ID;
     int lvlLineNum = -1;
 
-	SA2Object();
-	SA2Object(char data[32], bool useDefaultValues);
+    SA2Object();
+    SA2Object(char data[32], bool useDefaultValues);
 
     //call this whenever a new object is selected via a user click.
     // this will reach in to the editor window and update the values
@@ -35,9 +35,9 @@ public:
 
     virtual std::string toSabString();
 
-	//returns ID of switch or knudai (MM shrine) linked to the object, or -1 otherwise
-	virtual int getSwitchID();
-	virtual int getShrineID();
+    //returns ID of switch or knudai (MM shrine) linked to the object, or -1 otherwise
+    virtual int getSwitchID();
+    virtual int getShrineID();
 
     bool isSA2Object();
 };

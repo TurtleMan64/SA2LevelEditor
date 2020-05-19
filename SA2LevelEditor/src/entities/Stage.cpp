@@ -16,18 +16,18 @@ CollisionModel* Stage::collisionModel;
 
 Stage::Stage()
 {
-	position.x = 0;
-	position.y = 0;
-	position.z = 0;
-	rotationX = 0;
-	rotationY = 0;
-	rotationZ = 0;
-	scaleX = 1;
+    position.x = 0;
+    position.y = 0;
+    position.z = 0;
+    rotationX = 0;
+    rotationY = 0;
+    rotationZ = 0;
+    scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-	visible = true;
-	
-	updateTransformationMatrixYXZ();
+    visible = true;
+    
+    updateTransformationMatrixYXZ();
 }
 
 void Stage::step()
@@ -41,29 +41,29 @@ void Stage::step()
 
 std::list<TexturedModel*>* Stage::getModels()
 {
-	return &Stage::models;
+    return &Stage::models;
 }
 
 void Stage::loadModels(const char* objFolder, const char* objFilename)
 {
     if (Stage::models.size() == 0)
-	{
-		#ifdef DEV_MODE
-		std::fprintf(stdout, "Loading Stage static models...\n");
-		#endif
+    {
+        #ifdef DEV_MODE
+        std::fprintf(stdout, "Loading Stage static models...\n");
+        #endif
 
-		loadModel(&Stage::models, objFolder, objFilename);
-	}
+        loadModel(&Stage::models, objFolder, objFilename);
+    }
 
-	Stage::collisionModel = loadCollisionModel(objFolder, objFilename);
+    Stage::collisionModel = loadCollisionModel(objFolder, objFilename);
     CollisionChecker::addCollideModel(Stage::collisionModel);
 }
 
 void Stage::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting Stage static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting Stage static models...\n");
+    #endif
 
-	Entity::deleteModels(&Stage::models);
+    Entity::deleteModels(&Stage::models);
 }

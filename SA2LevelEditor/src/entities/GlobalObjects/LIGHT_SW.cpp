@@ -118,16 +118,16 @@ LIGHT_SW::LIGHT_SW(char data[32], bool useDefaultValues)
         var3 = 10.0f;
         rotationX = 0;
         rotationY = 0;
-	    rotationZ = 0; 
+        rotationZ = 0; 
     }
 
     collisionType = (rotationZ & 0x03);
 
-	scaleX = 0;
+    scaleX = 0;
     scaleY = 0;
     scaleZ = 0;
-	visible = true;
-	updateTransformationMatrixZY();
+    visible = true;
+    updateTransformationMatrixZY();
 
     if (collisionType == 0) //box
     {
@@ -150,8 +150,8 @@ LIGHT_SW::LIGHT_SW(char data[32], bool useDefaultValues)
     }
 
     collideModelTransformed->parent = this;
-	CollisionChecker::addCollideModel(collideModelTransformed);
-	updateMyCollisionModel();
+    CollisionChecker::addCollideModel(collideModelTransformed);
+    updateMyCollisionModel();
 
     box = nullptr;
     box = new Dummy(getSpecificModels(collisionType)); INCR_NEW("Entity");
@@ -182,7 +182,7 @@ void LIGHT_SW::step()
 
 std::list<TexturedModel*>* LIGHT_SW::getModels()
 {
-	return &LIGHT_SW::modelsCube;
+    return &LIGHT_SW::modelsCube;
 }
 
 std::list<TexturedModel*>* LIGHT_SW::getSpecificModels(int type)
@@ -200,40 +200,40 @@ std::list<TexturedModel*>* LIGHT_SW::getSpecificModels(int type)
 
 void LIGHT_SW::loadStaticModels()
 {
-	if (LIGHT_SW::modelsCube.size() > 0)
-	{
-		return;
-	}
+    if (LIGHT_SW::modelsCube.size() > 0)
+    {
+        return;
+    }
 
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Loading LIGHT_SW static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Loading LIGHT_SW static models...\n");
+    #endif
 
-	loadModel(&LIGHT_SW::modelsCube,     "res/Models/GlobalObjects/LightVolumes/", "LightBox");
+    loadModel(&LIGHT_SW::modelsCube,     "res/Models/GlobalObjects/LightVolumes/", "LightBox");
     loadModel(&LIGHT_SW::modelsSphere,   "res/Models/GlobalObjects/LightVolumes/", "LightSphere");
     loadModel(&LIGHT_SW::modelsCylinder, "res/Models/GlobalObjects/LightVolumes/", "LightCylinder");
 
     if (LIGHT_SW::cmBaseCube == nullptr)
-	{
-		LIGHT_SW::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightBox");
-	}
+    {
+        LIGHT_SW::cmBaseCube = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightBox");
+    }
     if (LIGHT_SW::cmBaseSphere == nullptr)
-	{
-		LIGHT_SW::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightSphere");
-	}
+    {
+        LIGHT_SW::cmBaseSphere = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightSphere");
+    }
     if (LIGHT_SW::cmBaseCylinder == nullptr)
-	{
-		LIGHT_SW::cmBaseCylinder = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightCylinder");
-	}
+    {
+        LIGHT_SW::cmBaseCylinder = loadCollisionModel("res/Models/GlobalObjects/LightVolumes/", "LightCylinder");
+    }
 }
 
 void LIGHT_SW::deleteStaticModels()
 {
-	#ifdef DEV_MODE
-	std::fprintf(stdout, "Deleting LIGHT_SW static models...\n");
-	#endif
+    #ifdef DEV_MODE
+    std::fprintf(stdout, "Deleting LIGHT_SW static models...\n");
+    #endif
 
-	Entity::deleteModels(&LIGHT_SW::modelsCube);
+    Entity::deleteModels(&LIGHT_SW::modelsCube);
     Entity::deleteModels(&LIGHT_SW::modelsSphere);
     Entity::deleteModels(&LIGHT_SW::modelsCylinder);
     Entity::deleteCollisionModel(&LIGHT_SW::cmBaseCube);
@@ -387,7 +387,7 @@ void LIGHT_SW::updateValue(int btnIndex)
                 }
 
                 collideModelTransformed->parent = this;
-	            CollisionChecker::addCollideModel(collideModelTransformed);
+                CollisionChecker::addCollideModel(collideModelTransformed);
             }
 
             rotationZ = newRotZ;
