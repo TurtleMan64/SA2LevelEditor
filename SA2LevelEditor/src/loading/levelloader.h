@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <unordered_map>
 
 class Entity;
 class SA2Object;
@@ -11,6 +12,10 @@ class SA2Object;
 class LevelLoader
 {
 private:
+    static std::unordered_map<int, std::string> objectIdToName;
+
+    static void initObjectMap();
+
     static float toFloat(char* input);
 
     static int toInt(char* input);
@@ -30,6 +35,8 @@ private:
     static int numLevels;
 
 public:
+    static void loadLevelData();
+
     static std::vector<std::string> lvlFile;
 
     static void loadTitle();
@@ -39,8 +46,6 @@ public:
     static void promptUserForLevel();
 
     static void promptUserForLevelSAB();
-
-    static void loadLevelData();
 
     static int getNumLevels();
 

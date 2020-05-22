@@ -82,7 +82,7 @@
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../entities/GlobalObjects/eai.h"
 
-std::string Global::version = "0.0.5";
+std::string Global::version = "0.0.6";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -439,7 +439,7 @@ int Global::initWin32GUI(HINSTANCE hInstance)
     WNDCLASSW wc = {0};
 
     wc.hbrBackground = CreateSolidBrush(RGB(200, 200, 200));//(HBRUSH)(COLOR_WINDOW + 1);
-    wc.hCursor         = LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
     wc.hInstance     = hInstance;
     wc.lpszClassName = L"SA2 Level Editor";
     wc.lpfnWndProc   = win32WindowCallback;

@@ -74,6 +74,37 @@
 
 int LevelLoader::numLevels = 0;
 std::vector<std::string> LevelLoader::lvlFile;
+std::unordered_map<int, std::string> LevelLoader::objectIdToName;
+
+void LevelLoader::initObjectMap()
+{
+    //go through all the files and load the values into the map
+    std::string folder = "res/StageObjectLists/";
+
+    for (int lvlId = 0; lvlId <= 70; lvlId++)
+    {
+        std::string fname = folder + std::to_string(lvlId) + ".txt";
+        std::ifstream file(fname);
+        if (!file.is_open())
+        {
+            continue;
+        }
+
+        std::string line;
+        int objId = 0;
+        while (!file.eof())
+        {
+            getlineSafe(file, line);
+            if (line.size() > 0)
+            {
+                int key = (lvlId << 8) | objId;
+                LevelLoader::objectIdToName[key] = line;
+            }
+            objId++;
+        }
+        file.close();
+    }
+}
 
 void LevelLoader::loadTitle()
 {
@@ -637,690 +668,75 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
 
     INCR_NEW("Entity");
 
-    switch (levelID)
+    if (levelID == Global::Levels::Custom_Level)
     {
-        case Global::Levels::City_Escape:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x3A: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x43: return new SWDRNGL        (data, useDefaultValues);
-                case 0x44: return new SWDRNGC        (data, useDefaultValues);
-                case 0x5A: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Metal_Harbor:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x41: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x5A: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Green_Forest:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new SPRA          (data, useDefaultValues);
-                case    2: return new SPRB          (data, useDefaultValues);
-                case    3: return new KASOKU        (data, useDefaultValues);
-                case    4: return new SAVEPOINT     (data, useDefaultValues);
-                case    5: return new SWITCH        (data, useDefaultValues);
-                case    6: return new ITEMBOX       (data, useDefaultValues);
-                case    7: return new ITEMBOXAIR    (data, useDefaultValues);
-                case    8: return new IRONBALL2        (data, useDefaultValues);
-                case 0x0A: return new BIGJUMP       (data, useDefaultValues);
-                case 0x0B: return new ROCKET        (data, useDefaultValues);
-                case 0x0C: return new E_KUMI        (data, useDefaultValues);
-                case 0x19: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x1E: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x21: return new BUNCHIN        (data, useDefaultValues);
-                case 0x22: return new RING_LINEAR   (data, useDefaultValues);
-                case 0x23: return new RING_CIRCLE   (data, useDefaultValues);
-                case 0x24: return new THREESPRING   (data, useDefaultValues);
-                case 0x33: return new KNUDAI        (data, useDefaultValues);
-                case 0x3D: return new KDDRNGL        (data, useDefaultValues);
-                case 0x3E: return new KDDRNGC        (data, useDefaultValues);
-                case 0x3F: return new KDSPRING        (data, useDefaultValues);
-                case 0x40: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x42: return new SPHERE        (data, useDefaultValues);
-                case 0x43: return new CCYL          (data, useDefaultValues);
-                case 0x44: return new CCUBE         (data, useDefaultValues);
-                case 0x49: return new LINKLINK      (data, useDefaultValues);
-                case 0x55: return new SWDRNGL        (data, useDefaultValues);
-                case 0x56: return new SWDRNGC        (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Pyramid_Cave:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x5A: return new SPIDERWEB     (data, useDefaultValues);
-                case 0x5E: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Crazy_Gadget:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x23: return new KNUDAI        (data, useDefaultValues);
-                case 0x28: return new KDDRNGL        (data, useDefaultValues);
-                case 0x29: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2A: return new KDSPRING        (data, useDefaultValues);
-                case 0x2B: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2C: return new SPHERE        (data, useDefaultValues);
-                case 0x2D: return new CCYL          (data, useDefaultValues);
-                case 0x2E: return new CCUBE         (data, useDefaultValues);
-                case 0x34: return new BUNCHIN        (data, useDefaultValues);
-                case 0x35: return new IRONBALL2        (data, useDefaultValues);
-                case 0x36: return new E_KUMI        (data, useDefaultValues);
-                case 0x38: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x39: return new SWDRNGL        (data, useDefaultValues);
-                case 0x3A: return new SWDRNGC        (data, useDefaultValues);
-                case 0x3C: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Final_Rush:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x3D: return new LINKLINK      (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Prison_Lane:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x5B: return new STOPLOCKON    (data, useDefaultValues);
-                case 0x5D: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x60: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Eternal_Engine:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x3D: return new LINKLINK      (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Meteor_Herd:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x3D: return new LINKLINK      (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
-                case 0x54: return new SG_RING        (data, useDefaultValues);
-                case 0x55: return new SG_SPRA       (data, useDefaultValues);
-                case 0x56: return new SG_SPRB       (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Radical_Highway:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP        (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC       (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN       (data, useDefaultValues);
-                case 0x37: return new IRONBALL2     (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x4B: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x50: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::White_Jungle:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new SPRA          (data, useDefaultValues);
-                case    2: return new SPRB          (data, useDefaultValues);
-                case    3: return new KASOKU        (data, useDefaultValues);
-                case    4: return new SAVEPOINT     (data, useDefaultValues);
-                case    5: return new SWITCH        (data, useDefaultValues);
-                case    6: return new ITEMBOX       (data, useDefaultValues);
-                case    7: return new ITEMBOXAIR    (data, useDefaultValues);
-                case    8: return new IRONBALL2        (data, useDefaultValues);
-                case 0x0A: return new BIGJUMP       (data, useDefaultValues);
-                case 0x0B: return new ROCKET        (data, useDefaultValues);
-                case 0x0C: return new E_KUMI        (data, useDefaultValues);
-                case 0x1B: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x1D: return new EMERALD       (data, useDefaultValues);
-                case 0x1E: return new BUNCHIN        (data, useDefaultValues);
-                case 0x1F: return new RING_LINEAR   (data, useDefaultValues);
-                case 0x20: return new RING_CIRCLE   (data, useDefaultValues);
-                case 0x21: return new THREESPRING   (data, useDefaultValues);
-                case 0x31: return new KNUDAI        (data, useDefaultValues);
-                case 0x3B: return new KDDRNGL        (data, useDefaultValues);
-                case 0x3C: return new KDDRNGC        (data, useDefaultValues);
-                case 0x3D: return new KDSPRING        (data, useDefaultValues);
-                case 0x3E: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x40: return new SPHERE        (data, useDefaultValues);
-                case 0x41: return new CCYL          (data, useDefaultValues);
-                case 0x42: return new CCUBE         (data, useDefaultValues);
-                case 0x47: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Sky_Rail:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new SPRA          (data, useDefaultValues);
-                case    2: return new SPRB          (data, useDefaultValues);
-                case    3: return new KASOKU        (data, useDefaultValues);
-                case    4: return new SAVEPOINT     (data, useDefaultValues);
-                case    5: return new SWITCH        (data, useDefaultValues);
-                case    6: return new ITEMBOX       (data, useDefaultValues);
-                case    7: return new ITEMBOXAIR    (data, useDefaultValues);
-                case    8: return new IRONBALL2        (data, useDefaultValues);
-                case    9: return new BIGJUMP       (data, useDefaultValues);
-                case 0x0A: return new ROCKET        (data, useDefaultValues);
-                case 0x0B: return new E_KUMI        (data, useDefaultValues);
-                case 0x0D: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x10: return new BUNCHIN        (data, useDefaultValues);
-                case 0x11: return new RING_LINEAR   (data, useDefaultValues);
-                case 0x12: return new RING_CIRCLE   (data, useDefaultValues);
-                case 0x13: return new THREESPRING   (data, useDefaultValues);
-                case 0x21: return new KNUDAI        (data, useDefaultValues);
-                case 0x45: return new KDDRNGL        (data, useDefaultValues);
-                case 0x46: return new KDDRNGC        (data, useDefaultValues);
-                case 0x47: return new KDSPRING        (data, useDefaultValues);
-                case 0x48: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x4A: return new SPHERE        (data, useDefaultValues);
-                case 0x4B: return new CCYL          (data, useDefaultValues);
-                case 0x4C: return new CCUBE         (data, useDefaultValues);
-                case 0x50: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Final_Chase:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2     (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x3D: return new LINKLINK      (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Iron_Gate:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new SPRA          (data, useDefaultValues);
-                case    2: return new SPRB          (data, useDefaultValues);
-                case    3: return new KASOKU        (data, useDefaultValues);
-                case    4: return new SAVEPOINT     (data, useDefaultValues);
-                case    5: return new SWITCH        (data, useDefaultValues);
-                case    6: return new ITEMBOX       (data, useDefaultValues);
-                case    7: return new ITEMBOXAIR    (data, useDefaultValues);
-                case    8: return new IRONBALL2        (data, useDefaultValues);
-                case    9: return new BIGJUMP       (data, useDefaultValues);
-                case 0x0A: return new ROCKET        (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0E: return new EMERALD       (data, useDefaultValues);
-                case 0x0F: return new BUNCHIN        (data, useDefaultValues);
-                case 0x10: return new RING_LINEAR   (data, useDefaultValues);
-                case 0x11: return new RING_CIRCLE   (data, useDefaultValues);
-                case 0x12: return new THREESPRING   (data, useDefaultValues);
-                case 0x1E: return new KNUDAI        (data, useDefaultValues);
-                case 0x2E: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2F: return new KDDRNGC        (data, useDefaultValues);
-                case 0x30: return new KDSPRING        (data, useDefaultValues);
-                case 0x31: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x33: return new SPHERE        (data, useDefaultValues);
-                case 0x34: return new CCYL          (data, useDefaultValues);
-                case 0x35: return new CCUBE         (data, useDefaultValues);
-                case 0x47: return new E_KUMI        (data, useDefaultValues);
-                case 0x54: return new STOPLOCKON    (data, useDefaultValues);
-                case 0x55: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x57: return new LINKLINK      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Lost_Colony:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x3E: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x3F: return new STOPLOCKON    (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Cosmic_Wall:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x23: return new KNUDAI        (data, useDefaultValues);
-                case 0x28: return new KDDRNGL        (data, useDefaultValues);
-                case 0x29: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2A: return new KDSPRING        (data, useDefaultValues);
-                case 0x2B: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2C: return new SPHERE        (data, useDefaultValues);
-                case 0x2D: return new CCYL          (data, useDefaultValues);
-                case 0x2E: return new CCUBE         (data, useDefaultValues);
-                case 0x34: return new BUNCHIN        (data, useDefaultValues);
-                case 0x35: return new IRONBALL2        (data, useDefaultValues);
-                case 0x3C: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x49: return new STOPLOCKON    (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Dry_Lagoon:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x53: return new LIGHT_SW      (data, useDefaultValues);
-                case 0x5A: return new SG_RING        (data, useDefaultValues);
-                case 0x5B: return new SG_SPRA       (data, useDefaultValues);
-                case 0x5C: return new SG_SPRB       (data, useDefaultValues);
-                case 0x5E: return new EMERALD_F     (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Security_Hall:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x25: return new KNUDAI        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2B: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2C: return new KDSPRING        (data, useDefaultValues);
-                case 0x2D: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2E: return new SPHERE        (data, useDefaultValues);
-                case 0x2F: return new CCYL          (data, useDefaultValues);
-                case 0x30: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x38: return new E_KUMI        (data, useDefaultValues);
-                case 0x4A: return new LINKLINK      (data, useDefaultValues);
-                case 0x50: return new SG_RING        (data, useDefaultValues);
-                case 0x51: return new SG_SPRA       (data, useDefaultValues);
-                case 0x52: return new SG_SPRB       (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Mad_Space:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case    1: return new RING_LINEAR   (data, useDefaultValues);
-                case    2: return new RING_CIRCLE   (data, useDefaultValues);
-                case    3: return new SPRA          (data, useDefaultValues);
-                case    4: return new SPRB          (data, useDefaultValues);
-                case    5: return new THREESPRING   (data, useDefaultValues);
-                case    6: return new BIGJUMP       (data, useDefaultValues);
-                case    7: return new KASOKU        (data, useDefaultValues);
-                case    8: return new SAVEPOINT     (data, useDefaultValues);
-                case    9: return new SWITCH        (data, useDefaultValues);
-                case 0x0A: return new ITEMBOX       (data, useDefaultValues);
-                case 0x0B: return new ITEMBOXAIR    (data, useDefaultValues);
-                case 0x0C: return new ITEMBOXBALLOON(data, useDefaultValues);
-                case 0x0F: return new EMERALD       (data, useDefaultValues);
-                case 0x15: return new ROCKET        (data, useDefaultValues);
-                case 0x24: return new KNUDAI        (data, useDefaultValues);
-                case 0x29: return new KDDRNGL        (data, useDefaultValues);
-                case 0x2A: return new KDDRNGC        (data, useDefaultValues);
-                case 0x2B: return new KDSPRING        (data, useDefaultValues);
-                case 0x2C: return new KDSPRINGB        (data, useDefaultValues);
-                case 0x2D: return new SPHERE        (data, useDefaultValues);
-                case 0x2E: return new CCYL          (data, useDefaultValues);
-                case 0x2F: return new CCUBE         (data, useDefaultValues);
-                case 0x36: return new BUNCHIN        (data, useDefaultValues);
-                case 0x37: return new IRONBALL2        (data, useDefaultValues);
-                case 0x3C: return new LINKLINK      (data, useDefaultValues);
-                case 0x40: return new SG_RING        (data, useDefaultValues);
-                case 0x41: return new SG_SPRA       (data, useDefaultValues);
-                case 0x42: return new SG_SPRB       (data, useDefaultValues);
-                case 0x51: return new LIGHT_SW      (data, useDefaultValues);
-                default:   return new Unknown       (data, useDefaultValues);
-            }
-
-        case Global::Levels::Custom_Level:
-            switch (objectID)
-            {
-                case    0: return new RING          (data, useDefaultValues);
-                case   98: return new RING_LINEAR   (data, useDefaultValues);
-                //case   99: return new RING_CIRCLE   (data, useDefaultValues);
-                case   12: return new SPRB          (data, useDefaultValues);
-                //case   13: return new THREESPRING   (data, useDefaultValues);
-                //case   11: return new BIGJUMP       (data, useDefaultValues);
-                //case    8: return new KASOKU        (data, useDefaultValues);
-                //case   10: return new SAVEPOINT     (data, useDefaultValues);
-                //case   27: return new ITEMBOX       (data, useDefaultValues);
-                case   28: return new E_KUMI        (data, useDefaultValues);
-                //case   97: return new ROCKET        (data, useDefaultValues);
-                default:   return new RING          (data, useDefaultValues);
-            }
-
-        default:
-            switch (objectID)
-            {
-                case  0: return new RING   (data, useDefaultValues);
-                default: return new Unknown(data, useDefaultValues);
-            }
-            break;
+        switch (objectID)
+        {
+            case    0: return new RING          (data, useDefaultValues);
+            case   98: return new RING_LINEAR   (data, useDefaultValues);
+            //case   99: return new RING_CIRCLE   (data, useDefaultValues);
+            case   12: return new SPRB          (data, useDefaultValues);
+            //case   13: return new THREESPRING   (data, useDefaultValues);
+            //case   11: return new BIGJUMP       (data, useDefaultValues);
+            //case    8: return new KASOKU        (data, useDefaultValues);
+            //case   10: return new SAVEPOINT     (data, useDefaultValues);
+            //case   27: return new ITEMBOX       (data, useDefaultValues);
+            case   28: return new E_KUMI        (data, useDefaultValues);
+            //case   97: return new ROCKET        (data, useDefaultValues);
+            default:   return new RING          (data, useDefaultValues);
+        }
     }
+
+    int key = (levelID << 8) | objectID;
+    if (LevelLoader::objectIdToName.find(key) == LevelLoader::objectIdToName.end())
+    {
+        return new Unknown(data, useDefaultValues);
+    }
+
+    std::string o = LevelLoader::objectIdToName[key];
+    if      (o == "RING")           {return new RING          (data, useDefaultValues);}
+    else if (o == "RING_LINEAR")    {return new RING_LINEAR   (data, useDefaultValues);}
+    else if (o == "RING_CIRCLE")    {return new RING_CIRCLE   (data, useDefaultValues);}
+    else if (o == "SPRA")           {return new SPRA          (data, useDefaultValues);}
+    else if (o == "SPRB")           {return new SPRB          (data, useDefaultValues);}
+    else if (o == "3SPRING")        {return new THREESPRING   (data, useDefaultValues);}
+    else if (o == "BIGJUMP")        {return new BIGJUMP       (data, useDefaultValues);}
+    else if (o == "KASOKU")         {return new KASOKU        (data, useDefaultValues);}
+    else if (o == "SAVEPOINT")      {return new SAVEPOINT     (data, useDefaultValues);}
+    else if (o == "SWITCH")         {return new SWITCH        (data, useDefaultValues);}
+    else if (o == "ITEMBOX")        {return new ITEMBOX       (data, useDefaultValues);}
+    else if (o == "ITEMBOXAIR")     {return new ITEMBOXAIR    (data, useDefaultValues);}
+    else if (o == "ITEMBOXBALLOON") {return new ITEMBOXBALLOON(data, useDefaultValues);}
+    else if (o == "ROCKET")         {return new ROCKET        (data, useDefaultValues);}
+    else if (o == "KNUDAI")         {return new KNUDAI        (data, useDefaultValues);}
+    else if (o == "KDDRNGL")        {return new KDDRNGL       (data, useDefaultValues);}
+    else if (o == "KDDRNGC")        {return new KDDRNGC       (data, useDefaultValues);}
+    else if (o == "KDSPRING")       {return new KDSPRING      (data, useDefaultValues);}
+    else if (o == "KDSPRINGB")      {return new KDSPRINGB     (data, useDefaultValues);}
+    else if (o == "SPHERE")         {return new SPHERE        (data, useDefaultValues);}
+    else if (o == "CCYL")           {return new CCYL          (data, useDefaultValues);}
+    else if (o == "CCUBE")          {return new CCUBE         (data, useDefaultValues);}
+    else if (o == "BUNCHIN")        {return new BUNCHIN       (data, useDefaultValues);}
+    else if (o == "IRONBALL2")      {return new IRONBALL2     (data, useDefaultValues);}
+    else if (o == "E KUMI")         {return new E_KUMI        (data, useDefaultValues);}
+    else if (o == "LIGHT SW")       {return new LIGHT_SW      (data, useDefaultValues);}
+    else if (o == "SWDRNGL")        {return new SWDRNGL       (data, useDefaultValues);}
+    else if (o == "SWDRNGC")        {return new SWDRNGC       (data, useDefaultValues);}
+    else if (o == "LINKLINK")       {return new LINKLINK      (data, useDefaultValues);}
+    else if (o == "STOPLOCKON")     {return new STOPLOCKON    (data, useDefaultValues);}
+    else if (o == "SG RING")        {return new SG_RING       (data, useDefaultValues);}
+    else if (o == "SG SPRA")        {return new SG_SPRA       (data, useDefaultValues);}
+    else if (o == "SG SPRB")        {return new SG_SPRB       (data, useDefaultValues);}
+    else if (o == "EMERALD")        {return new EMERALD       (data, useDefaultValues);}
+    else if (o == "EMERALD F")      {return new EMERALD_F     (data, useDefaultValues);}
+    else if (o == "SPIDERWEB")      {return new SPIDERWEB     (data, useDefaultValues);}
+    else                            {return new Unknown       (data, useDefaultValues);}
 }
 
 void LevelLoader::loadLevelData()
 {
+    LevelLoader::initObjectMap();
+
     Global::levelSetToLVL2.clear();
 
     Global::levelSetToLVL2["set_b_bigbogy_s.bin"]  = "";
