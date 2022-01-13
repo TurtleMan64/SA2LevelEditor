@@ -47,6 +47,8 @@ public:
 
     static void createTransformationMatrixZXY(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
 
+    static void createTransformationMatrixXZY(Matrix4f* result, Vector3f* translation, int rX, int rY, int rZ, float sX, float sY, float sZ);
+
     static void createTransformationMatrixZY(Matrix4f* result, Vector3f* translation, int rY, int rZ, float sX, float sY, float sZ);
 
     static void createTransformationMatrixXY(Matrix4f* result, Vector3f* translation, int rX, int rY, float sX, float sY, float sZ);

@@ -1,0 +1,14 @@
+# Material Count: 2
+
+newmtl Mesh_0523.rip
+Ns 20
+Ni 0.000000
+d 1.000000
+map_Kd Tex_0071_0.dds
+
+newmtl Mesh_0522.rip
+Ns 20
+Ni 0.000000
+d 1.000000
+map_Kd Tex_0070_0.dds
+

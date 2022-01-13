@@ -134,6 +134,49 @@ void CollisionModel::transformModelZXY(CollisionModel* targetModel, Vector3f* tr
     targetModel->generateMinMaxValues();
 }
 
+void CollisionModel::transformModelXZY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
+{
+    float angleRadX = Maths::bamsToRad(bamsXRot);
+    float angleRadY = Maths::bamsToRad(bamsYRot);
+    float angleRadZ = Maths::bamsToRad(bamsZRot);
+
+    targetModel->deleteMe();
+
+    for (Triangle3D* tri : triangles)
+    {
+        Vector3f newP1(tri->p1X*xScale, tri->p1Y*yScale, tri->p1Z*zScale);
+        Vector3f newP2(tri->p2X*xScale, tri->p2Y*yScale, tri->p2Z*zScale);
+        Vector3f newP3(tri->p3X*xScale, tri->p3Y*yScale, tri->p3Z*zScale);
+        Vector3f axis;
+
+        //order = x, z, y
+        axis.set(1, 0, 0);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadX);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadX);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadX);
+
+        axis.set(0, 0, 1);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadZ);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadZ);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadZ);
+
+        axis.set(0, 1, 0);
+        newP1 = Maths::rotatePoint(&newP1, &axis, angleRadY);
+        newP2 = Maths::rotatePoint(&newP2, &axis, angleRadY);
+        newP3 = Maths::rotatePoint(&newP3, &axis, angleRadY);
+
+        newP1 = newP1 + translate;
+        newP2 = newP2 + translate;
+        newP3 = newP3 + translate;
+
+        Triangle3D* newTri = new Triangle3D(&newP1, &newP2, &newP3); INCR_NEW("Triangle3D");
+
+        targetModel->triangles.push_back(newTri);
+    }
+
+    targetModel->generateMinMaxValues();
+}
+
 void CollisionModel::transformModelZY(CollisionModel* targetModel, Vector3f* translate, int bamsYRot, int bamsZRot, float xScale, float yScale, float zScale)
 {
     float angleRadY = Maths::bamsToRad(bamsYRot);

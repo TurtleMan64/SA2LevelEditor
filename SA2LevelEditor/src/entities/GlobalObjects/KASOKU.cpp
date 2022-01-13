@@ -113,13 +113,13 @@ KASOKU::KASOKU(char data[32], bool useDefaultValues)
     scaleZ = 1;
     visible = true;
     baseColour.set(1, 1, 1);
-    updateTransformationMatrixYXZ();
 
     collideModelOriginal = KASOKU::cmBase;
     collideModelTransformed = KASOKU::cmBase->duplicateMe();
     collideModelTransformed->parent = this;
     CollisionChecker::addCollideModel(collideModelTransformed);
-    updateCollisionModelYXZ();
+    
+    refreshMatrixAndCol();
 }
 
 bool KASOKU::isSA2Object()
@@ -155,12 +155,19 @@ void KASOKU::loadStaticModels()
     std::fprintf(stdout, "Loading KASOKU static models...\n");
     #endif
 
+    #ifndef SAB_LVL
     loadModel(&KASOKU::models, "res/Models/GlobalObjects/Dashpad/", "Dashpad");
-
     if (KASOKU::cmBase == nullptr)
     {
         KASOKU::cmBase = loadCollisionModel("res/Models/GlobalObjects/Dashpad/", "Dashpad");
     }
+    #else
+    loadModel(&KASOKU::models, "res/Models/GlobalObjects/Dashpad/", "DashpadSab");
+    if (KASOKU::cmBase == nullptr)
+    {
+        KASOKU::cmBase = loadCollisionModel("res/Models/GlobalObjects/Dashpad/", "DashpadSab");
+    }
+    #endif
 }
 
 void KASOKU::deleteStaticModels()
@@ -218,7 +225,7 @@ void KASOKU::updateValue(int btnIndex)
                     Global::deleteEntity(this);
                 }
             }
-            break;
+            return;
         }
         catch (...) { break; }
     }
@@ -229,8 +236,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             float newX = std::stof(text);
             position.x = newX;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
             break;
@@ -244,8 +249,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             float newY = std::stof(text);
             position.y = newY;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
             break;
@@ -259,8 +262,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             float newZ = std::stof(text);
             position.z = newZ;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
             break;
@@ -272,12 +273,10 @@ void KASOKU::updateValue(int btnIndex)
     {
         try
         {
-            int newRotX = std::stoi(text);
-            rotationX = newRotX;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
+            float newRotX = std::stof(text);
+            rotationX = Maths::degToBams(newRotX);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
+            SetWindowTextA(Global::windowValues[5], std::to_string(Maths::bamsToDeg(rotationX)).c_str());
             break;
         }
         catch (...) { break; }
@@ -287,12 +286,10 @@ void KASOKU::updateValue(int btnIndex)
     {
         try
         {
-            int newRotY = std::stoi(text);
-            rotationY = newRotY;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
+            float newRotY = std::stof(text);
+            rotationY = Maths::degToBams(newRotY);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
+            SetWindowTextA(Global::windowValues[6], std::to_string(Maths::bamsToDeg(rotationY)).c_str());
             break;
         }
         catch (...) { break; }
@@ -302,12 +299,10 @@ void KASOKU::updateValue(int btnIndex)
     {
         try
         {
-            int newRotZ = std::stoi(text);
-            rotationZ = newRotZ;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
+            float newRotZ = std::stof(text);
+            rotationZ = Maths::degToBams(newRotZ);
             Global::redrawWindow = true;
-            SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
+            SetWindowTextA(Global::windowValues[7], std::to_string(Maths::bamsToDeg(rotationZ)).c_str());
             break;
         }
         catch (...) { break; }
@@ -319,8 +314,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             float newVar1 = std::stof(text);
             power = newVar1;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[8], std::to_string(power).c_str());
             break;
@@ -334,8 +327,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             int newVar2 = std::stoi(text);
             cooldown = newVar2;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[9], std::to_string(cooldown).c_str());
             break;
@@ -349,8 +340,6 @@ void KASOKU::updateValue(int btnIndex)
         {
             float newVar3 = std::stof(text);
             var3 = newVar3;
-            updateTransformationMatrixYXZ();
-            updateCollisionModelYXZ();
             Global::redrawWindow = true;
             SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
             break;
@@ -360,6 +349,8 @@ void KASOKU::updateValue(int btnIndex)
 
     default: break;
     }
+
+    refreshMatrixAndCol();
 }
 
 void KASOKU::updateEditorWindows()
@@ -381,9 +372,9 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[ 5], std::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[ 6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[ 7], std::to_string(rotationZ).c_str());
+    SetWindowTextA(Global::windowValues[ 5], std::to_string(Maths::bamsToDeg(rotationX)).c_str());
+    SetWindowTextA(Global::windowValues[ 6], std::to_string(Maths::bamsToDeg(rotationY)).c_str());
+    SetWindowTextA(Global::windowValues[ 7], std::to_string(Maths::bamsToDeg(rotationZ)).c_str());
     SetWindowTextA(Global::windowValues[ 8], std::to_string(power).c_str());
     SetWindowTextA(Global::windowValues[ 9], std::to_string(cooldown).c_str());
     SetWindowTextA(Global::windowValues[10], std::to_string(var3).c_str());
@@ -405,14 +396,14 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
-    SetWindowTextA(Global::windowDescriptions[ 5], "");
-    SetWindowTextA(Global::windowDescriptions[ 6], "");
-    SetWindowTextA(Global::windowDescriptions[ 7], "");
+    SetWindowTextA(Global::windowDescriptions[ 5], "(in degrees)");
+    SetWindowTextA(Global::windowDescriptions[ 6], "(in degrees)");
+    SetWindowTextA(Global::windowDescriptions[ 7], "(in degrees)");
     SetWindowTextA(Global::windowDescriptions[ 8], "Speed that the player goes. If <= 0, 14 is used instead.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Time (in frames) of cooldown after each use. The player's control stick is also locked during this time. If <= 0, 60 is used instead.");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
-    #ifdef SAB_MODE
+    #ifdef SAB_GUIDES
     Vector3f vel(1, 0, 0);
     Vector3f up(0, 1, 0);
     vel.setLength(power*60.0f);
@@ -442,8 +433,7 @@ void KASOKU::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[10], endSpeed.c_str());
     #endif
 
-    updateTransformationMatrixYXZ();
-    updateCollisionModelYXZ();
+    refreshMatrixAndCol();
 }
 
 void KASOKU::fillData(char data[32])
@@ -493,4 +483,28 @@ void KASOKU::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
+}
+
+void KASOKU::refreshMatrixAndCol()
+{
+    #ifndef SAB_LVL
+    updateTransformationMatrixYXZ();
+    updateCollisionModelYXZ();
+    #else
+    updateTransformationMatrixXZY();
+    updateCollisionModelXZY();
+    #endif
+}
+
+std::string KASOKU::toSabString()
+{
+    return "8 " + 
+        std::to_string(position.x)     + " " + 
+        std::to_string(position.y)     + " " + 
+        std::to_string(position.z)     + " " +
+        std::to_string(power*60)       + " " +
+        std::to_string(cooldown/60.0f) + " " +
+        std::to_string(Maths::bamsToDeg(rotationX)) + " " +
+        std::to_string(Maths::bamsToDeg(rotationY)) + " " +
+        std::to_string(Maths::bamsToDeg(rotationZ));
 }

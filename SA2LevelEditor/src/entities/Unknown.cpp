@@ -221,10 +221,10 @@ void Unknown::loadStaticModels()
         Unknown::cmBase = loadCollisionModel("res/Models/GlobalObjects/Unknown/", "Unknown");
     }
 
-    loadModel(&Unknown::modelsGuide,            "res/Models/GlobalObjects/Guide/",   "Guide");
-    loadModel(&Unknown::modelsTriggerCube,        "res/Models/GlobalObjects/Trigger/", "TriggerCube");
-    loadModel(&Unknown::modelsTriggerSphere,    "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
-    loadModel(&Unknown::modelsTriggerCylinder,    "res/Models/GlobalObjects/Trigger/", "TriggerCylinder");
+    loadModel(&Unknown::modelsGuide,           "res/Models/GlobalObjects/Guide/",   "Guide");
+    loadModel(&Unknown::modelsTriggerCube,     "res/Models/GlobalObjects/Trigger/", "TriggerCube");
+    loadModel(&Unknown::modelsTriggerSphere,   "res/Models/GlobalObjects/Trigger/", "TriggerSphere");
+    loadModel(&Unknown::modelsTriggerCylinder, "res/Models/GlobalObjects/Trigger/", "TriggerCylinder");
 }
 
 void Unknown::deleteStaticModels()
@@ -473,7 +473,7 @@ void Unknown::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[10], "Variable 3");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
-    SetWindowTextA(Global::windowValues[ 1], "Unknown");
+    SetWindowTextA(Global::windowValues[ 1], LevelLoader::getObjectName(Global::levelID, ID).c_str());
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());

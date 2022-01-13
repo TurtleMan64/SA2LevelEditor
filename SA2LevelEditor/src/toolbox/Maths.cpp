@@ -144,6 +144,25 @@ void Maths::createTransformationMatrixZXY(Matrix4f* matrix, Vector3f* translatio
     matrix->scale(&vec);
 }
 
+void Maths::createTransformationMatrixXZY(Matrix4f* matrix, Vector3f* translation, int rx, int ry, int rz,  float sX, float sY, float sZ)
+{
+    matrix->setIdentity();
+    matrix->translate(translation);
+    Vector3f vec;
+
+    vec.set(0, 1, 0);
+    matrix->rotate(bamsToRad(ry), &vec);
+
+    vec.set(0, 0, 1);
+    matrix->rotate(bamsToRad(rz), &vec);
+
+    vec.set(1, 0, 0);
+    matrix->rotate(bamsToRad(rx), &vec);
+
+    vec.set(sX, sY, sZ);
+    matrix->scale(&vec);
+}
+
 void Maths::createTransformationMatrixZY(Matrix4f* matrix, Vector3f* translation, int ry, int rz,  float sX, float sY, float sZ)
 {
     matrix->setIdentity();

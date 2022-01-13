@@ -82,7 +82,7 @@
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../entities/GlobalObjects/eai.h"
 
-std::string Global::version = "0.0.6";
+std::string Global::version = "0.0.7";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -137,6 +137,7 @@ bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
 bool Global::gameIsFollowingSA2NoCam = false;
 bool Global::displayCameraTriggers = false;
+bool Global::displayLoopspeedTriggers = false;
 bool Global::displayStage = true;
 bool Global::displayStageCollision = false;
 bool Global::displayStageKillplanes = false;
@@ -180,19 +181,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
     return Global::main();
 }
 
-#define CMD_FILE_LOAD           1
-#define CMD_FILE_EXPORT         2
-#define CMD_FILE_EXIT           3
-#define CMD_VIEW_STAGE          4
-#define CMD_VIEW_COLLISION      5
-#define CMD_VIEW_KILLPLANES     6
-#define CMD_VIEW_BACKGROUND     7
-#define CMD_VIEW_CAMERA_TRIGGER 8
-#define CMD_VIEW_CULLING        9
-#define CMD_SA2_FOLLOW         10
-#define CMD_SA2_FOLLOW_NO_CAM  11
-#define CMD_SA2_TELEPORT       12
-#define CMD_HELP               13
+#define CMD_FILE_LOAD               1
+#define CMD_FILE_EXPORT             2
+#define CMD_FILE_EXIT               3
+#define CMD_VIEW_STAGE              4
+#define CMD_VIEW_COLLISION          5
+#define CMD_VIEW_KILLPLANES         6
+#define CMD_VIEW_BACKGROUND         7
+#define CMD_VIEW_CAMERA_TRIGGER     8
+#define CMD_VIEW_LOOPSPEED_TRIGGER  9
+#define CMD_VIEW_CULLING           10
+#define CMD_SA2_FOLLOW             11
+#define CMD_SA2_FOLLOW_NO_CAM      12
+#define CMD_SA2_TELEPORT           13
+#define CMD_HELP                   14
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -218,18 +220,20 @@ void addMenus(HWND window)
     AppendMenu(Global::mainMenuFile, MF_SEPARATOR, 0, "");
     AppendMenu(Global::mainMenuFile, MF_STRING, CMD_FILE_EXIT, "Exit");
 
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_STAGE         , "View Stage");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION     , "View Collision");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES    , "View Killplanes");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND    , "View Background");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CAMERA_TRIGGER, "View Camera Triggers");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING       , "Backface Culling");
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE         , MF_CHECKED); 
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION     , MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES    , MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND    , MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING       , MF_UNCHECKED);
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_STAGE            , "View Stage");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION        , "View Collision");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES       , "View Killplanes");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND       , "View Background");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CAMERA_TRIGGER   , "View Camera Triggers");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_LOOPSPEED_TRIGGER, "View Loopspeed Triggers");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING          , "Backface Culling");
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE            , MF_CHECKED); 
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION        , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES       , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND       , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER   , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING          , MF_UNCHECKED);
 
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,        "Follow SA2 in Real Time");
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM, "Follow SA2 in Real Time (No Camera)");
@@ -359,6 +363,14 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             Global::displayCameraTriggers = !Global::displayCameraTriggers;
             if (Global::displayCameraTriggers) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_CHECKED  ); }
             else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_UNCHECKED); }
+            Global::redrawWindow = true;
+            break;
+        }
+        case CMD_VIEW_LOOPSPEED_TRIGGER:
+        {
+            Global::displayLoopspeedTriggers = !Global::displayLoopspeedTriggers;
+            if (Global::displayLoopspeedTriggers) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_CHECKED  ); }
+            else                                  { CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
@@ -667,7 +679,7 @@ int Global::main()
         if (Global::shouldLoadNewLevel)
         {
             Global::shouldLoadNewLevel = false;
-            #ifndef SAB_MODE
+            #ifndef SAB_LVL
             LevelLoader::promptUserForLevel();
             #else
             LevelLoader::promptUserForLevelSAB();
@@ -677,7 +689,7 @@ int Global::main()
         if (Global::shouldExportLevel)
         {
             Global::shouldExportLevel = false;
-            #ifndef SAB_MODE
+            #ifndef SAB_LVL
             LevelLoader::exportLevel();
             #else
             LevelLoader::exportLevelSAB();
@@ -1117,7 +1129,16 @@ void Global::updateCamFromSA2()
 
                 if (sa2PID == NULL)
                 {
-                    timeUntilNextProcessAttach = ATTACH_DELAY;
+                    sa2PID = getPIDByName("sonic.exe");
+
+                    if (sa2PID == NULL)
+                    {
+                        timeUntilNextProcessAttach = ATTACH_DELAY;
+                    }
+                    else
+                    {
+                        Global::sa2Type = Global::SA2Type::Sadx;
+                    }
                 }
                 else
                 {
@@ -1319,6 +1340,7 @@ void Global::updateCamFromSA2()
     else if (Global::sa2Type == Global::SA2Type::Dolphin)
     {
         //address of where sa2's memory begins in Dolphin's memory space
+        // this doesnt seem to be working anymore
         const unsigned long long DOLPHIN_START_ADDR = 0x7FFF0000ULL;
 
         //read in camera values
@@ -1329,6 +1351,7 @@ void Global::updateCamFromSA2()
             char buffer[20] = {0};
             if (!ReadProcessMemory(sa2Handle, (LPCVOID)(CAMADDR), (LPVOID)buffer, (SIZE_T)20, &bytesRead) || bytesRead != 20)
             {
+                printf("Error when reading from dolphin\n");
                 CloseHandle(sa2Handle);
                 sa2Handle = NULL;
                 sa2PID = NULL;
@@ -1385,6 +1408,7 @@ void Global::updateCamFromSA2()
             char ptrbuf[4] = {0};
             if (!ReadProcessMemory(sa2Handle, (LPCVOID)(PLAYERADDR), (LPVOID)ptrbuf, (SIZE_T)4, &bytesRead) || bytesRead != 4)
             {
+                printf("Error when reading from dolphin\n");
                 CloseHandle(sa2Handle);
                 sa2Handle = NULL;
                 sa2PID = NULL;
@@ -1453,6 +1477,202 @@ void Global::updateCamFromSA2()
             Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
             Global::gamePlayer->updateTransformationMatrixYXZ();
         }
+    }
+    else if (Global::sa2Type == Global::SA2Type::Sadx)
+    {
+        //read in camera
+        SIZE_T bytesRead = 0;
+        unsigned long long camObj1 = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x03B2CBB0, (LPVOID)(&camObj1), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int camRotX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x14), (LPVOID)(&camRotX), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int camRotY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x18), (LPVOID)(&camRotY), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int camRotZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x1C), (LPVOID)(&camRotZ), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float camPosX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x20), (LPVOID)(&camPosX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float camPosY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x24), (LPVOID)(&camPosY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float camPosZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(camObj1+0x28), (LPVOID)(&camPosZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        //read in player
+        bytesRead = 0;
+        unsigned long long playerObj1 = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x03B42E10, (LPVOID)(&playerObj1), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int playerRotX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x14), (LPVOID)(&playerRotX), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int playerRotY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x18), (LPVOID)(&playerRotY), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        int playerRotZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x1C), (LPVOID)(&playerRotZ), (SIZE_T)2, &bytesRead) || bytesRead != 2)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float playerPosX = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x20), (LPVOID)(&playerPosX), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float playerPosY = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x24), (LPVOID)(&playerPosY), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        bytesRead = 0;
+        float playerPosZ = 0;
+        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(playerObj1+0x28), (LPVOID)(&playerPosZ), (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        {
+            CloseHandle(sa2Handle);
+            sa2Handle = NULL;
+            sa2PID = NULL;
+            timeUntilNextProcessAttach = ATTACH_DELAY;
+            return;
+        }
+
+        Global::gameCursor3D->setPosition(playerPosX, playerPosY, playerPosZ);
+        Global::gamePlayer->setPosition(playerPosX, playerPosY, playerPosZ);
+        Global::gamePlayer->setRotation(playerRotX, -playerRotY, playerRotZ);
+        Global::gamePlayer->updateTransformationMatrixYXZ();
+
+        if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        {
+            Global::gameCamera->eye.x = camPosX;
+            Global::gameCamera->eye.y = camPosY;
+            Global::gameCamera->eye.z = camPosZ;
+            Global::gameCamera->yaw = -Maths::bamsToDeg(camRotY);
+            Global::gameCamera->pitch = -Maths::bamsToDeg(camRotX);
+        }
+
+        ////make the score have a 1 at the end as a first
+        //// line of defence against cheaters :)
+        //char score;
+        //bytesRead = 0;
+        //if (!ReadProcessMemory(sa2Handle, (LPCVOID)0x0174B050, (LPVOID)(&score), (SIZE_T)1, &bytesRead) || bytesRead != 1)
+        //{
+        //    CloseHandle(sa2Handle);
+        //    sa2Handle = NULL;
+        //    sa2PID = NULL;
+        //    timeUntilNextProcessAttach = ATTACH_DELAY;
+        //    return;
+        //}
+        //
+        //score = score | 0x1;
+        //SIZE_T bytesWritten = 0;
+        //if (!WriteProcessMemory(sa2Handle, (LPVOID)0x0174B050, (LPCVOID)(&score), (SIZE_T)1, &bytesWritten) || bytesWritten != 1)
+        //{
+        //    CloseHandle(sa2Handle);
+        //    sa2Handle = NULL;
+        //    sa2PID = NULL;
+        //    timeUntilNextProcessAttach = ATTACH_DELAY;
+        //    return;
+        //}
     }
 }
 

@@ -24,7 +24,8 @@ class Dummy;
 
 //#define OBS_MODE
 //#define DEV_MODE
-//#define SAB_MODE
+//#define SAB_LVL
+//#define SAB_GUIDES
 
 #ifdef DEV_MODE
     #define INCR_NEW(NAME) Global::debugNew(NAME);
@@ -98,6 +99,7 @@ public:
     static int countDelete;
     static int gameState;
     static bool displayCameraTriggers;
+    static bool displayLoopspeedTriggers;
     static bool displayStage;
     static bool displayStageCollision;
     static bool displayStageKillplanes;
@@ -113,7 +115,8 @@ public:
     {
         None    = 0,
         Steam   = 1,
-        Dolphin = 2
+        Dolphin = 2,
+        Sadx    = 3
     };
 
     enum Levels

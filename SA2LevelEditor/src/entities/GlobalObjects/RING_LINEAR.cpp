@@ -97,7 +97,7 @@ RING_LINEAR::RING_LINEAR(char data[32], bool useDefaultValues)
     numRings = (int)var3;
     ringDelta = var1 + 10.0f;
 
-    #ifdef SAB_MODE
+    #ifdef SAB_GUIDES
     numRings = std::max(2, numRings);
     numRings = std::min(50, numRings);
     #else

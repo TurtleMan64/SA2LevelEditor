@@ -38,6 +38,21 @@ void CollideableObject::updateCollisionModelZXY(CollisionModel* cmBase, Collisio
     cmBase->transformModelZXY(cmToUpdate, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
 }
 
+void CollideableObject::updateCollisionModelXZY()
+{
+    collideModelOriginal->transformModelXZY(collideModelTransformed, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void CollideableObject::updateCollisionModelXZY(float sclX, float sclY, float sclZ)
+{
+    collideModelOriginal->transformModelXZY(collideModelTransformed, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+}
+
+void CollideableObject::updateCollisionModelXZY(CollisionModel* cmBase, CollisionModel* cmToUpdate)
+{
+    cmBase->transformModelXZY(cmToUpdate, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
 void CollideableObject::updateCollisionModelZY()
 {
     collideModelOriginal->transformModelZY(collideModelTransformed, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);

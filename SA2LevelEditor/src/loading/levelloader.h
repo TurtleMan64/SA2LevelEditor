@@ -26,6 +26,8 @@ private:
 
     static void processCameraTrigger(char** data, int dataLength);
 
+    static void processLoopspeedTrigger(char** data, int dataLength);
+
     static void loadLevel(std::string setDir, std::string setS, std::string setU);
 
     static void loadLevelSAB(std::string fileLvl, std::string fileObj);
@@ -48,6 +50,8 @@ public:
     static void promptUserForLevelSAB();
 
     static int getNumLevels();
+
+    static std::string getObjectName(int levelID, int objectID);
 
     static void exportLevel();
 

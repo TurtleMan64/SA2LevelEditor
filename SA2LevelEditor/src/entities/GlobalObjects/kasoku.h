@@ -19,6 +19,8 @@ private:
     int   cooldown;
     float var3;
 
+    void refreshMatrixAndCol();
+
 public:
     KASOKU();
     KASOKU(char data[32], bool useDefaultValues);
@@ -34,6 +36,8 @@ public:
     void fillData(char data[32]);
 
     bool isSA2Object();
+
+    std::string toSabString();
 
     std::list<TexturedModel*>* getModels();
 

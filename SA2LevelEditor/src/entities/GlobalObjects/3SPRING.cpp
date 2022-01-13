@@ -452,7 +452,7 @@ void THREESPRING::spawnGuides()
     dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX));
     dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
 
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     for (int i = 0; i < 30; i++)
     {
         Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");

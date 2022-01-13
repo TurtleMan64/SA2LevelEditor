@@ -1,0 +1,19 @@
+# Material Count: 3
+
+newmtl Mesh_0482.rip
+Ns 20.000000
+Ni 0.000000
+d 0.000000
+map_Kd Tex_0063_0.dds
+
+newmtl Mesh_0481.rip
+Ns 20.000000
+Ni 0.000000
+d 0.000000
+map_Kd Tex_0062_0.dds
+
+newmtl Mesh_0484.rip
+Ns 20.000000
+Ni 0.000000
+d 0.000000
+map_Kd Tex_0060_0.dds

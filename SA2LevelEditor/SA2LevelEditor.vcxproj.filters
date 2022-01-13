@@ -296,6 +296,9 @@
     <ClCompile Include="src\entities\CameraTrigger.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LoopspeedTrigger.cpp">
+      <Filter>Source Files\entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -542,6 +545,9 @@
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\cameratrigger.h">
+      <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\loopspeedtrigger.h">
       <Filter>Source Files\entities</Filter>
     </ClInclude>
   </ItemGroup>

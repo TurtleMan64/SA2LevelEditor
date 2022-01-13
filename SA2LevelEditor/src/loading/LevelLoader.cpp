@@ -67,6 +67,7 @@
 #include "../toolbox/maths.h"
 #include "../entities/GlobalObjects/eai.h"
 #include "../entities/cameratrigger.h"
+#include "../entities/loopspeedtrigger.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -307,6 +308,35 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
         camFile.close();
     }
 
+    //now go through the loopspeed file
+    std::string loopFilename = "res/Loops/stg" + std::to_string(Global::levelID) + "loop.txt";
+    std::ifstream loopFile(loopFilename);
+    if (!loopFile.is_open())
+    {
+        std::fprintf(stdout, "Error: Cannot load loop file '%s'\n", (loopFilename).c_str());
+        loopFile.close();
+    }
+    else
+    {
+        while (!loopFile.eof())
+        {
+            getlineSafe(loopFile, line);
+
+            char lineBuf[512]; //Buffer to copy line into
+            memcpy(lineBuf, line.c_str(), line.size()+1);
+
+            int splitLength = 0;
+            char** lineSplit = split(lineBuf, ' ', &splitLength);
+
+            if (splitLength > 0)
+            {
+                processLoopspeedTrigger(lineSplit, splitLength);
+            }
+            free(lineSplit);
+        }
+        loopFile.close();
+    }
+
     //Loader::printInfo();
 
     Global::gameState = STATE_RUNNING;
@@ -452,16 +482,23 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             return;
         }
 
-        //case 8: //Boostpad
-        //{
-        //    KASOKU::loadStaticModels();
-        //    KASOKU* pad = new KASOKU(
-        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),
-        //        toFloat(dat[4]), toFloat(dat[5]),
-        //        toFloat(dat[6]), toFloat(dat[7]), toFloat(dat[8])); INCR_NEW("Entity");
-        //    Global::addEntity(pad);
-        //    return;
-        //}
+        case 8: //Boostpad
+        {
+            //fill in to buffer
+            fillShort(Maths::degToBams(toFloat(dat[6])), &buf[ 2]); //rotations
+            fillShort(Maths::degToBams(toFloat(dat[7])), &buf[ 4]);
+            fillShort(Maths::degToBams(toFloat(dat[8])), &buf[ 6]);
+            fillFloat(toFloat(dat[1]),                   &buf[ 8]); //position
+            fillFloat(toFloat(dat[2]),                   &buf[12]);
+            fillFloat(toFloat(dat[3]),                   &buf[16]);
+            fillFloat(toFloat(dat[4])/60,                &buf[20]); //vars
+            fillFloat(toFloat(dat[5])*60,                &buf[24]);
+
+            KASOKU* pad = new KASOKU(buf, false); INCR_NEW("Entity");
+            pad->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(pad);
+            return;
+        }
 
         //case 10: //Checkpoint
         //{
@@ -646,6 +683,18 @@ void LevelLoader::processCameraTrigger(char** dat, int dataLength)
     Global::addTransparentEntity(trigger);
 }
 
+void LevelLoader::processLoopspeedTrigger(char** dat, int dataLength)
+{
+    if (dataLength != 3)
+    {
+        return;
+    }
+
+    LoopspeedTrigger* trigger = new LoopspeedTrigger(std::stof(dat[ 0]), std::stof(dat[ 1]), std::stof(dat[ 2])); INCR_NEW("Entity");
+    
+    Global::addTransparentEntity(trigger);
+}
+
 void LevelLoader::processObjectSET(char data[32])
 {
     #ifdef OBS_MODE
@@ -678,10 +727,11 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
             case   12: return new SPRB          (data, useDefaultValues);
             //case   13: return new THREESPRING   (data, useDefaultValues);
             //case   11: return new BIGJUMP       (data, useDefaultValues);
-            //case    8: return new KASOKU        (data, useDefaultValues);
+            case    8: return new KASOKU        (data, useDefaultValues);
             //case   10: return new SAVEPOINT     (data, useDefaultValues);
             //case   27: return new ITEMBOX       (data, useDefaultValues);
             case   28: return new E_KUMI        (data, useDefaultValues);
+            case   30: return new E_AI          (data, useDefaultValues);
             //case   97: return new ROCKET        (data, useDefaultValues);
             default:   return new RING          (data, useDefaultValues);
         }
@@ -1001,6 +1051,16 @@ void LevelLoader::freeAllStaticModels()
 int LevelLoader::getNumLevels()
 {
     return LevelLoader::numLevels;
+}
+
+std::string LevelLoader::getObjectName(int levelID, int objectID)
+{
+    int key = (levelID << 8) | objectID;
+    if (LevelLoader::objectIdToName.find(key) == LevelLoader::objectIdToName.end())
+    {
+        return "Unknown";
+    }
+    return LevelLoader::objectIdToName[key];
 }
 
 void LevelLoader::promptUserForLevel()

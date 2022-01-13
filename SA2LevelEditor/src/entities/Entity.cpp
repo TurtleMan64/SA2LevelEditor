@@ -125,6 +125,16 @@ void Entity::updateTransformationMatrixZXY(float sclX, float sclY, float sclZ)
     Maths::createTransformationMatrixZXY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
 }
 
+void Entity::updateTransformationMatrixXZY()
+{
+    Maths::createTransformationMatrixXZY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixXZY(float sclX, float sclY, float sclZ)
+{
+    Maths::createTransformationMatrixXZY(&transformationMatrix, &position, rotationX, rotationY, rotationZ, sclX, sclY, sclZ);
+}
+
 void Entity::updateTransformationMatrixZY()
 {
     Maths::createTransformationMatrixZY(&transformationMatrix, &position, rotationY, rotationZ, scaleX, scaleY, scaleZ);

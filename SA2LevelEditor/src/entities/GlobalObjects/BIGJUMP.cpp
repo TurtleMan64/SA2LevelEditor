@@ -124,7 +124,7 @@ BIGJUMP::BIGJUMP(char data[32], bool useDefaultValues)
     collideModelTransformed->parent = this;
     CollisionChecker::addCollideModel(collideModelTransformed);
 
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
     #else
@@ -359,7 +359,7 @@ void BIGJUMP::updateValue(int btnIndex)
     default: break;
     }
 
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
     #else
@@ -416,7 +416,7 @@ void BIGJUMP::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[ 5], "Affects model and collision, but not launch direction.");
     SetWindowTextA(Global::windowDescriptions[ 6], "");
     SetWindowTextA(Global::windowDescriptions[ 7], "Affects model and collision, but not launch direction.");
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     SetWindowTextA(Global::windowDescriptions[ 8], "Horizontal speed of the player after being launched.");
     SetWindowTextA(Global::windowDescriptions[ 9], "Unsure if this has any effect.");
     SetWindowTextA(Global::windowDescriptions[10], "Vertical speed of the player after being launched.");
@@ -426,7 +426,7 @@ void BIGJUMP::updateEditorWindows()
     SetWindowTextA(Global::windowDescriptions[10], "");
     #endif
 
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     updateTransformationMatrixYXZ();
     updateCollisionModelYXZ();
     #else
@@ -450,7 +450,7 @@ void BIGJUMP::spawnGuides()
 {
     despawnGuides();
 
-    #ifndef SAB_MODE
+    #ifndef SAB_GUIDES
     const float GRAVITY = -0.08f; //TODO hard coded value of gravity
 
     Vector3f pos(&position);

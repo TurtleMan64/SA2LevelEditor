@@ -53,6 +53,9 @@ public:
     void updateTransformationMatrixZXY();
     void updateTransformationMatrixZXY(float sclX, float sclY, float sclZ);
 
+    void updateTransformationMatrixXZY();
+    void updateTransformationMatrixXZY(float sclX, float sclY, float sclZ);
+
     void updateTransformationMatrixZY();
     void updateTransformationMatrixZY(float sclX, float sclY, float sclZ);
 

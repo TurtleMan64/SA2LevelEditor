@@ -22,6 +22,10 @@ public:
     void updateCollisionModelZXY();
     void updateCollisionModelZXY(float sclX, float sclY, float sclZ);
 
+    void updateCollisionModelXZY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+    void updateCollisionModelXZY();
+    void updateCollisionModelXZY(float sclX, float sclY, float sclZ);
+
     void updateCollisionModelZY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
     void updateCollisionModelZY();
     void updateCollisionModelZY(float sclX, float sclY, float sclZ);
