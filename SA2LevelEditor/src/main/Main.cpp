@@ -82,7 +82,7 @@
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../entities/GlobalObjects/eai.h"
 
-std::string Global::version = "0.0.7";
+std::string Global::version = "0.0.8";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
