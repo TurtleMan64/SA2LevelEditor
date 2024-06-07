@@ -42,6 +42,7 @@ int DisplayManager::createDisplay()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
+
     //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -81,6 +82,7 @@ int DisplayManager::createDisplay()
         glfwTerminate();
         return -1;
     }
+
     glfwMakeContextCurrent(glfwWindow);
     glfwSetFramebufferSizeCallback(glfwWindow, DisplayManager::framebuffer_size_callback);
     glfwSetWindowCloseCallback(glfwWindow, DisplayManager::window_close_callback);
@@ -199,6 +201,23 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
     float yDiff = (float)(ypos - prevYPos);
     DisplayManager::prevXPos = xpos;
     DisplayManager::prevYPos = ypos;
+
+    if (Global::gameIsFollowingSA2OrbitCam)
+    {
+        int stateMouseLeft = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
+        if (stateMouseLeft == GLFW_PRESS)
+        {
+            Vector3f yAxis(0, 1, 0);
+            Global::orbitCamDirection = Maths::rotatePoint(&Global::orbitCamDirection, &yAxis, -xDiff*0.01f);
+            Vector3f perp = Global::orbitCamDirection.cross(&yAxis);
+            Global::orbitCamDirection = Maths::rotatePoint(&Global::orbitCamDirection, &perp, -yDiff*0.01f);
+
+            Global::orbitCamDirection.normalize();
+        }
+
+        Global::redrawWindow = true;
+        return;
+    }
 
     int stateMouse = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE);
     if (stateMouse == GLFW_PRESS) //rotate the camera if you hold middle click
@@ -325,24 +344,43 @@ void DisplayManager::callbackCursorPosition(GLFWwindow* window, double xpos, dou
 
 void DisplayManager::callbackMouseScroll(GLFWwindow* /*window*/, double /*xoffset*/, double yoffset)
 {
-    if (Global::isHoldingAlt)
+    if (Global::gameIsFollowingSA2OrbitCam)
     {
-        //move the camera forward or back based on distance from 3d cursor
-        Vector3f camDiff = Global::gameCursor3D->position - Global::gameCamera->eye;
-        camDiff.scale(0.1f*(float)yoffset);
-        if (camDiff.length() > 0.16f || yoffset < 0)
+        if (yoffset < 0)
         {
-            Global::gameCamera->eye = Global::gameCamera->eye + camDiff;
+            Global::orbitCamRadius = Global::orbitCamRadius*1.2f;
+        }
+        else if (yoffset > 0)
+        {
+            Global::orbitCamRadius = Global::orbitCamRadius*0.8f;
+        }
+
+        if (Global::orbitCamRadius < 5)
+        {
+            Global::orbitCamRadius = 5;
         }
     }
     else
     {
-        //move the camera forward or back at constant rate
-        const float MOVE_SPEED = 40.0f;
-        Vector3f camDir = Global::gameCamera->calcForward();
-        camDir.normalize();
-        Vector3f moveOffset = camDir.scaleCopy(((float)yoffset)*MOVE_SPEED);
-        Global::gameCamera->eye = Global::gameCamera->eye + moveOffset;
+        if (Global::isHoldingAlt)
+        {
+            //move the camera forward or back based on distance from 3d cursor
+            Vector3f camDiff = Global::gameCursor3D->position - Global::gameCamera->eye;
+            camDiff.scale(0.1f*(float)yoffset);
+            if (camDiff.length() > 0.16f || yoffset < 0)
+            {
+                Global::gameCamera->eye = Global::gameCamera->eye + camDiff;
+            }
+        }
+        else
+        {
+            //move the camera forward or back at constant rate
+            const float MOVE_SPEED = 40.0f;
+            Vector3f camDir = Global::gameCamera->calcForward();
+            camDir.normalize();
+            Vector3f moveOffset = camDir.scaleCopy(((float)yoffset)*MOVE_SPEED);
+            Global::gameCamera->eye = Global::gameCamera->eye + moveOffset;
+        }
     }
 
     Global::redrawWindow = true;
@@ -507,7 +545,7 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
                     SA2Object* newObject = LevelLoader::newSA2Object(Global::levelID, Global::selectedSA2Object->ID, &data[0], false);
                     if (newObject != nullptr)
                     {
-                        newObject->position.y += 10;
+                        newObject->position.x += 10;
                         Global::addEntity(newObject);
                         Global::selectedSA2Object = newObject;
                         Global::selectedSA2Object->updateEditorWindows();
@@ -522,6 +560,8 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             {
                 Global::gameCamera->yaw = 0.0f;
                 Global::gameCamera->pitch = 89.99f;
+                Global::gameCamera->eye = Global::gameCursor3D->position;
+                Global::gameCamera->eye.y += 100;
                 Global::redrawWindow = true;
             }
             break;
@@ -541,6 +581,134 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
                 Global::redrawWindow = true;
             }
             break;
+
+        case GLFW_KEY_LEFT:
+        {
+            if (action != GLFW_RELEASE)
+            {
+                Vector3f right = Global::gameCamera->calcRight().scaleCopy(4.0f);
+                Global::gameCamera->eye = Global::gameCamera->eye - right;
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_RIGHT:
+        {
+            if (action != GLFW_RELEASE)
+            {
+                Vector3f right = Global::gameCamera->calcRight().scaleCopy(4.0f);
+                Global::gameCamera->eye = Global::gameCamera->eye + right;
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_UP:
+        {
+            if (action != GLFW_RELEASE)
+            {
+                Vector3f up = Global::gameCamera->calcUp().scaleCopy(4.0f);
+                Global::gameCamera->eye = Global::gameCamera->eye - up;
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_DOWN:
+        {
+            if (action != GLFW_RELEASE)
+            {
+                Vector3f up = Global::gameCamera->calcUp().scaleCopy(4.0f);
+                Global::gameCamera->eye = Global::gameCamera->eye + up;
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F1:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayStage = !Global::displayStage;
+                if (Global::displayStage) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_CHECKED  ); }
+                else                      { CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F2:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayStageCollision = !Global::displayStageCollision;
+                if (Global::displayStageCollision) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_CHECKED  ); }
+                else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F3:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::renderWithCulling = !Global::renderWithCulling;
+                if (Global::renderWithCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_CHECKED  ); }
+                else                           { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F4:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayStageKillplanes = !Global::displayStageKillplanes;
+                if (Global::displayStageKillplanes) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_CHECKED  ); }
+                else                                { CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F5:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayObjects = !Global::displayObjects;
+                if (Global::displayObjects) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_OBJECTS, MF_CHECKED  ); }
+                else                        { CheckMenuItem(Global::mainMenuView, CMD_VIEW_OBJECTS, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F6:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayCameraTriggers = !Global::displayCameraTriggers;
+                if (Global::displayCameraTriggers) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_CHECKED  ); }
+                else                               { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
+
+        case GLFW_KEY_F7:
+        {
+            if (action == GLFW_PRESS)
+            {
+                Global::displayLoopspeedTriggers = !Global::displayLoopspeedTriggers;
+                if (Global::displayLoopspeedTriggers) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_CHECKED  ); }
+                else                                  { CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_UNCHECKED); }
+                Global::redrawWindow = true;
+            }
+            break;
+        }
 
         default:
             break;

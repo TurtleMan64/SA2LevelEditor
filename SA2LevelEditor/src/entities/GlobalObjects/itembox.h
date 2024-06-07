@@ -47,6 +47,8 @@ public:
 
     bool isSA2Object();
 
+    std::string toSabString();
+
     std::list<TexturedModel*>* getModels();
 
     static void loadStaticModels();

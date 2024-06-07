@@ -18,6 +18,7 @@ class Dummy;
 #include <unordered_map>
 #include <list>
 #include "../toolbox/level.h"
+#include "../toolbox/vector.h"
 
 #define STATE_RUNNING 1
 #define STATE_EXITING 2
@@ -34,6 +35,35 @@ class Dummy;
     #define INCR_NEW(NAME) ;
     #define INCR_DEL(NAME) ;
 #endif
+
+#define CMD_FILE_LOAD               1
+#define CMD_FILE_EXPORT             2
+#define CMD_FILE_EXIT               3
+#define CMD_VIEW_STAGE              4
+#define CMD_VIEW_COLLISION          5
+#define CMD_VIEW_KILLPLANES         6
+#define CMD_VIEW_OBJECTS            7
+#define CMD_VIEW_BACKGROUND         8
+#define CMD_VIEW_CAMERA_TRIGGER     9
+#define CMD_VIEW_LOOPSPEED_TRIGGER 10
+#define CMD_VIEW_CULLING           11
+#define CMD_SA2_FOLLOW             12
+#define CMD_SA2_FOLLOW_NO_CAM      13
+#define CMD_SA2_FOLLOW_ORBIT_CAM   14
+#define CMD_SA2_TELEPORT           15
+#define CMD_HELP                   16
+
+#define CMD_BTN_1  20
+#define CMD_BTN_2  21
+#define CMD_BTN_3  22
+#define CMD_BTN_4  23
+#define CMD_BTN_5  24
+#define CMD_BTN_6  25
+#define CMD_BTN_7  26
+#define CMD_BTN_8  27
+#define CMD_BTN_9  28
+#define CMD_BTN_10 29
+#define CMD_BTN_11 30
 
 class Global
 {
@@ -103,6 +133,7 @@ public:
     static bool displayStage;
     static bool displayStageCollision;
     static bool displayStageKillplanes;
+    static bool displayObjects;
     static bool displayStageSky;
     static bool renderWithCulling;
 
@@ -110,6 +141,9 @@ public:
     // and follow the camera
     static bool gameIsFollowingSA2;
     static bool gameIsFollowingSA2NoCam;
+    static bool gameIsFollowingSA2OrbitCam;
+    static float orbitCamRadius;
+    static Vector3f orbitCamDirection;
     static int sa2Type;
     enum SA2Type
     {

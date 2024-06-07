@@ -3,6 +3,7 @@
 #include <cstring>
 #include <fstream>
 #include <list>
+#include <cctype>
 
 #include <chrono>
 #include <glad/glad.h>
@@ -68,6 +69,16 @@
 #include "../entities/GlobalObjects/eai.h"
 #include "../entities/cameratrigger.h"
 #include "../entities/loopspeedtrigger.h"
+#include "../entities/GlobalObjects/Heroes/dashring.h"
+#include "../entities/GlobalObjects/Heroes/pawn.h"
+#include "../entities/GlobalObjects/Heroes/searcher.h"
+#include "../entities/GlobalObjects/schbox.h"
+#include "../entities/GlobalObjects/Heroes/pawngun.h"
+#include "../entities/GlobalObjects/esaru.h"
+#include "../entities/GlobalObjects/Badniks/motobug.h"
+#include "../entities/GlobalObjects/Badniks/rhinotank.h"
+#include "../entities/GlobalObjects/Badniks/spinner.h"
+#include "../entities/GlobalObjects/soapsw.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -436,7 +447,7 @@ void fillShort(int value, char* buf)
     buf[1] = (char)((value >> 0) & 0xFF);
 }
 
-void LevelLoader::processLine(char** dat, int /*datLength*/)
+void LevelLoader::processLine(char** dat, int datLength)
 {
     if (dat[0][0] == '#')
     {
@@ -493,6 +504,10 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             fillFloat(toFloat(dat[3]),                   &buf[16]);
             fillFloat(toFloat(dat[4])/60,                &buf[20]); //vars
             fillFloat(toFloat(dat[5])*60,                &buf[24]);
+            if (datLength >= 10)
+            {
+                fillFloat(toFloat(dat[9]),                   &buf[28]);
+            }
 
             KASOKU* pad = new KASOKU(buf, false); INCR_NEW("Entity");
             pad->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
@@ -500,27 +515,45 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             return;
         }
 
-        //case 10: //Checkpoint
-        //{
-        //    Checkpoint::loadStaticModels();
-        //    Checkpoint* checkpoint = new Checkpoint(
-        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),
-        //        toFloat(dat[4])); INCR_NEW("Entity");
-        //    Global::addEntity(checkpoint);
-        //    return;
-        //}
+        case 10: //Checkpoint
+        {
+            int yrotBam = Maths::degToBams(toFloat(dat[4])+90);
 
-        //case 11: //JumpPad
-        //{
-        //    SpeedRamp::loadStaticModels();
-        //    SpeedRamp* ramp = new SpeedRamp(
-        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]), //position
-        //        toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]), //rotation direction
-        //        toFloat(dat[7]), toFloat(dat[8]));                 //power, input lock time
-        //    INCR_NEW("Entity");
-        //    Global::addEntity(ramp);
-        //    return;
-        //}
+            //fill in to buffer
+            fillShort(yrotBam,         &buf[ 4]); //rotation
+            fillFloat(toFloat(dat[1]), &buf[ 8]); //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+
+            SAVEPOINT* check = new SAVEPOINT(buf, false); INCR_NEW("Entity");
+            check->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(check);
+            return;
+        }
+
+        case 11: //JumpPad
+        {
+            Vector3f forward(toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]));
+            forward.normalize();
+
+            float rotX = Maths::toDegrees(atan2f(forward.y, sqrtf(forward.x*forward.x + forward.z*forward.z)));
+            float rotY = Maths::toDegrees(atan2f(-forward.x, -forward.z));
+
+            //fill in to buffer
+            fillShort(Maths::degToBams(rotX), &buf[ 2]); //rotations
+            fillShort(Maths::degToBams(rotY), &buf[ 4]);
+            fillShort(Maths::degToBams(0),    &buf[ 6]);
+            fillFloat(toFloat(dat[1]),        &buf[ 8]); //position
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            fillFloat(toFloat(dat[7])/60,     &buf[20]); //vars
+            fillFloat(toFloat(dat[8])*60,     &buf[24]);
+
+            BIGJUMP* ramp = new BIGJUMP(buf, false); INCR_NEW("Entity");
+            ramp->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(ramp);
+            return;
+        }
 
         case 12: //Spring
         {
@@ -553,33 +586,76 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             return;
         }
 
-        //case 13: //SpringTriple
-        //{
-        //    SpringTriple::loadStaticModels();
-        //    SpringTriple* spring = new SpringTriple(
-        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]), //position
-        //        toFloat(dat[4]), toFloat(dat[5]),                  //rotation direction
-        //        toFloat(dat[6]), toFloat(dat[7]));                 //power, time
-        //    INCR_NEW("Entity");
-        //    Global::addEntity(spring);
-        //    return;
-        //}
+        case 13: //SpringTriple
+        {
+            Vector3f dir(toFloat(dat[4]), 0, toFloat(dat[5]));
+            float yrot = atan2f(-dir.z, dir.x) + Maths::PI/2;
 
-        //case 27: //Item Capsule
-        //{
-        //    ItemCapsule::loadStaticModels();
-        //    ItemCapsule* capsule = new ItemCapsule(
-        //        toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]),   //position
-        //        toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]),   //relative up direction
-        //        toInt(dat[7]), toInt(dat[8]), chunkedEntities);      //item type, box type
-        //    INCR_NEW("Entity");
-        //    Global::addEntity(capsule);
-        //    return;
-        //}
+            int yrotBam = Maths::radToBams(yrot);
+
+            //fill in to buffer
+            fillShort(0,       &buf[2]); //rotations
+            fillShort(yrotBam, &buf[4]);
+            fillShort(0,       &buf[6]);
+            fillFloat(toFloat(dat[1]), &buf[8]);  //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat((toFloat(dat[6])/60)-5, &buf[20]); //power
+            fillFloat(toFloat(dat[7])*60, &buf[24]); //time
+
+            THREESPRING* spring = new THREESPRING(buf, false); INCR_NEW("Entity");
+            spring->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(spring);
+            return;
+        }
+
+        case 27: //Item Capsule
+        {
+            int boxType = toInt(dat[8]);
+            float itemType = toFloat(dat[7]);
+
+            //calculation rotations in YZ order
+            //Vector3f yAxis(0, 1, 0);
+
+            Vector3f dir(toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]));
+            dir.normalize();
+
+            //float yrot = atan2f(-dir.z, dir.x);
+            //dir = Maths::rotatePoint(&dir, &yAxis, -yrot);
+            //float zrot = atan2f(dir.y, dir.x);
+            float yrot = atan2f(-dir.z, dir.x);
+            float distH = sqrtf(dir.z*dir.z + dir.x*dir.x);
+            float zrot = atan2f(dir.y, distH);
+
+            int zrotBam = Maths::radToBams(zrot - Maths::PI/2);
+            int yrotBam = Maths::radToBams(yrot);
+
+            //fill in to buffer
+            fillShort(yrotBam,         &buf[ 4]); //rotations
+            fillShort(zrotBam,         &buf[ 6]);
+            fillFloat(toFloat(dat[1]), &buf[ 8]); //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(itemType,        &buf[20]); //vars
+
+            if (boxType == 0)
+            {
+                ITEMBOX* item = new ITEMBOX(buf, false); INCR_NEW("Entity");
+                item->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+                Global::addEntity(item);
+            }
+            else
+            {
+                ITEMBOXAIR* item = new ITEMBOXAIR(buf, false); INCR_NEW("Entity");
+                item->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+                Global::addEntity(item);
+            }
+            return;
+        }
 
         case 28: //Beetle
         {
-            fillFloat(toFloat(dat[1]), &buf[8]);
+            fillFloat(toFloat(dat[1]), &buf[ 8]);
             fillFloat(toFloat(dat[2]), &buf[12]);
             fillFloat(toFloat(dat[3]), &buf[16]);
             E_KUMI* beetle = new E_KUMI(buf, false); INCR_NEW("Entity");
@@ -601,6 +677,32 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             Global::addEntity(hunter);
             return;
         }
+
+        case 73: //Emerald
+        {
+            fillShort(toInt  (dat[4]), &buf[ 2]);
+            fillShort(toInt  (dat[5]), &buf[ 4]);
+            fillShort(toInt  (dat[6]), &buf[ 6]);
+            fillFloat(toFloat(dat[1]), &buf[ 8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            EMERALD* emerald = new EMERALD(buf, false); INCR_NEW("Entity");
+            emerald->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(emerald);
+            return;
+        }
+
+        case 75: //Hint Monitor
+        {
+            fillShort(Maths::degToBams(toFloat(dat[4])), &buf[4]); //yrot
+            fillFloat(toFloat(dat[1]), &buf[ 8]); //x
+            fillFloat(toFloat(dat[2]), &buf[12]); //y
+            fillFloat(toFloat(dat[3]), &buf[16]); //z
+            SCHBOX* monitor = new SCHBOX(buf, false); INCR_NEW("Entity");
+            monitor->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(monitor);
+            return;
+        }
         
         case 98: //Line of rings
         {
@@ -616,48 +718,162 @@ void LevelLoader::processLine(char** dat, int /*datLength*/)
             dir = Maths::rotatePoint(&dir, &yAxis, -yRot);
             float xRot = atan2f(dir.y, -dir.z);
 
-        
-            fillShort(Maths::radToBams(xRot), &buf[2]);
-            fillShort(Maths::radToBams(yRot), &buf[4]);
-            fillFloat(toFloat(dat[1]), &buf[8]);
-            fillFloat(toFloat(dat[2]), &buf[12]);
-            fillFloat(toFloat(dat[3]), &buf[16]);
-            fillFloat(spacing-10.0f,   &buf[20]);
-            fillFloat(0.0f,            &buf[24]);
-            fillFloat((float)numRings, &buf[28]);
+            fillShort(Maths::radToBams(xRot), &buf[ 2]);
+            fillShort(Maths::radToBams(yRot), &buf[ 4]);
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            fillFloat(spacing - 10.0f,        &buf[20]);
+            fillFloat(0.0f,                   &buf[24]);
+            fillFloat((float)numRings,        &buf[28]);
             RING_LINEAR* line = new RING_LINEAR(buf, false); INCR_NEW("Entity");
             line->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
             Global::addEntity(line);
             return;
         }
 
-        //case 99: //Circle of rings
-        //{
-        //    Ring::loadStaticModels();
-        //    Vector3f centerPos(toFloat(dat[1]), toFloat(dat[2]), toFloat(dat[3]));
-        //    float ringRadius = toFloat(dat[4]);
-        //    int numRings = toInt(dat[5]);
-        //
-        //    if (numRings > 1)
-        //    {
-        //        float degreeSegment = 360.0f / numRings;
-        //        Vector3f newPoint(0, centerPos.y, 0);
-        //
-        //        for (int i = 0; i < numRings; i++)
-        //        {
-        //            newPoint.x = centerPos.x + ringRadius*cosf(Maths::toRadians(degreeSegment*i));
-        //            newPoint.z = centerPos.z + ringRadius*sinf(Maths::toRadians(degreeSegment*i));
-        //            Ring* ring = new Ring(newPoint.x, newPoint.y, newPoint.z); INCR_NEW("Entity");
-        //            Global::addEntity(ring);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Ring* ring = new Ring(centerPos.x, centerPos.y, centerPos.z); INCR_NEW("Entity");
-        //        Global::addEntity(ring);
-        //    }
-        //    return;
-        //}
+        case 99: //Circle of rings
+        {
+            float radius = toFloat(dat[4]);
+            int numRings = toInt(dat[5]);
+
+            fillFloat(toFloat(dat[1]), &buf[ 8]);
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(radius - 10.0f,  &buf[20]);
+            fillFloat(0.0f,            &buf[24]);
+            fillFloat((float)numRings, &buf[28]);
+            RING_CIRCLE* circle = new RING_CIRCLE(buf, false); INCR_NEW("Entity");
+            circle->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(circle);
+            return;
+        }
+
+        case 115: //Item Balloon
+        {
+            //fill in to buffer
+            fillFloat(toFloat(dat[1]), &buf[8]);  //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(toFloat(dat[4]), &buf[20]); //vars
+
+            ITEMBOXBALLOON* item = new ITEMBOXBALLOON(buf, false); INCR_NEW("Entity");
+            item->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(item);
+            return;
+        }
+
+        case 117: //Flapper
+        {
+            float yrot = atan2f(-toFloat(dat[6]), toFloat(dat[5]));
+
+            fillShort(Maths::radToBams(yrot), &buf[ 4]);
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            fillFloat(toFloat(dat[4]),        &buf[20]);
+            SEARCHER* flapper = new SEARCHER(buf, false); INCR_NEW("Entity");
+            flapper->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(flapper);
+            return;
+        }
+
+        case 118: //Dash Ring
+        {
+            Vector3f dir(toFloat(dat[4]), toFloat(dat[5]), toFloat(dat[6]));
+            dir.normalize();
+
+            float yrot = atan2f(-dir.z, dir.x);
+            float distH = sqrtf(dir.z*dir.z + dir.x*dir.x);
+            float zrot = atan2f(dir.y, distH);
+
+            int yrotBam = Maths::radToBams(yrot);
+            int zrotBam = Maths::radToBams(zrot);
+
+            int camera  = toInt(dat[9]);
+            int rainbow = toInt(dat[10]);
+
+            float power = toFloat(dat[7])/60;
+            float controlTime = toFloat(dat[8])*60;
+
+            //fill in to buffer
+            fillShort(0,               &buf[ 2]); //rotations
+            fillShort(yrotBam,         &buf[ 4]);
+            fillShort(zrotBam,         &buf[ 6]);
+            fillFloat(toFloat(dat[1]), &buf[ 8]);  //position
+            fillFloat(toFloat(dat[2]), &buf[12]);
+            fillFloat(toFloat(dat[3]), &buf[16]);
+            fillFloat(power,           &buf[20]); //vars
+            fillFloat(controlTime,     &buf[24]);
+            buf[28] = (char)camera;
+            buf[29] = (char)rainbow;
+
+            DASHRING* dash = new DASHRING(buf, false); INCR_NEW("Entity");
+            dash->lvlLineNum = (int)LevelLoader::lvlFile.size()-1;
+            Global::addEntity(dash);
+            return;
+        }
+
+        case 119: //Pawn
+        {
+            float yrot = atan2f(-toFloat(dat[5]), toFloat(dat[4]));
+
+            fillShort(Maths::radToBams(yrot), &buf[ 4]);
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            PAWN* pawn = new PAWN(buf, false); INCR_NEW("Entity");
+            pawn->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(pawn);
+            return;
+        }
+
+        case 120: //Moto Bug
+        {
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            MOTOBUG* pawn = new MOTOBUG(buf, false); INCR_NEW("Entity");
+            pawn->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(pawn);
+            return;
+        }
+
+        case 121: //Rhino Tank
+        {
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            RHINOTANK* pawn = new RHINOTANK(buf, false); INCR_NEW("Entity");
+            pawn->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(pawn);
+            return;
+        }
+
+        case 123: //Spinner
+        {
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            SPINNER* pawn = new SPINNER(buf, false); INCR_NEW("Entity");
+            pawn->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(pawn);
+            return;
+        }
+
+        case 124: //Pawn Gun
+        {
+            float yrot = atan2f(-toFloat(dat[5]), toFloat(dat[4]));
+
+            fillShort(Maths::radToBams(yrot), &buf[ 4]);
+            fillFloat(toFloat(dat[1]),        &buf[ 8]);
+            fillFloat(toFloat(dat[2]),        &buf[12]);
+            fillFloat(toFloat(dat[3]),        &buf[16]);
+            PAWNGUN* pawn = new PAWNGUN(buf, false); INCR_NEW("Entity");
+            pawn->lvlLineNum = (int)LevelLoader::lvlFile.size() - 1;
+            Global::addEntity(pawn);
+            return;
+        }
 
         default:
         {
@@ -723,16 +939,22 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
         {
             case    0: return new RING          (data, useDefaultValues);
             case   98: return new RING_LINEAR   (data, useDefaultValues);
-            //case   99: return new RING_CIRCLE   (data, useDefaultValues);
+            case   99: return new RING_CIRCLE   (data, useDefaultValues);
             case   12: return new SPRB          (data, useDefaultValues);
-            //case   13: return new THREESPRING   (data, useDefaultValues);
-            //case   11: return new BIGJUMP       (data, useDefaultValues);
+            case   13: return new THREESPRING   (data, useDefaultValues);
+            case   11: return new BIGJUMP       (data, useDefaultValues);
             case    8: return new KASOKU        (data, useDefaultValues);
-            //case   10: return new SAVEPOINT     (data, useDefaultValues);
-            //case   27: return new ITEMBOX       (data, useDefaultValues);
+            case   10: return new SAVEPOINT     (data, useDefaultValues);
+            case   27: return new ITEMBOX       (data, useDefaultValues);
             case   28: return new E_KUMI        (data, useDefaultValues);
             case   30: return new E_AI          (data, useDefaultValues);
             //case   97: return new ROCKET        (data, useDefaultValues);
+            case  115: return new ITEMBOXBALLOON(data, useDefaultValues);
+            case  117: return new SEARCHER      (data, useDefaultValues);
+            case  118: return new DASHRING      (data, useDefaultValues);
+            case  119: return new PAWN          (data, useDefaultValues);
+            case   73: return new EMERALD       (data, useDefaultValues); 
+            case   75: return new SCHBOX        (data, useDefaultValues); 
             default:   return new RING          (data, useDefaultValues);
         }
     }
@@ -773,6 +995,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "SWDRNGL")        {return new SWDRNGL       (data, useDefaultValues);}
     else if (o == "SWDRNGC")        {return new SWDRNGC       (data, useDefaultValues);}
     else if (o == "LINKLINK")       {return new LINKLINK      (data, useDefaultValues);}
+    else if (o == "SOAP SW")        {return new SOAP_SW       (data, useDefaultValues);}
     else if (o == "STOPLOCKON")     {return new STOPLOCKON    (data, useDefaultValues);}
     else if (o == "SG RING")        {return new SG_RING       (data, useDefaultValues);}
     else if (o == "SG SPRA")        {return new SG_SPRA       (data, useDefaultValues);}
@@ -780,6 +1003,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "EMERALD")        {return new EMERALD       (data, useDefaultValues);}
     else if (o == "EMERALD F")      {return new EMERALD_F     (data, useDefaultValues);}
     else if (o == "SPIDERWEB")      {return new SPIDERWEB     (data, useDefaultValues);}
+    else if (o == "SCHBOX")         {return new SCHBOX        (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 
@@ -932,10 +1156,10 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0030_u.bin"]        = "FinalRush.lvl2";
     Global::levelSetToLVL2["set0031_s.bin"]        = "GreenHill.lvl2";
     Global::levelSetToLVL2["set0031_u.bin"]        = "GreenHill.lvl2";
-    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "";
+    Global::levelSetToLVL2["set0032_2p_s.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_2p_u.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_hd_s.bin"]     = "MeteorHerd.lvl2";
+    Global::levelSetToLVL2["set0032_hd_u.bin"]     = "MeteorHerd.lvl2";
     Global::levelSetToLVL2["set0032_s.bin"]        = "MeteorHerd.lvl2";
     Global::levelSetToLVL2["set0032_u.bin"]        = "MeteorHerd.lvl2";
     Global::levelSetToLVL2["set0033_s.bin"]        = "KnucklesVsRouge.lvl2";
@@ -967,14 +1191,14 @@ void LevelLoader::loadLevelData()
     Global::levelSetToLVL2["set0041_2p_u.bin"]     = "";
     Global::levelSetToLVL2["SET0042_S.BIN"]        = "";
     Global::levelSetToLVL2["set0042_u.bin"]        = "";
-    Global::levelSetToLVL2["set0043_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0043_hd_u.bin"]     = "";
+    Global::levelSetToLVL2["set0043_hd_s.bin"]     = "CosmicWall.lvl2";
+    Global::levelSetToLVL2["set0043_hd_u.bin"]     = "CosmicWall.lvl2";
     Global::levelSetToLVL2["set0043_s.bin"]        = "CosmicWall.lvl2";
     Global::levelSetToLVL2["set0043_u.bin"]        = "CosmicWall.lvl2";
-    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "";
-    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "";
-    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "";
-    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "";
+    Global::levelSetToLVL2["set0044_2p_s.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_2p_u.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_hd_s.bin"]     = "MadSpace.lvl2";
+    Global::levelSetToLVL2["set0044_hd_u.bin"]     = "MadSpace.lvl2";
     Global::levelSetToLVL2["set0044_s.bin"]        = "MadSpace.lvl2";
     Global::levelSetToLVL2["set0044_u.bin"]        = "MadSpace.lvl2";
     Global::levelSetToLVL2["set0045_s.bin"]        = "SandOcean2P.lvl2";
@@ -1113,6 +1337,10 @@ void LevelLoader::promptUserForLevel()
             }
         }
     }
+
+    //make them lowercase
+    //std::transform(file1.begin(), file1.end(), file1.begin(), [](unsigned char c) { return std::tolower(c); });
+    //std::transform(file2.begin(), file2.end(), file2.begin(), [](unsigned char c) { return std::tolower(c); });
 
     if (Global::levelSetToLVL2.find(file1) == Global::levelSetToLVL2.end())
     {

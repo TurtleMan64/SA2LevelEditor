@@ -45,6 +45,12 @@
     <Filter Include="Source Files\entities\LevelSpecific\PyramidCave">
       <UniqueIdentifier>{c2cbc78a-d907-4e53-b988-ff90c344b766}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\entities\GlobalObjects\Heroes">
+      <UniqueIdentifier>{e3ef717d-39c1-4117-841d-e867a65ccec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\GlobalObjects\Badniks">
+      <UniqueIdentifier>{beac9baa-5e69-42a4-ace2-47e72dfdbf22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c">
@@ -299,6 +305,36 @@
     <ClCompile Include="src\entities\LoopspeedTrigger.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Heroes\DASHRING.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Heroes\PAWN.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Heroes\SEARCHER.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SCHBOX.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\E_SARU.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Badniks\MOTOBUG.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Badniks\RHINOTANK.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Badniks\SPINNER.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\Heroes\PAWNGUN.cpp">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SOAP_SW.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -549,6 +585,36 @@
     </ClInclude>
     <ClInclude Include="src\entities\loopspeedtrigger.h">
       <Filter>Source Files\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Heroes\dashring.h">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Heroes\pawn.h">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Heroes\searcher.h">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\schbox.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\esaru.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Badniks\motobug.h">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Badniks\rhinotank.h">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Badniks\spinner.h">
+      <Filter>Source Files\entities\GlobalObjects\Badniks</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\Heroes\pawngun.h">
+      <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\soapsw.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

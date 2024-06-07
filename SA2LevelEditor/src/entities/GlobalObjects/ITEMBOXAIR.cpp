@@ -547,3 +547,22 @@ void ITEMBOXAIR::fillData(char data[32])
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
 }
+
+std::string ITEMBOXAIR::toSabString()
+{
+    Vector3f dir(0, 1, 0);
+    Vector3f yAxis(0, 1, 0);
+    Vector3f zAxis(0, 0, 1);
+
+    dir = Maths::rotatePoint(&dir, &zAxis, Maths::bamsToRad(rotationZ));
+    dir = Maths::rotatePoint(&dir, &yAxis, Maths::bamsToRad(rotationY));
+
+    return "27 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z) + " " + 
+        std::to_string(dir.x)      + " " + 
+        std::to_string(dir.y)      + " " + 
+        std::to_string(dir.z)      + " " + 
+        std::to_string(itemType)   + " 1";
+}

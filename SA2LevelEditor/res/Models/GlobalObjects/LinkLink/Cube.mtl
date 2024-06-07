@@ -9,5 +9,7 @@ Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
+Tr 0
+renderOrder 1
 illum 2
 map_Kd Unknown.png

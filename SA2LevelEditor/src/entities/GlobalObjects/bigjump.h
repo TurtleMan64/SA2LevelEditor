@@ -40,6 +40,8 @@ public:
 
     void fillData(char data[32]);
 
+    std::string toSabString();
+
     bool isSA2Object();
 
     std::list<TexturedModel*>* getModels();

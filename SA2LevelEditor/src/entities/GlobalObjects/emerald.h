@@ -46,6 +46,8 @@ public:
 
     std::list<TexturedModel*>* getModels();
 
+    std::string toSabString();
+
     static void loadStaticModels();
 
     static void deleteStaticModels();

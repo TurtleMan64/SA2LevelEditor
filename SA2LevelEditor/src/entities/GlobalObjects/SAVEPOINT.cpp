@@ -378,7 +378,7 @@ void SAVEPOINT::updateEditorWindows()
     SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
-    SetWindowTextA(Global::windowDescriptions[ 1], "Speed pad");
+    SetWindowTextA(Global::windowDescriptions[ 1], "Checkpoint");
     SetWindowTextA(Global::windowDescriptions[ 2], "");
     SetWindowTextA(Global::windowDescriptions[ 3], "");
     SetWindowTextA(Global::windowDescriptions[ 4], "");
@@ -439,4 +439,13 @@ void SAVEPOINT::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
+}
+
+std::string SAVEPOINT::toSabString()
+{
+    return "10 " + 
+        std::to_string(position.x) + " " +
+        std::to_string(position.y) + " " +
+        std::to_string(position.z) + " " +
+        std::to_string(Maths::bamsToDeg(rotationY)-90);
 }

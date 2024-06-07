@@ -445,3 +445,12 @@ void ITEMBOXBALLOON::fillData(char data[32])
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
 }
+
+std::string ITEMBOXBALLOON::toSabString()
+{
+    return "115 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z) + " " + 
+        std::to_string(itemType);
+}

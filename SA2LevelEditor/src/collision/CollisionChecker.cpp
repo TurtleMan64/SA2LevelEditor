@@ -76,6 +76,8 @@ bool CollisionChecker::checkCollision(
         //      (pz1 <= cm->minZ && pz2 <= cm->minZ) || (pz1 >= cm->maxZ && pz2 >= cm->maxZ) ||
         //      (py1 <= cm->minY && py2 <= cm->minY) || (py1 >= cm->maxY && py2 >= cm->maxY)))
         {
+            // only display objects if the toggle is on
+            if (Global::displayObjects || cm->parent == nullptr)
             {
                 for (Triangle3D* currTriangle : cm->triangles)
                 {

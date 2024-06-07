@@ -463,34 +463,41 @@ void SPRB::spawnGuides()
         pos = pos + dir;
     }
     #else
-    Vector3f vel = dir;
-    vel.setLength(power*60.0f);
-    float timeLeft = ((float)controlLockTime)/60.0f;
-    const float dt = 0.0166666666666f;
-    while (timeLeft > 0)
+
+    float dts[] = {1/60.0f, 1/144.0f, 1/360.0f, 1/720.0f};
+    for (int i = 0; i < 4; i++)
     {
-        Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
-        guide->setPosition(&pos);
-        guide->visible = true;
-        guide->updateTransformationMatrixYXZ();
-        Global::addEntity(guide);
-        guides.push_back(guide);
+        float dt = dts[i];
+        Vector3f vel = dir;
+        vel.setLength(power*60.0f);
+        pos = position;
+        float timeLeft = ((float)controlLockTime)/60.0f;
+        while (timeLeft > 0)
+        {
+            Dummy* guide = new Dummy(&Unknown::modelsGuide); INCR_NEW("Entity");
+            guide->setPosition(&pos);
+            guide->visible = true;
+            guide->updateTransformationMatrixYXZ();
+            Global::addEntity(guide);
+            guides.push_back(guide);
     
-        pos = pos + vel.scaleCopy(dt);
+            pos = pos + vel.scaleCopy(dt);
 
-        const float airNeutralFriction = 1.25f;
-        float storedVelY = vel.y;
-        vel.y = 0;
-        vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
-        vel.y = storedVelY;
+            const float airNeutralFriction = 1.25f;
+            float storedVelY = vel.y;
+            vel.y = 0;
+            vel = Maths::applyDrag(&vel, -airNeutralFriction, dt);
+            vel.y = storedVelY;
 
-        const float gravityForce = 280.0f;
-        const float gravityTerminal = -650.0f;
-        const float gravityApproach = 0.45f;
-        vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
+            const float gravityForce = 280.0f;
+            const float gravityTerminal = -650.0f;
+            const float gravityApproach = 0.45f;
+            vel.y = Maths::approach(vel.y, gravityTerminal, gravityApproach, dt);
 
-        timeLeft -= dt;
+            timeLeft -= dt;
+        }
     }
+
     #endif
 }
 

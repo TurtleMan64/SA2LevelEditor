@@ -1,0 +1,192 @@
+# Blender MTL File: 'None'
+# Material Count: 19
+
+newmtl material_10
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu02.png
+
+newmtl material_11
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu05.png
+
+newmtl material_12
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu06.png
+
+newmtl material_13
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\era_s_kuro.png
+
+newmtl material_14
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_kasa01.png
+
+newmtl material_15
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_kasa02.png
+
+newmtl material_20
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\mrb_128s_kusa.png
+
+newmtl material_36
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\s_m128_wave001.png
+
+newmtl material_5
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\s_m128_sea001.png
+
+newmtl material_51
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\ecch_128s_suna.png
+
+newmtl material_53
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\mrb_128s_kusa.png
+
+newmtl material_53_ecch_128s_sunakusa.png
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\ecch_128s_sunakusa.png
+
+newmtl material_55
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\mrb_256s_pekie.png
+
+newmtl material_56
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\mrb_256s_pekia.png
+
+newmtl material_6
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_kankyo4.png
+
+newmtl material_68
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\s_m128_sea001.png
+
+newmtl material_7
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu03.png
+
+newmtl material_8
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu01.png
+
+newmtl material_9
+Ns 50.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ni 0.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Anders\Desktop\eggcarr\edb_o_isu04.png

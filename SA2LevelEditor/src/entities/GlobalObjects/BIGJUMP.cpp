@@ -604,3 +604,22 @@ void BIGJUMP::fillData(char data[32])
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
 }
+
+std::string BIGJUMP::toSabString()
+{
+    Vector3f dir(0, 0, -1);
+    Vector3f xAxis(1, 0, 0);
+    Vector3f yAxis(0, 1, 0);
+    dir = Maths::rotatePoint(&dir, &xAxis, Maths::bamsToRad(rotationX)); //additional rot from var
+    dir = Maths::rotatePoint(&dir, &yAxis, Maths::bamsToRad(rotationY));
+
+    return "11 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z) + " " +
+        std::to_string(dir.x)      + " " +
+        std::to_string(dir.y)      + " " +
+        std::to_string(dir.z)      + " " +
+        std::to_string(powerH*60)  + " " +
+        std::to_string(cooldown/60.0f);
+}

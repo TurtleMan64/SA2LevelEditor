@@ -331,7 +331,8 @@ void KNUDAI::updateValue(int btnIndex)
     highlight();
 }
 
-void KNUDAI::updateID() {
+void KNUDAI::updateID()
+{
     linkedObjects.clear();
     /*for (SA2Object* object in Global::Entities) {
         if([object is connected with a switch] && object.switchID == triggerID){
@@ -340,14 +341,16 @@ void KNUDAI::updateID() {
     }*/
 }
 
-void KNUDAI::highlight() {
+void KNUDAI::highlight()
+{
     for (SA2Object* object : linkedObjects)
     {
         object->baseColour.set(1.75f, 1.75f, 1.75f);
     }
 }
 
-void KNUDAI::unhighlight() {
+void KNUDAI::unhighlight()
+{
     for(SA2Object* object : linkedObjects)
     {
         object->baseColour.set(1.00f, 1.00f, 1.00f);
@@ -356,52 +359,52 @@ void KNUDAI::unhighlight() {
 
 void KNUDAI::updateEditorWindows()
 {
-    SetWindowTextA(Global::windowLabels[0], "ID");
-    SetWindowTextA(Global::windowLabels[1], "Name");
-    SetWindowTextA(Global::windowLabels[2], "Position X");
-    SetWindowTextA(Global::windowLabels[3], "Position Y");
-    SetWindowTextA(Global::windowLabels[4], "Position Z");
-    SetWindowTextA(Global::windowLabels[5], "Trigger ID");
-    SetWindowTextA(Global::windowLabels[6], "Rotation Y");
-    SetWindowTextA(Global::windowLabels[7], "Rotation Z");
-    SetWindowTextA(Global::windowLabels[8], "");
-    SetWindowTextA(Global::windowLabels[9], "");
+    SetWindowTextA(Global::windowLabels[0],  "ID");
+    SetWindowTextA(Global::windowLabels[1],  "Name");
+    SetWindowTextA(Global::windowLabels[2],  "Position X");
+    SetWindowTextA(Global::windowLabels[3],  "Position Y");
+    SetWindowTextA(Global::windowLabels[4],  "Position Z");
+    SetWindowTextA(Global::windowLabels[5],  "Trigger ID");
+    SetWindowTextA(Global::windowLabels[6],  "Rotation Y");
+    SetWindowTextA(Global::windowLabels[7],  "Rotation Z");
+    SetWindowTextA(Global::windowLabels[8],  "");
+    SetWindowTextA(Global::windowLabels[9],  "");
     SetWindowTextA(Global::windowLabels[10], "");
 
-    SetWindowTextA(Global::windowValues[0], std::to_string(ID).c_str());
-    SetWindowTextA(Global::windowValues[1], "KNUDAI");
-    SetWindowTextA(Global::windowValues[2], std::to_string(position.x).c_str());
-    SetWindowTextA(Global::windowValues[3], std::to_string(position.y).c_str());
-    SetWindowTextA(Global::windowValues[4], std::to_string(position.z).c_str());
-    SetWindowTextA(Global::windowValues[5], std::to_string(rotationX).c_str());
-    SetWindowTextA(Global::windowValues[6], std::to_string(rotationY).c_str());
-    SetWindowTextA(Global::windowValues[7], std::to_string(rotationZ).c_str());
-    SetWindowTextA(Global::windowValues[8], "");
-    SetWindowTextA(Global::windowValues[9], "");
+    SetWindowTextA(Global::windowValues[0],  std::to_string(ID).c_str());
+    SetWindowTextA(Global::windowValues[1],  "KNUDAI");
+    SetWindowTextA(Global::windowValues[2],  std::to_string(position.x).c_str());
+    SetWindowTextA(Global::windowValues[3],  std::to_string(position.y).c_str());
+    SetWindowTextA(Global::windowValues[4],  std::to_string(position.z).c_str());
+    SetWindowTextA(Global::windowValues[5],  std::to_string(triggerID) .c_str());
+    SetWindowTextA(Global::windowValues[6],  std::to_string(rotationY) .c_str());
+    SetWindowTextA(Global::windowValues[7],  std::to_string(rotationZ) .c_str());
+    SetWindowTextA(Global::windowValues[8],  "");
+    SetWindowTextA(Global::windowValues[9],  "");
     SetWindowTextA(Global::windowValues[10], "");
 
-    SendMessageA(Global::windowValues[0], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[1], EM_SETREADONLY, 1, 0);
-    SendMessageA(Global::windowValues[2], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[3], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[4], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[5], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[6], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[7], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[8], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[9], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[0],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[1],  EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[2],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[3],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[4],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[5],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[6],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[7],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[8],  EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[9],  EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 
-    SetWindowTextA(Global::windowDescriptions[0], "");
-    SetWindowTextA(Global::windowDescriptions[1], "Switch");
-    SetWindowTextA(Global::windowDescriptions[2], "");
-    SetWindowTextA(Global::windowDescriptions[3], "");
-    SetWindowTextA(Global::windowDescriptions[4], "");
-    SetWindowTextA(Global::windowDescriptions[5], "An ID that tells the game what shrine-activated objects to trigger.");
-    SetWindowTextA(Global::windowDescriptions[6], "");
-    SetWindowTextA(Global::windowDescriptions[7], "");
-    SetWindowTextA(Global::windowDescriptions[8], "");
-    SetWindowTextA(Global::windowDescriptions[9], "");
+    SetWindowTextA(Global::windowDescriptions[0],  "");
+    SetWindowTextA(Global::windowDescriptions[1],  "Shrine");
+    SetWindowTextA(Global::windowDescriptions[2],  "");
+    SetWindowTextA(Global::windowDescriptions[3],  "");
+    SetWindowTextA(Global::windowDescriptions[4],  "");
+    SetWindowTextA(Global::windowDescriptions[5],  "An ID that tells the game what shrine-activated objects to trigger.");
+    SetWindowTextA(Global::windowDescriptions[6],  "");
+    SetWindowTextA(Global::windowDescriptions[7],  "");
+    SetWindowTextA(Global::windowDescriptions[8],  "");
+    SetWindowTextA(Global::windowDescriptions[9],  "");
     SetWindowTextA(Global::windowDescriptions[10], "");
 
     updateTransformationMatrixYXZ();

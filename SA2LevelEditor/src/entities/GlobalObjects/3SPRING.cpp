@@ -559,3 +559,19 @@ void THREESPRING::fillData(char data[32])
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
 }
+
+std::string THREESPRING::toSabString()
+{
+    Vector3f dir(0, 0, 1);
+    Vector3f yAxis(0, 1, 0);
+    dir = Maths::rotatePoint(&dir, &yAxis, Maths::bamsToRad(rotationY));
+
+    return "13 " + 
+        std::to_string(position.x) + " " + 
+        std::to_string(position.y) + " " + 
+        std::to_string(position.z) + " " + 
+        std::to_string(dir.x) + " " + 
+        std::to_string(dir.z) + " " + 
+        std::to_string(power*60) + " " + 
+        std::to_string(((float)controlLockTime)/60);
+}

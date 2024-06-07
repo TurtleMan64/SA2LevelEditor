@@ -89,8 +89,14 @@ RING_CIRCLE::RING_CIRCLE(char data[32], bool useDefaultValues)
     numRings = (int)var3;
     ringRadius = var1 + 10.0f;
 
+    #ifdef SAB_GUIDES
+    numRings = std::max(2, numRings);
+    numRings = std::min(50, numRings);
+    rotationZ = 16384;
+    #else
     numRings = std::max(1, numRings);
     numRings = std::min(8, numRings);
+    #endif
 
     if (useDefaultValues)
     {
@@ -474,6 +480,16 @@ void RING_CIRCLE::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
+}
+
+std::string RING_CIRCLE::toSabString()
+{
+    return "99 " + 
+        std::to_string(position.x) + " " +
+        std::to_string(position.y) + " " +
+        std::to_string(position.z) + " " +
+        std::to_string(ringRadius) + " " +
+        std::to_string(numRings);
 }
 
 bool RING_CIRCLE::isSA2Object()

@@ -81,8 +81,18 @@
 #include "../entities/GlobalObjects/3spring.h"
 #include "../entities/GlobalObjects/ekumi.h"
 #include "../entities/GlobalObjects/eai.h"
+#include "../entities/GlobalObjects/Heroes/dashring.h"
+#include "../entities/GlobalObjects/Heroes/pawn.h"
+#include "../entities/GlobalObjects/Heroes/searcher.h"
+#include "../entities/GlobalObjects/schbox.h"
+#include "../entities/GlobalObjects/Heroes/pawngun.h"
+#include "../entities/GlobalObjects/esaru.h"
+#include "../entities/GlobalObjects/Badniks/motobug.h"
+#include "../entities/GlobalObjects/Badniks/rhinotank.h"
+#include "../entities/GlobalObjects/Badniks/spinner.h"
+#include "../entities/GlobalObjects/soapsw.h"
 
-std::string Global::version = "0.0.7";
+std::string Global::version = "0.0.9";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -136,11 +146,15 @@ bool Global::shouldLoadNewLevel = false;
 bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
 bool Global::gameIsFollowingSA2NoCam = false;
+bool Global::gameIsFollowingSA2OrbitCam = false;
+float Global::orbitCamRadius = 60.0f;
+Vector3f Global::orbitCamDirection(1.0f, 0.0f, 0.0f);
 bool Global::displayCameraTriggers = false;
 bool Global::displayLoopspeedTriggers = false;
 bool Global::displayStage = true;
 bool Global::displayStageCollision = false;
 bool Global::displayStageKillplanes = false;
+bool Global::displayObjects = true;
 bool Global::displayStageSky = false;
 bool Global::renderWithCulling = false;
 int Global::sa2Type = Global::SA2Type::None;
@@ -181,33 +195,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpC
     return Global::main();
 }
 
-#define CMD_FILE_LOAD               1
-#define CMD_FILE_EXPORT             2
-#define CMD_FILE_EXIT               3
-#define CMD_VIEW_STAGE              4
-#define CMD_VIEW_COLLISION          5
-#define CMD_VIEW_KILLPLANES         6
-#define CMD_VIEW_BACKGROUND         7
-#define CMD_VIEW_CAMERA_TRIGGER     8
-#define CMD_VIEW_LOOPSPEED_TRIGGER  9
-#define CMD_VIEW_CULLING           10
-#define CMD_SA2_FOLLOW             11
-#define CMD_SA2_FOLLOW_NO_CAM      12
-#define CMD_SA2_TELEPORT           13
-#define CMD_HELP                   14
-
-#define CMD_BTN_1  20
-#define CMD_BTN_2  21
-#define CMD_BTN_3  22
-#define CMD_BTN_4  23
-#define CMD_BTN_5  24
-#define CMD_BTN_6  25
-#define CMD_BTN_7  26
-#define CMD_BTN_8  27
-#define CMD_BTN_9  28
-#define CMD_BTN_10 29
-#define CMD_BTN_11 30
-
 void addMenus(HWND window)
 {
     Global::mainMenu     = CreateMenu();
@@ -223,6 +210,7 @@ void addMenus(HWND window)
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_STAGE            , "View Stage");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_COLLISION        , "View Collision");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_KILLPLANES       , "View Killplanes");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_OBJECTS          , "View Objects");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND       , "View Background");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CAMERA_TRIGGER   , "View Camera Triggers");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_LOOPSPEED_TRIGGER, "View Loopspeed Triggers");
@@ -230,16 +218,19 @@ void addMenus(HWND window)
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE            , MF_CHECKED); 
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION        , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES       , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_OBJECTS          , MF_CHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND       , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER   , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING          , MF_UNCHECKED);
 
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,        "Follow SA2 in Real Time");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM, "Follow SA2 in Real Time (No Camera)");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT,      "Teleport Playable Character to 3D Cursor");
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW,        MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED);
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,           "Follow SA2 in Real Time");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM,    "Follow SA2 in Real Time (Free Camera)");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_ORBIT_CAM, "Follow SA2 in Real Time (Orbit Camera)");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT,         "Teleport Playable Character to 3D Cursor");
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW,           MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM,    MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_UNCHECKED);
 
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuFile, "File");
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuView, "View");
@@ -350,6 +341,14 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             Global::redrawWindow = true;
             break;
         }
+        case CMD_VIEW_OBJECTS:
+        {
+            Global::displayObjects = !Global::displayObjects;
+            if (Global::displayObjects) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_OBJECTS, MF_CHECKED  ); }
+            else                        { CheckMenuItem(Global::mainMenuView, CMD_VIEW_OBJECTS, MF_UNCHECKED); }
+            Global::redrawWindow = true;
+            break;
+        }
         case CMD_VIEW_BACKGROUND:
         {
             Global::displayStageSky = !Global::displayStageSky;
@@ -386,27 +385,40 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
         case CMD_SA2_FOLLOW:
         {
             Global::gameIsFollowingSA2 = !Global::gameIsFollowingSA2;
-            if (Global::gameIsFollowingSA2NoCam)
-            {
-                Global::gameIsFollowingSA2NoCam = false;
-            }
+            Global::gameIsFollowingSA2NoCam = false;
+            Global::gameIsFollowingSA2OrbitCam = false;
             if (Global::gameIsFollowingSA2) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_CHECKED  ); }
             else                            { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED); }
             if (Global::gameIsFollowingSA2NoCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_CHECKED  ); }
             else                                 { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2OrbitCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_CHECKED  ); }
+            else                                    { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_UNCHECKED); }
             break;
         }
         case CMD_SA2_FOLLOW_NO_CAM:
         {
             Global::gameIsFollowingSA2NoCam = !Global::gameIsFollowingSA2NoCam;
-            if (Global::gameIsFollowingSA2)
-            {
-                Global::gameIsFollowingSA2 = false;
-            }
+            Global::gameIsFollowingSA2 = false;
+            Global::gameIsFollowingSA2OrbitCam = false;
             if (Global::gameIsFollowingSA2) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_CHECKED  ); }
             else                            { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED); }
             if (Global::gameIsFollowingSA2NoCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_CHECKED  ); }
             else                                 { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2OrbitCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_CHECKED  ); }
+            else                                    { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_UNCHECKED); }
+            break;
+        }
+        case CMD_SA2_FOLLOW_ORBIT_CAM:
+        {
+            Global::gameIsFollowingSA2OrbitCam = !Global::gameIsFollowingSA2OrbitCam;
+            Global::gameIsFollowingSA2 = false;
+            Global::gameIsFollowingSA2NoCam = false;
+            if (Global::gameIsFollowingSA2) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_CHECKED  ); }
+            else                            { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2NoCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_CHECKED  ); }
+            else                                 { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM, MF_UNCHECKED); }
+            if (Global::gameIsFollowingSA2OrbitCam) { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_CHECKED  ); }
+            else                                    { CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_UNCHECKED); }
             break;
         }
         case CMD_SA2_TELEPORT: Global::teleportSA2PlayerToCursor3D(); break;
@@ -640,6 +652,16 @@ int Global::main()
     THREESPRING::loadStaticModels();
     E_KUMI::loadStaticModels();
     E_AI::loadStaticModels();
+    DASHRING::loadStaticModels();
+    PAWN::loadStaticModels();
+    SEARCHER::loadStaticModels();
+    SCHBOX::loadStaticModels();
+    MOTOBUG::loadStaticModels();
+    RHINOTANK::loadStaticModels();
+    SPINNER::loadStaticModels();
+    PAWNGUN::loadStaticModels();
+    E_SARU::loadStaticModels();
+    SOAP_SW::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -667,7 +689,7 @@ int Global::main()
 
         timeOld = timeNew;
 
-        if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam)
         {
             Input::waitForInputs();
         }
@@ -696,7 +718,7 @@ int Global::main()
             #endif
         }
 
-        if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam)
         {
             continue;
         }
@@ -709,7 +731,7 @@ int Global::main()
             std::fprintf(stderr, "%d\n", err);
         }
 
-        if (Global::gameIsFollowingSA2 || Global::gameIsFollowingSA2NoCam)
+        if (Global::gameIsFollowingSA2 || Global::gameIsFollowingSA2NoCam || Global::gameIsFollowingSA2OrbitCam)
         {
             //Camera prevCam(Global::gameCamera);
             //Vector3f prevPos(&Global::gamePlayer->position);
@@ -826,21 +848,24 @@ int Global::main()
         }
 
         //prepare entities to render
-        for (Entity* e : gameEntities)
+        if (Global::displayObjects)
         {
-            MasterRenderer::processEntity(e);
-        }
-        for (Entity* e : gameEntitiesPass2)
-        {
-            MasterRenderer::processEntityPass2(e);
-        }
-        for (Entity* e : gameEntitiesPass3)
-        {
-            MasterRenderer::processEntityPass3(e);
-        }
-        for (Entity* e : gameTransparentEntities)
-        {
-            MasterRenderer::processTransparentEntity(e);
+            for (Entity* e : gameEntities)
+            {
+                MasterRenderer::processEntity(e);
+            }
+            for (Entity* e : gameEntitiesPass2)
+            {
+                MasterRenderer::processEntityPass2(e);
+            }
+            for (Entity* e : gameEntitiesPass3)
+            {
+                MasterRenderer::processEntityPass3(e);
+            }
+            for (Entity* e : gameTransparentEntities)
+            {
+                MasterRenderer::processTransparentEntity(e);
+            }
         }
         
         MasterRenderer::processEntity(Global::gameStage);
@@ -1210,7 +1235,7 @@ void Global::updateCamFromSA2()
         int yaw;
         memcpy(&yaw, &buffer[16], 4);
 
-        if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        if (Global::gameIsFollowingSA2)
         {
             Global::gameCamera->eye.x = camX;
             Global::gameCamera->eye.y = camY;
@@ -1313,6 +1338,16 @@ void Global::updateCamFromSA2()
         Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
         Global::gamePlayer->updateTransformationMatrixYXZ();
 
+        if (Global::gameIsFollowingSA2OrbitCam)
+        {
+            Vector3f camPos = Global::gamePlayer->position;
+            camPos = camPos + Global::orbitCamDirection.scaleCopy(-Global::orbitCamRadius);
+            Global::gameCamera->eye = camPos;
+            Vector2f ang = Maths::anglesFromDirection(&Global::orbitCamDirection);
+            Global::gameCamera->yaw   =  Maths::toDegrees(ang.x)+90;
+            Global::gameCamera->pitch = -Maths::toDegrees(ang.y);
+        }
+
         //make the score have a 1 at the end as a first
         // line of defence against cheaters :)
         char score;
@@ -1340,7 +1375,7 @@ void Global::updateCamFromSA2()
     else if (Global::sa2Type == Global::SA2Type::Dolphin)
     {
         //address of where sa2's memory begins in Dolphin's memory space
-        // this doesnt seem to be working anymore
+        // this only works with a specific dolphin build. other builds have different starting addresses.
         const unsigned long long DOLPHIN_START_ADDR = 0x7FFF0000ULL;
 
         //read in camera values
@@ -1390,7 +1425,7 @@ void Global::updateCamFromSA2()
             memcpy(ptr+1, &buffer[18], 1);
             memcpy(ptr+0, &buffer[19], 1);
 
-            if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+            if (Global::gameIsFollowingSA2)
             {
                 Global::gameCamera->eye.x = camX;
                 Global::gameCamera->eye.y = camY;
@@ -1476,6 +1511,16 @@ void Global::updateCamFromSA2()
             Global::gamePlayer->setPosition(posX, posY, posZ);
             Global::gamePlayer->setRotation(bamsX, -bamsY, bamsZ);
             Global::gamePlayer->updateTransformationMatrixYXZ();
+
+            if (Global::gameIsFollowingSA2OrbitCam)
+            {
+                Vector3f camPos = Global::gamePlayer->position;
+                camPos = camPos + Global::orbitCamDirection.scaleCopy(-Global::orbitCamRadius);
+                Global::gameCamera->eye = camPos;
+                Vector2f ang = Maths::anglesFromDirection(&Global::orbitCamDirection);
+                Global::gameCamera->yaw   =  Maths::toDegrees(ang.x)+90;
+                Global::gameCamera->pitch = -Maths::toDegrees(ang.y);
+            }
         }
     }
     else if (Global::sa2Type == Global::SA2Type::Sadx)
@@ -1641,13 +1686,23 @@ void Global::updateCamFromSA2()
         Global::gamePlayer->setRotation(playerRotX, -playerRotY, playerRotZ);
         Global::gamePlayer->updateTransformationMatrixYXZ();
 
-        if (Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam)
+        if (Global::gameIsFollowingSA2)
         {
             Global::gameCamera->eye.x = camPosX;
             Global::gameCamera->eye.y = camPosY;
             Global::gameCamera->eye.z = camPosZ;
             Global::gameCamera->yaw = -Maths::bamsToDeg(camRotY);
             Global::gameCamera->pitch = -Maths::bamsToDeg(camRotX);
+        }
+
+        if (Global::gameIsFollowingSA2OrbitCam)
+        {
+            Vector3f camPos = Global::gamePlayer->position;
+            camPos = camPos + Global::orbitCamDirection.scaleCopy(-Global::orbitCamRadius);
+            Global::gameCamera->eye = camPos;
+            Vector2f ang = Maths::anglesFromDirection(&Global::orbitCamDirection);
+            Global::gameCamera->yaw   =  Maths::toDegrees(ang.x)+90;
+            Global::gameCamera->pitch = -Maths::toDegrees(ang.y);
         }
 
         ////make the score have a 1 at the end as a first

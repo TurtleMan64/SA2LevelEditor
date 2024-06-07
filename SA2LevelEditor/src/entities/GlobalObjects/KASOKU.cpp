@@ -105,7 +105,7 @@ KASOKU::KASOKU(char data[32], bool useDefaultValues)
         rotationZ = 0;
         power = 11.0f;
         cooldown = 30;
-        var3 = 0.0f;
+        var3 = 1.0f;
     }
 
     scaleX = 1;
@@ -389,7 +389,7 @@ void KASOKU::updateEditorWindows()
     SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 9], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 1, 0);
+    SendMessageA(Global::windowValues[10], EM_SETREADONLY, 0, 0);
 
     SetWindowTextA(Global::windowDescriptions[ 0], "");
     SetWindowTextA(Global::windowDescriptions[ 1], "Speed pad");
@@ -506,5 +506,6 @@ std::string KASOKU::toSabString()
         std::to_string(cooldown/60.0f) + " " +
         std::to_string(Maths::bamsToDeg(rotationX)) + " " +
         std::to_string(Maths::bamsToDeg(rotationY)) + " " +
-        std::to_string(Maths::bamsToDeg(rotationZ));
+        std::to_string(Maths::bamsToDeg(rotationZ)) + " " +
+        std::to_string(var3);
 }
