@@ -121,7 +121,7 @@ LIGHT_SW::LIGHT_SW(char data[32], bool useDefaultValues)
         rotationZ = 0; 
     }
 
-    collisionType = (rotationZ & 0x03);
+    collisionType = ((rotationZ & 0xFF) % 0x03);
 
     scaleX = 0;
     scaleY = 0;
@@ -361,11 +361,11 @@ void LIGHT_SW::updateValue(int btnIndex)
 
             //we have switch collision types, must delete collision model
             // and make a new one
-            if (collisionType != (newRotZ & 0x03))
+            if (collisionType != ((newRotZ & 0xFF) % 0x03))
             {
                 CollisionChecker::deleteCollideModel(collideModelTransformed);
 
-                collisionType = newRotZ & 0x03;
+                collisionType = newRotZ % 0x03;
                 if (collisionType == 0) //box
                 {
                     collideModelOriginal    = LIGHT_SW::cmBaseCube;
@@ -435,6 +435,8 @@ void LIGHT_SW::updateValue(int btnIndex)
     
     default: break;
     }
+
+    collisionType = ((rotationZ & 0xFF) % 0x03);
 
     updateMyCollisionModel();
     Global::redrawWindow = true;
@@ -554,10 +556,10 @@ void LIGHT_SW::updateBoxTransformationMatrix()
     float rad = sqrtf(var1*var1 + var2*var2 + var3*var3);
     switch (collisionType)
     {
-    case 0: box->updateTransformationMatrixZY(var1, var2, var3); break;
-    case 1: box->updateTransformationMatrixZY(rad, rad, rad); break;
-    case 2: box->updateTransformationMatrixYXZ(var1, var2, var1); break;
-    default: std::fprintf(stdout, "Warning: LIGHT_SW does not have a defined collision type.\n");
+        case 0: box->updateTransformationMatrixZY(var1, var2, var3); break;
+        case 1: box->updateTransformationMatrixZY(rad, rad, rad); break;
+        case 2: box->updateTransformationMatrixYXZ(var1, var2, var1); break;
+        default: std::fprintf(stdout, "Warning: LIGHT_SW does not have a defined collision type.\n");
     }
 }
 
@@ -566,9 +568,9 @@ void LIGHT_SW::updateMyCollisionModel()
     float rad = sqrtf(var1*var1 + var2*var2 + var3*var3);
     switch (collisionType)
     {
-    case 0: updateCollisionModelZY(var1, var2, var3); break;
-    case 1: updateCollisionModelZY(rad, rad, rad); break;
-    case 2: updateCollisionModelYXZ(var1, var2, var1); break;
-    default: std::fprintf(stdout, "Warning: LIGHT_SW does not have a defined collision type.\n");
+        case 0: updateCollisionModelZY(var1, var2, var3); break;
+        case 1: updateCollisionModelZY(rad, rad, rad); break;
+        case 2: updateCollisionModelYXZ(var1, var2, var1); break;
+        default: std::fprintf(stdout, "Warning: LIGHT_SW does not have a defined collision type.\n");
     }
 }

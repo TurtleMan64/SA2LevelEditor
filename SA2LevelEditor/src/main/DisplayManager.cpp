@@ -556,6 +556,7 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             break;
 
         case GLFW_KEY_KP_7:
+        case GLFW_KEY_7:
             if (action == GLFW_PRESS)
             {
                 Global::gameCamera->yaw = 0.0f;
@@ -567,6 +568,7 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             break;
 
         case GLFW_KEY_KP_4:
+        case GLFW_KEY_4:
             if (action == GLFW_PRESS)
             {
                 Global::gameCamera->yaw -= 22.5f;
@@ -575,6 +577,7 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             break;
 
         case GLFW_KEY_KP_6:
+        case GLFW_KEY_6:
             if (action == GLFW_PRESS)
             {
                 Global::gameCamera->yaw += 22.5f;

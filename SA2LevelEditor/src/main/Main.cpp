@@ -92,7 +92,7 @@
 #include "../entities/GlobalObjects/Badniks/spinner.h"
 #include "../entities/GlobalObjects/soapsw.h"
 
-std::string Global::version = "0.0.91";
+std::string Global::version = "0.0.92";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
