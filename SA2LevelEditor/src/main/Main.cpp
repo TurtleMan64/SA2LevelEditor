@@ -91,8 +91,9 @@
 #include "../entities/GlobalObjects/Badniks/rhinotank.h"
 #include "../entities/GlobalObjects/Badniks/spinner.h"
 #include "../entities/GlobalObjects/soapsw.h"
+#include "../entities/GlobalObjects/tjumpdai.h"
 
-std::string Global::version = "0.0.92";
+std::string Global::version = "0.0.93";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -662,6 +663,7 @@ int Global::main()
     PAWNGUN::loadStaticModels();
     E_SARU::loadStaticModels();
     SOAP_SW::loadStaticModels();
+    TJUMPDAI::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

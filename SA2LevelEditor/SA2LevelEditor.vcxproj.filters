@@ -335,6 +335,9 @@
     <ClCompile Include="src\entities\GlobalObjects\SOAP_SW.cpp">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\TJUMPDAI.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -614,6 +617,9 @@
       <Filter>Source Files\entities\GlobalObjects\Heroes</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\GlobalObjects\soapsw.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\tjumpdai.h">
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>

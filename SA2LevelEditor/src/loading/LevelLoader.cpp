@@ -79,6 +79,7 @@
 #include "../entities/GlobalObjects/Badniks/rhinotank.h"
 #include "../entities/GlobalObjects/Badniks/spinner.h"
 #include "../entities/GlobalObjects/soapsw.h"
+#include "../entities/GlobalObjects/tjumpdai.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1004,6 +1005,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "EMERALD F")      {return new EMERALD_F     (data, useDefaultValues);}
     else if (o == "SPIDERWEB")      {return new SPIDERWEB     (data, useDefaultValues);}
     else if (o == "SCHBOX")         {return new SCHBOX        (data, useDefaultValues);}
+    else if (o == "TJUMPDAI")       {return new TJUMPDAI      (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 

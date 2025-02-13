@@ -203,6 +203,7 @@
     <ClCompile Include="src\entities\GlobalObjects\SPRA.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\SPRB.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\STOPLOCKON.cpp" />
+    <ClCompile Include="src\entities\GlobalObjects\TJUMPDAI.cpp" />
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SPIDERWEB.cpp" />
     <ClCompile Include="src\entities\LoopspeedTrigger.cpp" />
     <ClCompile Include="src\entities\SA2Object.cpp" />
@@ -299,6 +300,7 @@
     <ClInclude Include="src\entities\GlobalObjects\spra.h" />
     <ClInclude Include="src\entities\GlobalObjects\sprb.h" />
     <ClInclude Include="src\entities\GlobalObjects\stoplockon.h" />
+    <ClInclude Include="src\entities\GlobalObjects\tjumpdai.h" />
     <ClInclude Include="src\entities\LevelSpecific\PyramidCave\spiderweb.h" />
     <ClInclude Include="src\entities\loopspeedtrigger.h" />
     <ClInclude Include="src\entities\sa2object.h" />
