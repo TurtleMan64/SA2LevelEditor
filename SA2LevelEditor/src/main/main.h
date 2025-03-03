@@ -10,6 +10,7 @@ class StageKillplanes;
 class SA2Object;
 class StageSky;
 class Dummy;
+class Ghost;
 
 #include <Windows.h>
 #include <string>
@@ -64,6 +65,9 @@ class Dummy;
 #define CMD_BTN_9  28
 #define CMD_BTN_10 29
 #define CMD_BTN_11 30
+
+// 3 slots as keys 1-3 are used for user ghosts
+#define NUM_GHOST_SLOTS 3
 
 class Global
 {
@@ -136,6 +140,10 @@ public:
     static bool displayObjects;
     static bool displayStageSky;
     static bool renderWithCulling;
+
+    static std::vector<Ghost*> userGhosts;
+    static void createGhost(short slot);
+    static void deleteGhost(short slot);
 
     //if this is true, the editor will try to attach to a running SA2 process
     // and follow the camera

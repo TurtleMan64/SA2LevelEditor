@@ -555,6 +555,51 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
             }
             break;
 
+        case GLFW_KEY_KP_1:
+        case GLFW_KEY_1:
+            if (action == GLFW_PRESS)
+            {
+                if (Global::isHoldingShift)
+                {
+                    Global::deleteGhost(0);
+                }
+                else
+                {
+                    Global::createGhost(0);
+                }
+            }
+            break;
+
+        case GLFW_KEY_KP_2:
+        case GLFW_KEY_2:
+            if (action == GLFW_PRESS)
+            {
+                if (Global::isHoldingShift)
+                {
+                    Global::deleteGhost(1);
+                }
+                else
+                {
+                    Global::createGhost(1);
+                }
+            }
+            break;
+
+        case GLFW_KEY_KP_3:
+        case GLFW_KEY_3:
+            if (action == GLFW_PRESS)
+            {
+                if (Global::isHoldingShift)
+                {
+                    Global::deleteGhost(2);
+                }
+                else
+                {
+                    Global::createGhost(2);
+                }
+            }
+            break;
+
         case GLFW_KEY_KP_7:
         case GLFW_KEY_7:
             if (action == GLFW_PRESS)
