@@ -57,6 +57,7 @@
 #include "../toolbox/maths.h"
 #include "../loading/objloader.h"
 #include "../entities/dummy.h"
+#include "../entities/ghost.h"
 #include "../entities/GlobalObjects/ring.h"
 #include "../entities/GlobalObjects/sprb.h"
 #include "../entities/GlobalObjects/spra.h"
@@ -172,6 +173,8 @@ std::vector<HWND> Global::windowLabels;
 std::vector<HWND> Global::windowValues;
 std::vector<HWND> Global::windowButtons;
 std::vector<HWND> Global::windowDescriptions;
+
+std::vector<Ghost*> Global::userGhosts(NUM_GHOST_SLOTS, nullptr);
 
 void addMenus(HWND window);
 void addControls(HWND window);
@@ -875,6 +878,13 @@ int Global::main()
         MasterRenderer::processEntity(Global::gameStageKillplanes);
         MasterRenderer::processEntity(Global::gameStageSky);
         MasterRenderer::processEntity(Global::gamePlayer);
+        for (Entity* ghost : Global::userGhosts)
+        {
+            if (ghost)
+            {
+                MasterRenderer::processEntity(ghost);
+            }
+        }
 
         glEnable(GL_CLIP_DISTANCE1);
         MasterRenderer::render(&cam);
@@ -1801,4 +1811,43 @@ void Global::teleportSA2PlayerToCursor3D()
     }
 
     CloseHandle(handle);
+}
+
+void Global::createGhost(short slot)
+{
+    if (slot >= Global::userGhosts.size() || slot < 0)
+    {
+        return;
+    }
+    Vector3f* color;
+    switch (slot)
+    {
+    case 0:
+        color = new Vector3f(1, 0, 0);
+        break;
+    case 1:
+        color = new Vector3f(0, 1, 0);
+        break;
+    case 2:
+        color = new Vector3f(0, 0, 1);
+        break;
+    default:
+        color = new Vector3f(1, 1, 1);
+        break;
+    }
+    Ghost *ghost = new Ghost(&playerModels, color);
+    ghost->setPosition(&Global::gamePlayer->position);
+    ghost->setRotation(Global::gamePlayer->rotationX, Global::gamePlayer->rotationY, Global::gamePlayer->rotationZ);
+    ghost->updateTransformationMatrixYXZ();
+    Global::userGhosts[slot] = ghost;
+}
+
+void Global::deleteGhost(short slot)
+{
+    if (slot >= Global::userGhosts.size() || slot < 0)
+    {
+        return;
+    }
+    delete Global::userGhosts[slot];
+    Global::userGhosts[slot] = nullptr;
 }

@@ -157,6 +157,7 @@
     <ClCompile Include="src\entities\Cursor3D.cpp" />
     <ClCompile Include="src\entities\Dummy.cpp" />
     <ClCompile Include="src\entities\Entity.cpp" />
+    <ClCompile Include="src\entities\Ghost.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\3SPRING.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\Badniks\MOTOBUG.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\Badniks\RHINOTANK.cpp" />
@@ -254,6 +255,7 @@
     <ClInclude Include="src\entities\cursor3d.h" />
     <ClInclude Include="src\entities\dummy.h" />
     <ClInclude Include="src\entities\entity.h" />
+    <ClInclude Include="src\entities\ghost.h" />
     <ClInclude Include="src\entities\GlobalObjects\3spring.h" />
     <ClInclude Include="src\entities\GlobalObjects\Badniks\motobug.h" />
     <ClInclude Include="src\entities\GlobalObjects\Badniks\rhinotank.h" />
