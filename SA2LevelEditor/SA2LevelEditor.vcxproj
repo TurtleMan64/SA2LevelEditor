@@ -78,10 +78,12 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>../Libraries/Lib64;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)SA2LevelEditor\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>../Libraries/Lib64;$(LibraryPath)</LibraryPath>
     <IncludePath>../Libraries/Include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)SA2LevelEditor\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -206,6 +208,7 @@
     <ClCompile Include="src\entities\GlobalObjects\STOPLOCKON.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\TJUMPDAI.cpp" />
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SPIDERWEB.cpp" />
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\TORCHCUP.cpp" />
     <ClCompile Include="src\entities\LoopspeedTrigger.cpp" />
     <ClCompile Include="src\entities\SA2Object.cpp" />
     <ClCompile Include="src\entities\Stage.cpp" />
@@ -304,6 +307,7 @@
     <ClInclude Include="src\entities\GlobalObjects\stoplockon.h" />
     <ClInclude Include="src\entities\GlobalObjects\tjumpdai.h" />
     <ClInclude Include="src\entities\LevelSpecific\PyramidCave\spiderweb.h" />
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\torchcup.h" />
     <ClInclude Include="src\entities\loopspeedtrigger.h" />
     <ClInclude Include="src\entities\sa2object.h" />
     <ClInclude Include="src\entities\stage.h" />

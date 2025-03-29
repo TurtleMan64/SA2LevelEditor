@@ -1,27 +1,23 @@
-#ifndef TJUMPDAI_H
-#define TJUMPDAI_H
+#ifndef TORCHCUP_H
+#define TORCHCUP_H
 
 class TexturedModel;
 class CollisionModel;
 
 #include <list>
-#include "../entity.h"
-#include "../sa2object.h"
+#include "../../entity.h"
+#include "../../sa2object.h"
 
-class TJUMPDAI : public SA2Object
+class TORCHCUP : public SA2Object
 {
 private:
     static std::list<TexturedModel*> models;
 
     static CollisionModel* cmBase;
 
-    float var1 = 0.0f;
-    float var2 = 0.0f;
-    float var3 = 0.0f;
-
 public:
-    TJUMPDAI();
-    TJUMPDAI(char data[32], bool useDefaultValues);
+    TORCHCUP();
+    TORCHCUP(char data[32], bool useDefaultValues);
 
     void step();
 
@@ -32,8 +28,6 @@ public:
     void updateValue(int btnIndex);
 
     void fillData(char data[32]);
-
-    std::string toSabString();
 
     bool isSA2Object();
 
