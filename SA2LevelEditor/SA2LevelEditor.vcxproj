@@ -84,6 +84,7 @@
     <LibraryPath>../Libraries/Lib64;$(LibraryPath)</LibraryPath>
     <IncludePath>../Libraries/Include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)SA2LevelEditor\</OutDir>
+    <TargetName>SA2 Level Editor</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -249,6 +250,7 @@
     <ClCompile Include="src\toolbox\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\collision\collisionchecker.h" />
     <ClInclude Include="src\collision\collisionmodel.h" />
     <ClInclude Include="src\collision\triangle3d.h" />
@@ -345,6 +347,12 @@
     <ClInclude Include="src\toolbox\readbytes.h" />
     <ClInclude Include="src\toolbox\split.h" />
     <ClInclude Include="src\toolbox\vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SA2LevelEditor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

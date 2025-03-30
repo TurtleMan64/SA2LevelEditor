@@ -91,20 +91,27 @@ int DisplayManager::createDisplay()
     glfwSetMouseButtonCallback(glfwWindow, DisplayManager::callbackMouseClick);
     glfwSetKeyCallback(glfwWindow, DisplayManager::callbackKeyboard);
 
-    GLFWimage icons[3];
+    GLFWimage icons[5];
     icons[0].pixels = SOIL_load_image("res/Images/Icon16.png", &icons[0].width, &icons[0].height, 0, SOIL_LOAD_RGBA);
-    icons[1].pixels = SOIL_load_image("res/Images/Icon32.png", &icons[1].width, &icons[1].height, 0, SOIL_LOAD_RGBA);
-    icons[2].pixels = SOIL_load_image("res/Images/Icon64.png", &icons[2].width, &icons[2].height, 0, SOIL_LOAD_RGBA);
-
+    icons[1].pixels = SOIL_load_image("res/Images/Icon24.png", &icons[1].width, &icons[1].height, 0, SOIL_LOAD_RGBA);
+    icons[2].pixels = SOIL_load_image("res/Images/Icon32.png", &icons[2].width, &icons[2].height, 0, SOIL_LOAD_RGBA);
+    icons[3].pixels = SOIL_load_image("res/Images/Icon48.png", &icons[3].width, &icons[3].height, 0, SOIL_LOAD_RGBA);
+    icons[4].pixels = SOIL_load_image("res/Images/Icon64.png", &icons[4].width, &icons[4].height, 0, SOIL_LOAD_RGBA);
+    
     if (icons[0].pixels != nullptr &&
         icons[1].pixels != nullptr &&
-        icons[2].pixels != nullptr)
+        icons[2].pixels != nullptr &&
+        icons[3].pixels != nullptr &&
+        icons[4].pixels != nullptr)
     {
-        glfwSetWindowIcon(glfwWindow, 3, icons);
-        SOIL_free_image_data(icons[0].pixels);
-        SOIL_free_image_data(icons[1].pixels);
-        SOIL_free_image_data(icons[2].pixels);
+        glfwSetWindowIcon(glfwWindow, 5, icons);
     }
+
+    if (icons[0].pixels != nullptr) { SOIL_free_image_data(icons[0].pixels); }
+    if (icons[1].pixels != nullptr) { SOIL_free_image_data(icons[1].pixels); }
+    if (icons[2].pixels != nullptr) { SOIL_free_image_data(icons[2].pixels); }
+    if (icons[3].pixels != nullptr) { SOIL_free_image_data(icons[3].pixels); }
+    if (icons[4].pixels != nullptr) { SOIL_free_image_data(icons[4].pixels); }
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------

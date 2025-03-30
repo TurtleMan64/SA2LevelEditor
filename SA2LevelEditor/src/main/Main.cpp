@@ -7,6 +7,9 @@
 #include <tchar.h>
 #include <tlhelp32.h>
 
+// copied from the resource.h file because i cant seem to #include it without error
+#define IDI_ICON1 101
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -94,7 +97,7 @@
 #include "../entities/GlobalObjects/soapsw.h"
 #include "../entities/GlobalObjects/tjumpdai.h"
 
-std::string Global::version = "0.0.95";
+std::string Global::version = "0.0.96";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -471,6 +474,7 @@ int Global::initWin32GUI(HINSTANCE hInstance)
     wc.hInstance     = hInstance;
     wc.lpszClassName = L"SA2 Level Editor";
     wc.lpfnWndProc   = win32WindowCallback;
+    wc.hIcon         = LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     if (!RegisterClassW(&wc))
     {

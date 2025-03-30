@@ -341,6 +341,9 @@
     <ClCompile Include="src\entities\Ghost.cpp">
       <Filter>Source Files\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\TORCHCUP.cpp">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -628,5 +631,19 @@
     <ClInclude Include="src\entities\ghost.h">
       <Filter>Source Files\entities</Filter>
     </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\torchcup.h">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SA2LevelEditor.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
