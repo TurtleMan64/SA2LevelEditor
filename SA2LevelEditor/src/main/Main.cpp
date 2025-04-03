@@ -97,7 +97,7 @@
 #include "../entities/GlobalObjects/soapsw.h"
 #include "../entities/GlobalObjects/tjumpdai.h"
 
-std::string Global::version = "0.0.96";
+std::string Global::version = "0.0.97";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;

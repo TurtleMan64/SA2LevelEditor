@@ -81,6 +81,8 @@
 #include "../entities/GlobalObjects/soapsw.h"
 #include "../entities/GlobalObjects/tjumpdai.h"
 #include "../entities/LevelSpecific/PyramidCave/torchcup.h"
+#include "../entities/LevelSpecific/PyramidCave/snakestatue.h"
+#include "../entities/LevelSpecific/PyramidCave/sneakrail.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -246,6 +248,8 @@ void LevelLoader::loadLevel(std::string setDir, std::string setS, std::string se
         case Global::Levels::Pyramid_Cave:
             SPIDERWEB::loadStaticModels();
             TORCHCUP::loadStaticModels();
+            SNAKESTATUE::loadStaticModels();
+            SNEAKRAIL::loadStaticModels();
             break;
 
         default:
@@ -1007,6 +1011,8 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "EMERALD F")      {return new EMERALD_F     (data, useDefaultValues);}
     else if (o == "SPIDERWEB")      {return new SPIDERWEB     (data, useDefaultValues);}
     else if (o == "TORCHCUP")       {return new TORCHCUP      (data, useDefaultValues);}
+    else if (o == "SNAKESTATUE")    {return new SNAKESTATUE   (data, useDefaultValues);}
+    else if (o == "SNEAKRAIL")      {return new SNEAKRAIL     (data, useDefaultValues);}
     else if (o == "SCHBOX")         {return new SCHBOX        (data, useDefaultValues);}
     else if (o == "TJUMPDAI")       {return new TJUMPDAI      (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
@@ -1276,6 +1282,8 @@ void LevelLoader::freeAllStaticModels()
     //Unknown::deleteStaticModels();
     SPIDERWEB::deleteStaticModels();
     TORCHCUP::deleteStaticModels();
+    SNAKESTATUE::deleteStaticModels();
+    SNEAKRAIL::deleteStaticModels();
 }
 
 int LevelLoader::getNumLevels()
