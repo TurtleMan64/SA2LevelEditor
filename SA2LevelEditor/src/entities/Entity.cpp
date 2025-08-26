@@ -155,6 +155,16 @@ void Entity::updateTransformationMatrixXY(float sclX, float sclY, float sclZ)
     Maths::createTransformationMatrixXY(&transformationMatrix, &position, rotationX, rotationY, sclX, sclY, sclZ);
 }
 
+void Entity::updateTransformationMatrixY()
+{
+    Maths::createTransformationMatrixY(&transformationMatrix, &position, rotationY, scaleX, scaleY, scaleZ);
+}
+
+void Entity::updateTransformationMatrixY(float sclX, float sclY, float sclZ)
+{
+    Maths::createTransformationMatrixY(&transformationMatrix, &position, rotationY, sclX, sclY, sclZ);
+}
+
 Matrix4f* Entity::getTransformationMatrix()
 {
     return &transformationMatrix;

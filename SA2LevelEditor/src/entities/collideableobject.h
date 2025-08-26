@@ -33,5 +33,9 @@ public:
     void updateCollisionModelXY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
     void updateCollisionModelXY();
     void updateCollisionModelXY(float sclX, float sclY, float sclZ);
+
+    void updateCollisionModelY(CollisionModel* cmBase, CollisionModel* cmToUpdate);
+    void updateCollisionModelY();
+    void updateCollisionModelY(float sclX, float sclY, float sclZ);
 };
 #endif

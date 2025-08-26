@@ -208,6 +208,7 @@
     <ClCompile Include="src\entities\GlobalObjects\SPRB.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\STOPLOCKON.cpp" />
     <ClCompile Include="src\entities\GlobalObjects\TJUMPDAI.cpp" />
+    <ClCompile Include="src\entities\LevelSpecific\CosmicWall\CW_STAGE.cpp" />
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SNAKESTATUE.cpp" />
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SNEAKRAIL.cpp" />
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SPIDERWEB.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="src\entities\GlobalObjects\sprb.h" />
     <ClInclude Include="src\entities\GlobalObjects\stoplockon.h" />
     <ClInclude Include="src\entities\GlobalObjects\tjumpdai.h" />
+    <ClInclude Include="src\entities\LevelSpecific\CosmicWall\cw_stage.h" />
     <ClInclude Include="src\entities\LevelSpecific\PyramidCave\SNAKESTATUE.h" />
     <ClInclude Include="src\entities\LevelSpecific\PyramidCave\sneakrail.h" />
     <ClInclude Include="src\entities\LevelSpecific\PyramidCave\spiderweb.h" />

@@ -53,6 +53,8 @@ public:
 
     static void createTransformationMatrixXY(Matrix4f* result, Vector3f* translation, int rX, int rY, float sX, float sY, float sZ);
 
+    static void createTransformationMatrixY(Matrix4f* result, Vector3f* translation, int rY, float sX, float sY, float sZ);
+
     static void createViewMatrix(Matrix4f* result, Camera* cam);
 
     //Returns the difference between the two angles

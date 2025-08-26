@@ -199,6 +199,19 @@ void Maths::createTransformationMatrixXY(Matrix4f* matrix, Vector3f* translation
     matrix->scale(&vec);
 }
 
+void Maths::createTransformationMatrixY(Matrix4f* matrix, Vector3f* translation, int ry, float sX, float sY, float sZ)
+{
+    matrix->setIdentity();
+    matrix->translate(translation);
+    Vector3f vec;
+
+    vec.set(0, 1, 0);
+    matrix->rotate(Maths::bamsToRad(ry), &vec);
+
+    vec.set(sX, sY, sZ);
+    matrix->scale(&vec);
+}
+
 void Maths::createViewMatrix(Matrix4f* matrix, Camera* cam)
 {
     //needed for arbitrary up vectors. shouldnt be needed for this

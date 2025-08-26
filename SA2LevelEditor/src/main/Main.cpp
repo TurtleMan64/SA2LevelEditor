@@ -96,8 +96,13 @@
 #include "../entities/GlobalObjects/Badniks/spinner.h"
 #include "../entities/GlobalObjects/soapsw.h"
 #include "../entities/GlobalObjects/tjumpdai.h"
+#include "../entities/LevelSpecific/PyramidCave/torchcup.h"
+#include "../entities/LevelSpecific/PyramidCave/snakestatue.h"
+#include "../entities/LevelSpecific/PyramidCave/sneakrail.h"
+#include "../entities/LevelSpecific/CosmicWall/cw_stage.h"
+#include "../entities/LevelSpecific/PyramidCave/spiderweb.h"
 
-std::string Global::version = "0.0.97";
+std::string Global::version = "0.0.98";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -671,6 +676,11 @@ int Global::main()
     E_SARU::loadStaticModels();
     SOAP_SW::loadStaticModels();
     TJUMPDAI::loadStaticModels();
+    SPIDERWEB::loadStaticModels();
+    TORCHCUP::loadStaticModels();
+    SNAKESTATUE::loadStaticModels();
+    SNEAKRAIL::loadStaticModels();
+    CW_STAGE::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -1823,26 +1833,30 @@ void Global::createGhost(short slot)
     {
         return;
     }
-    Vector3f* color;
+    Vector3f color;
     switch (slot)
     {
     case 0:
-        color = new Vector3f(1, 0, 0);
+        color = Vector3f(1, 0, 0);
         break;
     case 1:
-        color = new Vector3f(0, 1, 0);
+        color = Vector3f(0, 1, 0);
         break;
     case 2:
-        color = new Vector3f(0, 0, 1);
+        color = Vector3f(0, 0, 1);
         break;
     default:
-        color = new Vector3f(1, 1, 1);
+        color = Vector3f(1, 1, 1);
         break;
     }
-    Ghost *ghost = new Ghost(&playerModels, color);
+    Ghost* ghost = new Ghost(&playerModels, &color);
     ghost->setPosition(&Global::gamePlayer->position);
     ghost->setRotation(Global::gamePlayer->rotationX, Global::gamePlayer->rotationY, Global::gamePlayer->rotationZ);
     ghost->updateTransformationMatrixYXZ();
+    if (Global::userGhosts[slot] != nullptr)
+    {
+        delete Global::userGhosts[slot];
+    }
     Global::userGhosts[slot] = ghost;
 }
 

@@ -48,6 +48,8 @@ public:
 
     void transformModelXY(CollisionModel* targetModel, Vector3f* translate, int bamsXRot, int bamsYRot, float xScale, float yScale, float zScale);
 
+    void transformModelY(CollisionModel* targetModel, Vector3f* translate, int bamsYRot, float xScale, float yScale, float zScale);
+
     //calls delete on every Triangle3D contained within triangles list, 
     // and every QuadTreeNode in this quad tree. 
     // this MUST be called before this object is deleted, or you memory leak
