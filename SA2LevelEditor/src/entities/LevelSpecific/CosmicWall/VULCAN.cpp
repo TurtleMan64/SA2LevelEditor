@@ -5,7 +5,7 @@
 #include "../../entity.h"
 #include "../../dummy.h"
 #include "../../../toolbox/vector.h"
-#include "cw_stage.h"
+#include "vulcan.h"
 #include "../../../models/texturedmodel.h"
 #include "../../../loading/objLoader.h"
 #include "../../../loading/levelloader.h"
@@ -16,18 +16,16 @@
 
 #include <list>
 
-std::list<TexturedModel*> CW_STAGE::models;
-std::list<TexturedModel*> CW_STAGE::modelsRails;
+std::list<TexturedModel*> VULCAN::models;
 
-CollisionModel* CW_STAGE::cmBase;
-CollisionModel* CW_STAGE::cmBaseRails;
+CollisionModel* VULCAN::cmBase;
 
-CW_STAGE::CW_STAGE()
+VULCAN::VULCAN()
 {
 
 }
 
-void CW_STAGE::cleanUp()
+void VULCAN::cleanUp()
 {
     if (collideModelTransformed != nullptr)
     {
@@ -36,7 +34,7 @@ void CW_STAGE::cleanUp()
     }
 }
 
-CW_STAGE::CW_STAGE(char data[32], bool /*useDefaultValues*/)
+VULCAN::VULCAN(char data[32], bool /*useDefaultValues*/)
 {
     std::memcpy(rawData, data, 32);
 
@@ -102,14 +100,7 @@ CW_STAGE::CW_STAGE(char data[32], bool /*useDefaultValues*/)
     baseColour.set(1, 1, 1);
     updateTransformationMatrixY(1.0f, 1.0f, 1.0f);
 
-    if (hasRails())
-    {
-        collideModelOriginal = CW_STAGE::cmBaseRails;
-    }
-    else
-    {
-        collideModelOriginal = CW_STAGE::cmBase;
-    }
+    collideModelOriginal = VULCAN::cmBase;
 
     collideModelTransformed = collideModelOriginal->duplicateMe();
     collideModelTransformed->parent = this;
@@ -119,12 +110,12 @@ CW_STAGE::CW_STAGE(char data[32], bool /*useDefaultValues*/)
     updateCollisionModelY(1.0f, 1.0f, 1.0f);
 }
 
-bool CW_STAGE::isSA2Object()
+bool VULCAN::isSA2Object()
 {
     return true;
 }
 
-void CW_STAGE::step()
+void VULCAN::step()
 {
     if (Global::selectedSA2Object == this)
     {
@@ -136,49 +127,38 @@ void CW_STAGE::step()
     }
 }
 
-std::list<TexturedModel*>* CW_STAGE::getModels()
+std::list<TexturedModel*>* VULCAN::getModels()
 {
-    if (hasRails())
-    {
-        return &CW_STAGE::modelsRails;
-    }
-    else
-    {
-        return &CW_STAGE::models;
-    }
+    return &VULCAN::models;
 }
 
-void CW_STAGE::loadStaticModels()
+void VULCAN::loadStaticModels()
 {
-    if (CW_STAGE::models.size() > 0)
+    if (VULCAN::models.size() > 0)
     {
         return;
     }
 
     #ifdef DEV_MODE
-    std::fprintf(stdout, "Loading CW_STAGE static models...\n");
+    std::fprintf(stdout, "Loading VULCAN static models...\n");
     #endif
 
-    loadModel(&CW_STAGE::models,      "res/Models/LevelObjects/CosmicWall/", "STAGE");
-    loadModel(&CW_STAGE::modelsRails, "res/Models/LevelObjects/CosmicWall/", "STAGE_RAILS");
+    loadModel(&VULCAN::models, "res/Models/LevelObjects/CosmicWall/", "VULCAN");
 
-    CW_STAGE::cmBase      = loadCollisionModel("res/Models/LevelObjects/CosmicWall/", "STAGE");
-    CW_STAGE::cmBaseRails = loadCollisionModel("res/Models/LevelObjects/CosmicWall/", "STAGE_RAILS");
+    VULCAN::cmBase = loadCollisionModel("res/Models/LevelObjects/CosmicWall/", "VULCAN");
 }
 
-void CW_STAGE::deleteStaticModels()
+void VULCAN::deleteStaticModels()
 {
     #ifdef DEV_MODE
-    std::fprintf(stdout, "Deleting CW_STAGE static models...\n");
+    std::fprintf(stdout, "Deleting VULCAN static models...\n");
     #endif
 
-    Entity::deleteModels(&CW_STAGE::models);
-    Entity::deleteModels(&CW_STAGE::modelsRails);
-    Entity::deleteCollisionModel(&CW_STAGE::cmBase);
-    Entity::deleteCollisionModel(&CW_STAGE::cmBaseRails);
+    Entity::deleteModels(&VULCAN::models);
+    Entity::deleteCollisionModel(&VULCAN::cmBase);
 }
 
-void CW_STAGE::updateValue(int btnIndex)
+void VULCAN::updateValue(int btnIndex)
 {
     char buf[128];
     GetWindowTextA(Global::windowValues[btnIndex], buf, 128);
@@ -341,14 +321,14 @@ void CW_STAGE::updateValue(int btnIndex)
     Global::redrawWindow = true;
 }
 
-void CW_STAGE::updateEditorWindows()
+void VULCAN::updateEditorWindows()
 {
     SetWindowTextA(Global::windowLabels[ 0], "ID"        );
     SetWindowTextA(Global::windowLabels[ 1], "Name"      );
     SetWindowTextA(Global::windowLabels[ 2], "Position X");
     SetWindowTextA(Global::windowLabels[ 3], "Position Y");
     SetWindowTextA(Global::windowLabels[ 4], "Position Z");
-    SetWindowTextA(Global::windowLabels[ 5], "Has Rail");
+    SetWindowTextA(Global::windowLabels[ 5], "");
     SetWindowTextA(Global::windowLabels[ 6], "Rotation Y");
     SetWindowTextA(Global::windowLabels[ 7], "");
     SetWindowTextA(Global::windowLabels[ 8], "");
@@ -356,7 +336,7 @@ void CW_STAGE::updateEditorWindows()
     SetWindowTextA(Global::windowLabels[10], "");
 
     SetWindowTextA(Global::windowValues[ 0], std::to_string(ID).c_str());
-    SetWindowTextA(Global::windowValues[ 1], "STAGE");
+    SetWindowTextA(Global::windowValues[ 1], "VULCAN");
     SetWindowTextA(Global::windowValues[ 2], std::to_string(position.x).c_str());
     SetWindowTextA(Global::windowValues[ 3], std::to_string(position.y).c_str());
     SetWindowTextA(Global::windowValues[ 4], std::to_string(position.z).c_str());
@@ -372,7 +352,7 @@ void CW_STAGE::updateEditorWindows()
     SendMessageA(Global::windowValues[ 2], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 3], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 4], EM_SETREADONLY, 0, 0);
-    SendMessageA(Global::windowValues[ 5], EM_SETREADONLY, 0, 0);
+    SendMessageA(Global::windowValues[ 5], EM_SETREADONLY, 1, 0);
     SendMessageA(Global::windowValues[ 6], EM_SETREADONLY, 0, 0);
     SendMessageA(Global::windowValues[ 7], EM_SETREADONLY, 1, 0);
     SendMessageA(Global::windowValues[ 8], EM_SETREADONLY, 1, 0);
@@ -395,7 +375,7 @@ void CW_STAGE::updateEditorWindows()
     updateCollisionModelY(1.0f, 1.0f, 1.0f);
 }
 
-void CW_STAGE::fillData(char data[32])
+void VULCAN::fillData(char data[32])
 {
     data[1] = (char)ID;
 
@@ -441,9 +421,4 @@ void CW_STAGE::fillData(char data[32])
     data[29] = (char)(*(ptr + 2));
     data[30] = (char)(*(ptr + 1));
     data[31] = (char)(*(ptr + 0));
-}
-
-bool CW_STAGE::hasRails()
-{
-    return (rotationX % 2 == 1);
 }

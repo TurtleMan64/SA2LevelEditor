@@ -51,6 +51,9 @@
     <Filter Include="Source Files\entities\GlobalObjects\Badniks">
       <UniqueIdentifier>{beac9baa-5e69-42a4-ace2-47e72dfdbf22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\CosmicWall">
+      <UniqueIdentifier>{a28b2123-fac5-4962-996a-57b3fb5e13be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c">
@@ -344,6 +347,18 @@
     <ClCompile Include="src\entities\LevelSpecific\PyramidCave\TORCHCUP.cpp">
       <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SNAKESTATUE.cpp">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\SNEAKRAIL.cpp">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\CosmicWall\CW_STAGE.cpp">
+      <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\CosmicWall\VULCAN.cpp">
+      <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -635,6 +650,18 @@
       <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\SNAKESTATUE.h">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\sneakrail.h">
+      <Filter>Source Files\entities\LevelSpecific\PyramidCave</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\CosmicWall\cw_stage.h">
+      <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\CosmicWall\vulcan.h">
+      <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SA2LevelEditor.rc">
