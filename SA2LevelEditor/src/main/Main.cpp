@@ -102,8 +102,10 @@
 #include "../entities/LevelSpecific/CosmicWall/cw_stage.h"
 #include "../entities/LevelSpecific/PyramidCave/spiderweb.h"
 #include "../entities/LevelSpecific/CosmicWall/vulcan.h"
+#include "../entities/LevelSpecific/IronGate/shelth.h"
+#include "../entities/LevelSpecific/IronGate/sheltv.h"
 
-std::string Global::version = "0.0.99";
+std::string Global::version = "0.0.100";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -683,6 +685,8 @@ int Global::main()
     SNEAKRAIL::loadStaticModels();
     CW_STAGE::loadStaticModels();
     VULCAN::loadStaticModels();
+    SHELTH::loadStaticModels();
+    SHELTV::loadStaticModels();
     #endif
 
     //This dummy never gets deleted

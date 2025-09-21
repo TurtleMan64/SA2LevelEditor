@@ -4,9 +4,10 @@
 class TexturedModel;
 
 #include <unordered_map>
-#include <glad/glad.h>
 #include <list>
 #include <vector>
+#include <string>
+#include <glad/glad.h>
 #include "../models/rawmodel.h"
 
 

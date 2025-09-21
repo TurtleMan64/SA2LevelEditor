@@ -85,6 +85,8 @@
 #include "../entities/LevelSpecific/PyramidCave/sneakrail.h"
 #include "../entities/LevelSpecific/CosmicWall/cw_stage.h"
 #include "../entities/LevelSpecific/CosmicWall/vulcan.h"
+#include "../entities/LevelSpecific/IronGate/shelth.h"
+#include "../entities/LevelSpecific/IronGate/sheltv.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1019,6 +1021,8 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "TJUMPDAI")       {return new TJUMPDAI      (data, useDefaultValues);}
     else if (o == "STAGE")          {return new CW_STAGE      (data, useDefaultValues);}
     else if (o == "VULCAN")         {return new VULCAN        (data, useDefaultValues);}
+    else if (o == "SHELTH")         {return new SHELTH        (data, useDefaultValues);}
+    else if (o == "SHELTV")         {return new SHELTV        (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 
