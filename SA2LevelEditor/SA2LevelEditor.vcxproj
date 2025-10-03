@@ -246,6 +246,7 @@
     <ClCompile Include="src\rendering\MasterRenderer.cpp" />
     <ClCompile Include="src\rendering\Renderer.cpp" />
     <ClCompile Include="src\shaders\ShaderProgram.cpp" />
+    <ClCompile Include="src\toolbox\DolphinBase.cpp" />
     <ClCompile Include="src\toolbox\Getline.cpp" />
     <ClCompile Include="src\toolbox\Hex.cpp" />
     <ClCompile Include="src\toolbox\Input.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="src\rendering\masterrenderer.h" />
     <ClInclude Include="src\rendering\renderer.h" />
     <ClInclude Include="src\shaders\shaderprogram.h" />
+    <ClInclude Include="src\toolbox\dolphinbase.h" />
     <ClInclude Include="src\toolbox\getline.h" />
     <ClInclude Include="src\toolbox\hex.h" />
     <ClInclude Include="src\toolbox\input.h" />

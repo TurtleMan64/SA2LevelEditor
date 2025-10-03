@@ -104,8 +104,9 @@
 #include "../entities/LevelSpecific/CosmicWall/vulcan.h"
 #include "../entities/LevelSpecific/IronGate/shelth.h"
 #include "../entities/LevelSpecific/IronGate/sheltv.h"
+#include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.100";
+std::string Global::version = "0.0.101";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -1209,12 +1210,38 @@ void Global::updateCamFromSA2()
 
             if (sa2PID != NULL)
             {
-                sa2Handle = OpenProcess(PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, sa2PID);
+                if (Global::sa2Type == Global::SA2Type::Dolphin)
+                {
+                    sa2Handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, sa2PID);
+                }
+                else
+                {
+                    sa2Handle = OpenProcess(PROCESS_VM_READ | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, false, sa2PID);
+                }
+
                 if (sa2Handle == NULL)
                 {
                     std::fprintf(stdout, "Error: Found the process, but couldn't open and get a handle.\n");
                     sa2PID = NULL;
                     timeUntilNextProcessAttach = ATTACH_DELAY;
+                }
+                
+                if (sa2Handle != NULL && Global::sa2Type == Global::SA2Type::Dolphin)
+                {
+                    if (!DolphinBase::obtainEmuRAMInformations(sa2Handle))
+                    {
+                        CloseHandle(sa2Handle);
+                        printf("Dolphin is open, but no emulation started yet it seems.\n");
+                        sa2PID = NULL;
+                        sa2Handle = NULL;
+                        timeUntilNextProcessAttach = ATTACH_DELAY;
+
+                        DolphinBase::m_emuRAMAddressStart = 0;
+                        DolphinBase::m_emuARAMAdressStart = 0;
+                        DolphinBase::m_MEM2AddressStart = 0;
+                        DolphinBase::m_MEM2Present = false;
+                        DolphinBase::m_ARAMAccessible = false;
+                    }
                 }
             }
         }
@@ -1408,11 +1435,12 @@ void Global::updateCamFromSA2()
     {
         //address of where sa2's memory begins in Dolphin's memory space
         // this only works with a specific dolphin build. other builds have different starting addresses.
-        const unsigned long long DOLPHIN_START_ADDR = 0x7FFF0000ULL;
+        //const unsigned long long DOLPHIN_START_ADDR = 0x7FFF0000ULL;
 
         //read in camera values
         {
-            const unsigned long long CAMADDR = DOLPHIN_START_ADDR + 0x801FF5B8ULL;
+            //const unsigned long long CAMADDR = DOLPHIN_START_ADDR + 0x801FF5B8ULL;
+            unsigned long long CAMADDR = DolphinBase::getAddressOfDolphinMemoryToRead(0x801FF5B8ULL);
 
             SIZE_T bytesRead = 0;
             char buffer[20] = {0};
@@ -1469,7 +1497,8 @@ void Global::updateCamFromSA2()
 
         //read in character position and rotation
         {
-            const unsigned long long PLAYERADDR = DOLPHIN_START_ADDR + 0x801E7768ULL;
+            //const unsigned long long PLAYERADDR = DOLPHIN_START_ADDR + 0x801E7768ULL;
+            unsigned long long PLAYERADDR = DolphinBase::getAddressOfDolphinMemoryToRead(0x801E7768ULL);
 
             SIZE_T bytesRead = 0;
             char ptrbuf[4] = {0};
@@ -1490,7 +1519,8 @@ void Global::updateCamFromSA2()
             memcpy(ptr+2, &ptrbuf[1], 1);
             memcpy(ptr+3, &ptrbuf[0], 1);
 
-            chobj1 = DOLPHIN_START_ADDR + chobj1;
+            //chobj1 = DOLPHIN_START_ADDR + chobj1;
+            chobj1 = DolphinBase::getAddressOfDolphinMemoryToRead(chobj1);
             
             bytesRead = 0;
             char buffer[32] = {0};
