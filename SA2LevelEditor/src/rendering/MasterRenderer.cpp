@@ -57,7 +57,6 @@ void MasterRenderer::init()
     #endif
 
     MasterRenderer::makeProjectionMatrix();
-    MasterRenderer::disableCulling();
 }
 
 void MasterRenderer::render(Camera* camera)
@@ -189,13 +188,19 @@ void MasterRenderer::prepare()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(RED, GREEN, BLUE, 1);
 
-    if (Global::renderWithCulling)
+    if (Global::backfaceCulling)
     {
-        MasterRenderer::enableCulling();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else if (Global::frontfaceCulling)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
     }
     else
     {
-        MasterRenderer::disableCulling();
+        glDisable(GL_CULL_FACE);
     }
 }
 
@@ -207,13 +212,19 @@ void MasterRenderer::prepareTransparentRender()
     glEnable(GL_DEPTH_TEST);
     glDepthMask(false);
 
-    if (Global::renderWithCulling)
+    if (Global::backfaceCulling)
     {
-        MasterRenderer::enableCulling();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else if (Global::frontfaceCulling)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
     }
     else
     {
-        MasterRenderer::disableCulling();
+        glDisable(GL_CULL_FACE);
     }
 }
 
@@ -227,13 +238,19 @@ void MasterRenderer::prepareTransparentRenderDepthOnly()
     glEnable(GL_DEPTH_TEST);
     glDepthMask(true);
 
-    if (Global::renderWithCulling)
+    if (Global::backfaceCulling)
     {
-        MasterRenderer::enableCulling();
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+    }
+    else if (Global::frontfaceCulling)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
     }
     else
     {
-        MasterRenderer::disableCulling();
+        glDisable(GL_CULL_FACE);
     }
 }
 
@@ -243,17 +260,6 @@ void MasterRenderer::cleanUp()
     delete shader; INCR_DEL("ShaderProgram");
     delete renderer; INCR_DEL("EntityRenderer");
     delete projectionMatrix; INCR_DEL("Matrix4f");
-}
-
-void MasterRenderer::enableCulling()
-{
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-}
-
-void MasterRenderer::disableCulling()
-{
-    glDisable(GL_CULL_FACE);
 }
 
 void MasterRenderer::makeProjectionMatrix()

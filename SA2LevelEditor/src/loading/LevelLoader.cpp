@@ -87,6 +87,9 @@
 #include "../entities/LevelSpecific/CosmicWall/vulcan.h"
 #include "../entities/LevelSpecific/IronGate/shelth.h"
 #include "../entities/LevelSpecific/IronGate/sheltv.h"
+#include "../entities/LevelSpecific/CannonsCore/clearsw.h"
+#include "../entities/LevelSpecific/WeaponsBed/figene.h"
+#include "../entities/LevelSpecific/MeteorHerd/aircont.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1023,6 +1026,9 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "VULCAN")         {return new VULCAN        (data, useDefaultValues);}
     else if (o == "SHELTH")         {return new SHELTH        (data, useDefaultValues);}
     else if (o == "SHELTV")         {return new SHELTV        (data, useDefaultValues);}
+    else if (o == "CLEAR SW")       {return new CLEAR_SW      (data, useDefaultValues);}
+    else if (o == "FIG_ENE")        {return new FIG_ENE       (data, useDefaultValues);}
+    else if (o == "AIRCONT")        {return new AIRCONT       (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 

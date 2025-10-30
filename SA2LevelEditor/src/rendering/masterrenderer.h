@@ -55,9 +55,6 @@ public:
     static void init();
     static void cleanUp();
          
-    static void enableCulling();
-    static void disableCulling();
-         
     static void makeProjectionMatrix();
     static Matrix4f* getProjectionMatrix();
 

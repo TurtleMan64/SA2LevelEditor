@@ -709,9 +709,17 @@ void DisplayManager::callbackKeyboard(GLFWwindow* /*window*/, int key, int /*sca
         {
             if (action == GLFW_PRESS)
             {
-                Global::renderWithCulling = !Global::renderWithCulling;
-                if (Global::renderWithCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_CHECKED  ); }
-                else                           { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_UNCHECKED); }
+                Global::backfaceCulling = !Global::backfaceCulling;
+                if (Global::backfaceCulling)
+                {
+                    Global::frontfaceCulling = false;
+                }
+
+                if (Global::backfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_CHECKED  ); }
+                else                         { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_UNCHECKED); }
+                if (Global::frontfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_CHECKED  ); }
+                else                          { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_UNCHECKED); }
+
                 Global::redrawWindow = true;
             }
             break;

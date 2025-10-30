@@ -47,12 +47,13 @@ class Ghost;
 #define CMD_VIEW_BACKGROUND         8
 #define CMD_VIEW_CAMERA_TRIGGER     9
 #define CMD_VIEW_LOOPSPEED_TRIGGER 10
-#define CMD_VIEW_CULLING           11
-#define CMD_SA2_FOLLOW             12
-#define CMD_SA2_FOLLOW_NO_CAM      13
-#define CMD_SA2_FOLLOW_ORBIT_CAM   14
-#define CMD_SA2_TELEPORT           15
-#define CMD_HELP                   16
+#define CMD_VIEW_BACKFACE_CULLING  11
+#define CMD_VIEW_FRONTFACE_CULLING 12
+#define CMD_SA2_FOLLOW             13
+#define CMD_SA2_FOLLOW_NO_CAM      14
+#define CMD_SA2_FOLLOW_ORBIT_CAM   15
+#define CMD_SA2_TELEPORT           16
+#define CMD_HELP                   17
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -139,7 +140,8 @@ public:
     static bool displayStageKillplanes;
     static bool displayObjects;
     static bool displayStageSky;
-    static bool renderWithCulling;
+    static bool backfaceCulling;
+    static bool frontfaceCulling;
 
     static std::vector<Ghost*> userGhosts;
     static void createGhost(short slot);

@@ -104,9 +104,12 @@
 #include "../entities/LevelSpecific/CosmicWall/vulcan.h"
 #include "../entities/LevelSpecific/IronGate/shelth.h"
 #include "../entities/LevelSpecific/IronGate/sheltv.h"
+#include "../entities/LevelSpecific/CannonsCore/clearsw.h"
+#include "../entities/LevelSpecific/WeaponsBed/figene.h"
+#include "../entities/LevelSpecific/MeteorHerd/aircont.h"
 #include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.101";
+std::string Global::version = "0.0.102";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -170,7 +173,8 @@ bool Global::displayStageCollision = false;
 bool Global::displayStageKillplanes = false;
 bool Global::displayObjects = true;
 bool Global::displayStageSky = false;
-bool Global::renderWithCulling = false;
+bool Global::backfaceCulling = false;
+bool Global::frontfaceCulling = false;
 int Global::sa2Type = Global::SA2Type::None;
 
 int Global::gameMissionNumber = 0;
@@ -230,7 +234,8 @@ void addMenus(HWND window)
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKGROUND       , "View Background");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CAMERA_TRIGGER   , "View Camera Triggers");
     AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_LOOPSPEED_TRIGGER, "View Loopspeed Triggers");
-    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_CULLING          , "Backface Culling");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_BACKFACE_CULLING , "Backface Culling");
+    AppendMenu(Global::mainMenuView, MF_STRING, CMD_VIEW_FRONTFACE_CULLING, "Frontface Culling");
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_STAGE            , MF_CHECKED); 
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_COLLISION        , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_KILLPLANES       , MF_UNCHECKED);
@@ -238,7 +243,8 @@ void addMenus(HWND window)
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKGROUND       , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_CAMERA_TRIGGER   , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_LOOPSPEED_TRIGGER, MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING          , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING , MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_UNCHECKED);
 
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,           "Follow SA2 in Real Time");
     AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM,    "Follow SA2 in Real Time (Free Camera)");
@@ -389,11 +395,25 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             Global::redrawWindow = true;
             break;
         }
-        case CMD_VIEW_CULLING:
+        case CMD_VIEW_BACKFACE_CULLING:
         {
-            Global::renderWithCulling = !Global::renderWithCulling;
-            if (Global::renderWithCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_CHECKED  ); }
-            else                           { CheckMenuItem(Global::mainMenuView, CMD_VIEW_CULLING, MF_UNCHECKED); }
+            Global::backfaceCulling = !Global::backfaceCulling;
+            Global::frontfaceCulling = false;
+            if (Global::backfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_CHECKED  ); }
+            else                         { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_UNCHECKED); }
+            if (Global::frontfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_CHECKED  ); }
+            else                          { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_UNCHECKED); }
+            Global::redrawWindow = true;
+            break;
+        }
+        case CMD_VIEW_FRONTFACE_CULLING:
+        {
+            Global::frontfaceCulling = !Global::frontfaceCulling;
+            Global::backfaceCulling = false;
+            if (Global::backfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_CHECKED  ); }
+            else                         { CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING, MF_UNCHECKED); }
+            if (Global::frontfaceCulling) { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_CHECKED  ); }
+            else                          { CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_UNCHECKED); }
             Global::redrawWindow = true;
             break;
         }
@@ -688,6 +708,9 @@ int Global::main()
     VULCAN::loadStaticModels();
     SHELTH::loadStaticModels();
     SHELTV::loadStaticModels();
+    CLEAR_SW::loadStaticModels();
+    FIG_ENE::loadStaticModels();
+    AIRCONT::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
