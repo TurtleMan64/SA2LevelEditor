@@ -90,6 +90,10 @@
 #include "../entities/LevelSpecific/CannonsCore/clearsw.h"
 #include "../entities/LevelSpecific/WeaponsBed/figene.h"
 #include "../entities/LevelSpecific/MeteorHerd/aircont.h"
+#include "../entities/GlobalObjects/contiron.h"
+#include "../entities/GlobalObjects/contwood.h"
+#include "../entities/GlobalObjects/solidbox.h"
+#include "../entities/GlobalObjects/ori.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1029,6 +1033,10 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "CLEAR SW")       {return new CLEAR_SW      (data, useDefaultValues);}
     else if (o == "FIG_ENE")        {return new FIG_ENE       (data, useDefaultValues);}
     else if (o == "AIRCONT")        {return new AIRCONT       (data, useDefaultValues);}
+    else if (o == "CONTIRON")       {return new CONTIRON      (data, useDefaultValues);}
+    else if (o == "CONTWOOD")       {return new CONTWOOD      (data, useDefaultValues);}
+    else if (o == "SOLIDBOX")       {return new SOLIDBOX      (data, useDefaultValues);}
+    else if (o == "ORI")            {return new ORI           (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 

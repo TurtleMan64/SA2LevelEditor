@@ -107,9 +107,13 @@
 #include "../entities/LevelSpecific/CannonsCore/clearsw.h"
 #include "../entities/LevelSpecific/WeaponsBed/figene.h"
 #include "../entities/LevelSpecific/MeteorHerd/aircont.h"
+#include "../entities/GlobalObjects/contwood.h"
+#include "../entities/GlobalObjects/contiron.h"
+#include "../entities/GlobalObjects/solidbox.h"
+#include "../entities/GlobalObjects/ori.h"
 #include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.102";
+std::string Global::version = "0.0.103";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -711,6 +715,10 @@ int Global::main()
     CLEAR_SW::loadStaticModels();
     FIG_ENE::loadStaticModels();
     AIRCONT::loadStaticModels();
+    CONTIRON::loadStaticModels();
+    CONTWOOD::loadStaticModels();
+    SOLIDBOX::loadStaticModels();
+    ORI::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
@@ -1925,6 +1933,11 @@ void Global::deleteGhost(short slot)
     {
         return;
     }
-    delete Global::userGhosts[slot];
+
+    if (Global::userGhosts[slot] != nullptr)
+    {
+        delete Global::userGhosts[slot];
+    }
+
     Global::userGhosts[slot] = nullptr;
 }
