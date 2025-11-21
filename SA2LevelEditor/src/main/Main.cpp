@@ -113,7 +113,7 @@
 #include "../entities/GlobalObjects/ori.h"
 #include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.103";
+std::string Global::version = "0.0.104";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
