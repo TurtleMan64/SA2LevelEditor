@@ -94,6 +94,8 @@
 #include "../entities/GlobalObjects/contwood.h"
 #include "../entities/GlobalObjects/solidbox.h"
 #include "../entities/GlobalObjects/ori.h"
+#include "../entities/GlobalObjects/goalring.h"
+#include "../entities/LevelSpecific/WeaponsBed/wall.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1037,6 +1039,8 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "CONTWOOD")       {return new CONTWOOD      (data, useDefaultValues);}
     else if (o == "SOLIDBOX")       {return new SOLIDBOX      (data, useDefaultValues);}
     else if (o == "ORI")            {return new ORI           (data, useDefaultValues);}
+    else if (o == "GOALRING")       {return new GOALRING      (data, useDefaultValues);}
+    else if (o == "WALL")           {return new WALL          (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 
@@ -1336,13 +1340,15 @@ void LevelLoader::promptUserForLevel()
         return;
     }
 
+    std::string initialDir = (Global::dirSA2Root + "\\resource\\gd_PC\\");
+
     const int BUFSIZE = 1024;
     char filePaths[BUFSIZE] = {0};
     OPENFILENAME ofns = {0};
     ofns.lStructSize = sizeof(OPENFILENAME);
     ofns.lpstrFile = filePaths;
     ofns.nMaxFile = BUFSIZE;
-    ofns.lpstrInitialDir = (Global::dirSA2Root + "\\resource\\gd_PC\\").c_str();
+    ofns.lpstrInitialDir = initialDir.c_str();
     ofns.lpstrFilter = "SET files (set*_*.bin)\0set*_*.bin\0";
     ofns.nFilterIndex = 1; //default filter to show
     ofns.lpstrTitle = "Select BOTH setXXXX_s AND setXXXX_u for the level you want to edit";
@@ -1515,13 +1521,15 @@ void LevelLoader::promptUserForLevelSAB()
 
 void LevelLoader::exportLevel()
 {
+    std::string initialDir = (Global::dirSA2Root + "\\resource\\gd_PC\\");
+
     const int BUFSIZE = 1024;
     char filePaths[BUFSIZE] = {0};
     OPENFILENAME ofns = {0};
     ofns.lStructSize = sizeof(OPENFILENAME);
     ofns.lpstrFile = filePaths;
     ofns.nMaxFile = BUFSIZE;
-    ofns.lpstrInitialDir = (Global::dirSA2Root + "\\resource\\gd_PC\\").c_str();
+    ofns.lpstrInitialDir = initialDir.c_str();
     ofns.lpstrFilter = "SET files (set*_*.bin)\0set*_*.bin\0";
     ofns.nFilterIndex = 1; //default filter to show
     ofns.lpstrTitle = "Select BOTH setXXXX_s AND setXXXX_u for the level you want to export to.";

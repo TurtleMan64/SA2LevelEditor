@@ -54,6 +54,18 @@
     <Filter Include="Source Files\entities\LevelSpecific\CosmicWall">
       <UniqueIdentifier>{a28b2123-fac5-4962-996a-57b3fb5e13be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\IronGate">
+      <UniqueIdentifier>{43ac0127-8640-4aff-b7f9-728208c1c64a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\CannonsCore">
+      <UniqueIdentifier>{a782439b-4a62-4d40-ae7d-25c1cdf67cf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\WeaponsBed">
+      <UniqueIdentifier>{da61782d-32ce-4a4b-86c7-aa62b4d25140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\entities\LevelSpecific\MeteorHerd">
+      <UniqueIdentifier>{7ed1fbdc-a105-4ee0-8dbe-31277c5c1acd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.c">
@@ -359,6 +371,42 @@
     <ClCompile Include="src\entities\LevelSpecific\CosmicWall\VULCAN.cpp">
       <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\IronGate\SHELTH.cpp">
+      <Filter>Source Files\entities\LevelSpecific\IronGate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\IronGate\SHELTV.cpp">
+      <Filter>Source Files\entities\LevelSpecific\IronGate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\DolphinBase.cpp">
+      <Filter>Source Files\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\CannonsCore\CLEAR_SW.cpp">
+      <Filter>Source Files\entities\LevelSpecific\CannonsCore</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\WeaponsBed\FIG_ENE.cpp">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\MeteorHerd\AIRCONT.cpp">
+      <Filter>Source Files\entities\LevelSpecific\MeteorHerd</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\CONTWOOD.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\CONTIRON.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\SOLIDBOX.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\ORI.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\GlobalObjects\GOALRING.cpp">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\WeaponsBed\WALL.cpp">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -661,6 +709,42 @@
     </ClInclude>
     <ClInclude Include="src\entities\LevelSpecific\CosmicWall\vulcan.h">
       <Filter>Source Files\entities\LevelSpecific\CosmicWall</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\IronGate\shelth.h">
+      <Filter>Source Files\entities\LevelSpecific\IronGate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\IronGate\sheltv.h">
+      <Filter>Source Files\entities\LevelSpecific\IronGate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\dolphinbase.h">
+      <Filter>Source Files\toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\CannonsCore\clearsw.h">
+      <Filter>Source Files\entities\LevelSpecific\CannonsCore</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\WeaponsBed\figene.h">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\MeteorHerd\aircont.h">
+      <Filter>Source Files\entities\LevelSpecific\MeteorHerd</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\contwood.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\contiron.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\solidbox.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\ori.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\GlobalObjects\goalring.h">
+      <Filter>Source Files\entities\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\WeaponsBed\wall.h">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

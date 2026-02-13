@@ -107,13 +107,15 @@
 #include "../entities/LevelSpecific/CannonsCore/clearsw.h"
 #include "../entities/LevelSpecific/WeaponsBed/figene.h"
 #include "../entities/LevelSpecific/MeteorHerd/aircont.h"
+#include "../entities/LevelSpecific/WeaponsBed/wall.h"
 #include "../entities/GlobalObjects/contwood.h"
 #include "../entities/GlobalObjects/contiron.h"
 #include "../entities/GlobalObjects/solidbox.h"
 #include "../entities/GlobalObjects/ori.h"
+#include "../entities/GlobalObjects/goalring.h"
 #include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.104";
+std::string Global::version = "0.0.106";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -719,6 +721,8 @@ int Global::main()
     CONTWOOD::loadStaticModels();
     SOLIDBOX::loadStaticModels();
     ORI::loadStaticModels();
+    GOALRING::loadStaticModels();
+    WALL::loadStaticModels();
     #endif
 
     //This dummy never gets deleted
