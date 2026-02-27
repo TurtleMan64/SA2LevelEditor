@@ -407,6 +407,9 @@
     <ClCompile Include="src\entities\LevelSpecific\WeaponsBed\WALL.cpp">
       <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\WeaponsBed\TRUCK.cpp">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -744,6 +747,9 @@
       <Filter>Source Files\entities\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\LevelSpecific\WeaponsBed\wall.h">
+      <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\WeaponsBed\truck.h">
       <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
     </ClInclude>
   </ItemGroup>

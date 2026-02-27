@@ -96,6 +96,7 @@
 #include "../entities/GlobalObjects/ori.h"
 #include "../entities/GlobalObjects/goalring.h"
 #include "../entities/LevelSpecific/WeaponsBed/wall.h"
+#include "../entities/LevelSpecific/WeaponsBed/truck.h"
 
 #include <Windows.h>
 #include <commdlg.h>
@@ -1041,6 +1042,7 @@ SA2Object* LevelLoader::newSA2Object(int levelID, int objectID, char data[32], b
     else if (o == "ORI")            {return new ORI           (data, useDefaultValues);}
     else if (o == "GOALRING")       {return new GOALRING      (data, useDefaultValues);}
     else if (o == "WALL")           {return new WALL          (data, useDefaultValues);}
+    else if (o == "TRUCK")          {return new TRUCK         (data, useDefaultValues);}
     else                            {return new Unknown       (data, useDefaultValues);}
 }
 
