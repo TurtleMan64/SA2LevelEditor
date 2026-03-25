@@ -53,7 +53,8 @@ class Ghost;
 #define CMD_SA2_FOLLOW_NO_CAM      14
 #define CMD_SA2_FOLLOW_ORBIT_CAM   15
 #define CMD_SA2_TELEPORT           16
-#define CMD_HELP                   17
+#define CMD_SA2_LIVE_OBJECT_UPDATE 17
+#define CMD_HELP                   18
 
 #define CMD_BTN_1  20
 #define CMD_BTN_2  21
@@ -88,9 +89,13 @@ public:
     static std::list<Entity*> gameTransparentEntitiesToAdd;
     static std::list<Entity*> gameTransparentEntitiesToDelete;
 
+    static void attemptAttachToSA2();
+
     static void updateCamFromSA2();
 
     static void teleportSA2PlayerToCursor3D();
+
+    static void updateLiveObjectsFromSA2();
 
     static int main();
 
@@ -152,6 +157,8 @@ public:
     static bool gameIsFollowingSA2;
     static bool gameIsFollowingSA2NoCam;
     static bool gameIsFollowingSA2OrbitCam;
+    // if this is true, will update positions/rotations of objects as they move in sa2. dont export if you use this.
+    static bool gameIsLiveUpdatingSA2Objects;
     static float orbitCamRadius;
     static Vector3f orbitCamDirection;
     static int sa2Type;

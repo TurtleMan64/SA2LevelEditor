@@ -171,10 +171,10 @@ void BIGJUMP::loadStaticModels()
     std::fprintf(stdout, "Loading BIGJUMP static models...\n");
     #endif
 
-    loadModel(&BIGJUMP::models, "res/Models/GlobalObjects/BigJump/", "BigJump");
+    loadModel(&BIGJUMP::models, "res/Models/GlobalObjects/BigJump/", "Collision");
     if (BIGJUMP::cmBase == nullptr)
     {
-        BIGJUMP::cmBase = loadCollisionModel("res/Models/GlobalObjects/BigJump/", "BigJump");
+        BIGJUMP::cmBase = loadCollisionModel("res/Models/GlobalObjects/BigJump/", "Collision");
     }
 }
 

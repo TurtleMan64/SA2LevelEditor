@@ -116,7 +116,7 @@
 #include "../entities/GlobalObjects/goalring.h"
 #include "../toolbox/dolphinbase.h"
 
-std::string Global::version = "0.0.107";
+std::string Global::version = "0.0.108";
 
 std::unordered_set<Entity*> Global::gameEntities;
 std::list<Entity*> Global::gameEntitiesToAdd;
@@ -171,6 +171,7 @@ bool Global::shouldExportLevel  = false;
 bool Global::gameIsFollowingSA2 = false;
 bool Global::gameIsFollowingSA2NoCam = false;
 bool Global::gameIsFollowingSA2OrbitCam = false;
+bool Global::gameIsLiveUpdatingSA2Objects = false;
 float Global::orbitCamRadius = 60.0f;
 Vector3f Global::orbitCamDirection(1.0f, 0.0f, 0.0f);
 bool Global::displayCameraTriggers = false;
@@ -253,13 +254,15 @@ void addMenus(HWND window)
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_BACKFACE_CULLING , MF_UNCHECKED);
     CheckMenuItem(Global::mainMenuView, CMD_VIEW_FRONTFACE_CULLING, MF_UNCHECKED);
 
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,           "Follow SA2 in Real Time");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM,    "Follow SA2 in Real Time (Free Camera)");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_ORBIT_CAM, "Follow SA2 in Real Time (Orbit Camera)");
-    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT,         "Teleport Playable Character to 3D Cursor");
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW,           MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM,    MF_UNCHECKED);
-    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM, MF_UNCHECKED);
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW,             "Follow SA2 in Real Time");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_NO_CAM,      "Follow SA2 in Real Time (Free Camera)");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_FOLLOW_ORBIT_CAM,   "Follow SA2 in Real Time (Orbit Camera)");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_TELEPORT,           "Teleport Playable Character to 3D Cursor");
+    AppendMenu(Global::mainMenuSA2, MF_STRING, CMD_SA2_LIVE_OBJECT_UPDATE, "Update objects as they move/rotate in the level (not implemented)");
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW,             MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_NO_CAM,      MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_FOLLOW_ORBIT_CAM,   MF_UNCHECKED);
+    CheckMenuItem(Global::mainMenuSA2, CMD_SA2_LIVE_OBJECT_UPDATE, MF_UNCHECKED);
 
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuFile, "File");
     AppendMenu(Global::mainMenu, MF_POPUP, (UINT_PTR)Global::mainMenuView, "View");
@@ -465,6 +468,20 @@ LRESULT CALLBACK win32WindowCallback(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
             break;
         }
         case CMD_SA2_TELEPORT: Global::teleportSA2PlayerToCursor3D(); break;
+        
+        case CMD_SA2_LIVE_OBJECT_UPDATE:
+        {
+            Global::gameIsLiveUpdatingSA2Objects = !Global::gameIsLiveUpdatingSA2Objects;
+            if (Global::gameIsLiveUpdatingSA2Objects)
+            {
+                CheckMenuItem(Global::mainMenuSA2, CMD_SA2_LIVE_OBJECT_UPDATE, MF_CHECKED);
+            }
+            else
+            {
+                CheckMenuItem(Global::mainMenuSA2, CMD_SA2_LIVE_OBJECT_UPDATE, MF_UNCHECKED);
+            }
+            break;
+        }
         
         case CMD_HELP: MessageBox(NULL,
                 (("Version " + Global::version) + "\n\n"
@@ -752,7 +769,7 @@ int Global::main()
 
         timeOld = timeNew;
 
-        if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam)
+        if (!Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam && !Global::gameIsLiveUpdatingSA2Objects)
         {
             Input::waitForInputs();
         }
@@ -781,7 +798,7 @@ int Global::main()
             #endif
         }
 
-        if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam)
+        if (!Global::redrawWindow && !Global::gameIsFollowingSA2 && !Global::gameIsFollowingSA2NoCam && !Global::gameIsFollowingSA2OrbitCam && !Global::gameIsLiveUpdatingSA2Objects)
         {
             continue;
         }
@@ -810,6 +827,11 @@ int Global::main()
             //    DisplayManager::updateDisplay();
             //    continue;
             //}
+        }
+
+        if (Global::gameIsLiveUpdatingSA2Objects)
+        {
+            Global::updateLiveObjectsFromSA2();
         }
 
         //long double thisTime = std::time(0);
@@ -1205,7 +1227,7 @@ DWORD getPIDByName(const char* processName)
     return NULL;
 }
 
-void Global::updateCamFromSA2()
+void Global::attemptAttachToSA2()
 {
     if (sa2Handle == NULL || sa2PID == NULL)
     {
@@ -1287,7 +1309,15 @@ void Global::updateCamFromSA2()
             extern float dt;
             timeUntilNextProcessAttach -= dt;
         }
+    }
+}
 
+void Global::updateCamFromSA2()
+{
+    Global::attemptAttachToSA2();
+
+    if (sa2Handle == NULL || sa2PID == NULL)
+    {
         return;
     }
 
@@ -1898,6 +1928,107 @@ void Global::teleportSA2PlayerToCursor3D()
     }
 
     CloseHandle(handle);
+}
+
+void Global::updateLiveObjectsFromSA2()
+{
+    Global::attemptAttachToSA2();
+
+    if (sa2Handle == NULL || sa2PID == NULL)
+    {
+        return;
+    }
+    //printf("updating live objects...\n");
+
+    if (Global::sa2Type == Global::SA2Type::Dolphin)
+    {
+
+        //{
+        //    unsigned long long objectListsAddrPC = DolphinBase::getAddressOfDolphinMemoryToRead(0x801fceb8ULL + 0x8);
+        //
+        //    SIZE_T bytesRead = 0;
+        //    char buffer[64] = {0};
+        //    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(objectListsAddrPC), (LPVOID)buffer, (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        //    {
+        //        printf("Error when reading from dolphin\n");
+        //        CloseHandle(sa2Handle);
+        //        sa2Handle = NULL;
+        //        sa2PID = NULL;
+        //        timeUntilNextProcessAttach = ATTACH_DELAY;
+        //        return;
+        //    }
+        //    unsigned int currentObjAddrGC = 0;
+        //    ((char*)&currentObjAddrGC)[3] = buffer[0];
+        //    ((char*)&currentObjAddrGC)[2] = buffer[1];
+        //    ((char*)&currentObjAddrGC)[1] = buffer[2];
+        //    ((char*)&currentObjAddrGC)[0] = buffer[3];
+        //
+        //    unsigned int firstObjAddrGC = currentObjAddrGC;
+        //
+        //    //printf("obj addr = %x\n", currentObjAddrGC);
+        //
+        //    if (!ReadProcessMemory(sa2Handle, (LPCVOID)(DolphinBase::getAddressOfDolphinMemoryToRead(currentObjAddrGC + 0x44)), (LPVOID)buffer, (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        //    {
+        //        printf("Error when reading from dolphin\n");
+        //        CloseHandle(sa2Handle);
+        //        sa2Handle = NULL;
+        //        sa2PID = NULL;
+        //        timeUntilNextProcessAttach = ATTACH_DELAY;
+        //        return;
+        //    }
+        //    unsigned int currentObjNameAddrGC = 0;
+        //
+        //    int safety = 0;
+        //
+        //    while (currentObjAddrGC != firstObjAddrGC && safety < 100)
+        //    {
+        //        safety++;
+        //
+        //        //printf("obj addr = %x\n", currentObjAddrGC);
+        //
+        //        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(DolphinBase::getAddressOfDolphinMemoryToRead(currentObjAddrGC + 0x44)), (LPVOID)buffer, (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        //        {
+        //            printf("Error when reading from dolphin\n");
+        //            CloseHandle(sa2Handle);
+        //            sa2Handle = NULL;
+        //            sa2PID = NULL;
+        //            timeUntilNextProcessAttach = ATTACH_DELAY;
+        //            return;
+        //        }
+        //        ((char*)&currentObjNameAddrGC)[3] = buffer[0];
+        //        ((char*)&currentObjNameAddrGC)[2] = buffer[1];
+        //        ((char*)&currentObjNameAddrGC)[1] = buffer[2];
+        //        ((char*)&currentObjNameAddrGC)[0] = buffer[3];
+        //
+        //        //printf("obj name addr = %d\n", currentObjNameAddrGC);
+        //
+        //        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(DolphinBase::getAddressOfDolphinMemoryToRead(currentObjNameAddrGC)), (LPVOID)buffer, (SIZE_T)64, &bytesRead) || bytesRead != 64)
+        //        {
+        //            printf("Error when reading from dolphin\n");
+        //            CloseHandle(sa2Handle);
+        //            sa2Handle = NULL;
+        //            sa2PID = NULL;
+        //            timeUntilNextProcessAttach = ATTACH_DELAY;
+        //            return;
+        //        }
+        //        printf("obj name = %s\n", buffer);
+        //
+        //        if (!ReadProcessMemory(sa2Handle, (LPCVOID)(DolphinBase::getAddressOfDolphinMemoryToRead(currentObjAddrGC + 0x4)), (LPVOID)buffer, (SIZE_T)4, &bytesRead) || bytesRead != 4)
+        //        {
+        //            printf("Error when reading from dolphin\n");
+        //            CloseHandle(sa2Handle);
+        //            sa2Handle = NULL;
+        //            sa2PID = NULL;
+        //            timeUntilNextProcessAttach = ATTACH_DELAY;
+        //            return;
+        //        }
+        //        ((char*)&currentObjAddrGC)[3] = buffer[0];
+        //        ((char*)&currentObjAddrGC)[2] = buffer[1];
+        //        ((char*)&currentObjAddrGC)[1] = buffer[2];
+        //        ((char*)&currentObjAddrGC)[0] = buffer[3];
+        //    }
+        //}
+    }
 }
 
 void Global::createGhost(short slot)
