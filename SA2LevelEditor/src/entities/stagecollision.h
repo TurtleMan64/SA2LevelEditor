@@ -6,8 +6,9 @@ class CollisionModel;
 
 #include <list>
 #include "entity.h"
+#include "sa2object.h"
 
-class StageCollision : public Entity
+class StageCollision : public SA2Object
 {
 private:
     static std::list<TexturedModel*> models;
@@ -21,6 +22,8 @@ public:
     std::list<TexturedModel*>* getModels();
 
     static void loadModels(const char* objFolder, const char* objFilename);
+
+	void updateEditorWindows();
 
     static void deleteStaticModels();
 };

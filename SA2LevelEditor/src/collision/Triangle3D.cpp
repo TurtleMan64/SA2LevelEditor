@@ -2,7 +2,6 @@
 #include "triangle3d.h"
 #include "../toolbox/vector.h"
 
-
 Triangle3D::Triangle3D(Vector3f* newP1, Vector3f* newP2, Vector3f* newP3)
 {
     this->p1X = newP1->x;
@@ -22,12 +21,12 @@ Triangle3D::Triangle3D(Vector3f* newP1, Vector3f* newP2, Vector3f* newP3)
 
 void Triangle3D::generateValues()
 {
-    Vector3f vec1(p1X - p3X, p1Y - p3Y, p1Z - p3Z);
-    Vector3f vec2(p2X - p3X, p2Y - p3Y, p2Z - p3Z);
+    Vector3f vec1(p2X - p1X, p2Y - p1Y, p2Z - p1Z);
+    Vector3f vec2(p3X - p1X, p3Y - p1Y, p3Z - p1Z);
 
     Vector3f cross = vec1.cross(&vec2);
 
-    float newD = cross.x*p3X + cross.y*p3Y + cross.z*p3Z;
+    float newD = cross.x*p1X + cross.y*p1Y + cross.z*p1Z;
 
     A = cross.x;
     B = cross.y;
