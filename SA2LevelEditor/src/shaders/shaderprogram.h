@@ -26,6 +26,7 @@ private:
     int location_clipPlaneBehind;
     int location_mixFactor;
     int location_textureSampler2;
+    int location_hasTexture;
 
 public:
     ShaderProgram(const char* vertexFilename, const char* fragmentFilename);
@@ -52,7 +53,11 @@ public:
 
     void loadMixFactor(float factor);
 
+    void loadHasTexture(int hasTexture);
+
     void connectTextureUnits();
+
+
 
 protected:
     void bindAttributes();

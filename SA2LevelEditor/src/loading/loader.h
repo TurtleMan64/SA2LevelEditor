@@ -43,7 +43,14 @@ public:
                               std::vector<float>* textureCoords, 
                               std::vector<float>* normals, 
                               std::vector<float>* vertexColors, 
-                              std::vector<int>* indices);
+                              std::vector<int>* indices,
+                              std::vector<float>* bary=nullptr);
+
+    static RawModel loadToVAO(
+        std::vector<float>* positions,
+        std::vector<float>* normals,
+        std::vector<float>* bary,
+        std::vector<int>* indices);
 
     //for gui
     static RawModel loadToVAO(std::vector<float>* positions, int dimensions);

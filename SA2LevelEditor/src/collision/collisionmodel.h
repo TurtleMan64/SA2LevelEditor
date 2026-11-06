@@ -7,7 +7,39 @@ class SA2Object;
 
 #include <math.h>
 #include <list>
+#include "../toolbox/vector.h"
 
+struct PCMeshset {
+    uint16_t typeAndMaterialID;
+    uint16_t numMeshes;
+    int16_t* __ptr32 meshes;
+    uint32_t* __ptr32 attrA;
+    Vector3f* __ptr32 normals;
+    uint32_t* __ptr32 vertexColor;
+    uint32_t* __ptr32 vertexUV;
+};
+
+struct PCMeshModel {
+    Vector3f* __ptr32 points;
+    Vector3f* __ptr32 normals;
+    uint32_t numPoints;
+    struct PCMeshset* __ptr32 meshsets;
+    uint32_t materials;
+    uint16_t numMeshsets;
+    uint16_t numMaterials;
+    Vector3f center;
+    float radius;
+};
+
+struct PCMeshObject {
+    uint32_t evalFlags;
+    struct PCMeshModel* __ptr32 model;
+    Vector3f pos;
+    int32_t ang[3];
+    Vector3f scale;
+    struct PCMeshObject* __ptr32 child;
+    struct PCMeshObject* __ptr32 sibling;
+};
 
 class CollisionModel
 {

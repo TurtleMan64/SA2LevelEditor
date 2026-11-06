@@ -23,11 +23,12 @@ std::unordered_map<GLuint, std::string> Loader::texIdToFilename;
 int Loader::vaoNumber = 0;
 int Loader::vboNumber = 0;
 
-RawModel Loader::loadToVAO(std::vector<float>* positions, 
-                           std::vector<float>* textureCoords, 
-                           std::vector<float>* normals, 
-                           std::vector<float>* vertexColors, 
-                           std::vector<int>* indicies)
+RawModel Loader::loadToVAO(std::vector<float>* positions,
+    std::vector<float>* textureCoords,
+    std::vector<float>* normals,
+    std::vector<float>* vertexColors,
+    std::vector<int>* indicies,
+    std::vector<float>* bary)
 {
     GLuint vaoID = createVAO();
     std::list<GLuint> vboIDs;
@@ -37,10 +38,30 @@ RawModel Loader::loadToVAO(std::vector<float>* positions,
     vboIDs.push_back(storeDataInAttributeList(1, 2, textureCoords));
     vboIDs.push_back(storeDataInAttributeList(2, 3, normals));
     vboIDs.push_back(storeDataInAttributeList(3, 3, vertexColors));
+    if (bary != nullptr) {
+        vboIDs.push_back(storeDataInAttributeList(4, 3, bary));
+    }
+    else {
+        std::vector<float> tmpBary(positions->size(), 0.0f);
+        vboIDs.push_back(storeDataInAttributeList(4, 3, &tmpBary));
+    }
 
     unbindVAO();
 
     return RawModel(vaoID, (int)indicies->size(), &vboIDs);
+}
+
+RawModel Loader::loadToVAO(
+    std::vector<float>* positions, std::vector<float>* normals, std::vector<float>* bary, std::vector<int>* indices)
+{
+    GLuint vaoID = createVAO();
+    std::list<GLuint> vboIDs;
+
+    vboIDs.push_back(bindIndiciesBuffer(indices));
+    vboIDs.push_back(storeDataInAttributeList(0, 3, positions));
+    vboIDs.push_back(storeDataInAttributeList(2, 3, normals));
+    vboIDs.push_back(storeDataInAttributeList(4, 3, bary));
+    return RawModel(vaoID, (int)indices->size(), &vboIDs);
 }
 
 //for gui

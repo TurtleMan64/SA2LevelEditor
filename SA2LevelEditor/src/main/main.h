@@ -250,5 +250,7 @@ public:
     static void addTransparentEntity(Entity* entityToAdd);
     static void deleteTransparentEntity(Entity* entityToDelete);
     static void deleteAllTransparentEntites();
+
+    static HANDLE getSA2Handle();
 };
 #endif

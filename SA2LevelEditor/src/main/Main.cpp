@@ -97,6 +97,7 @@
 #include "../entities/GlobalObjects/soapsw.h"
 #include "../entities/GlobalObjects/tjumpdai.h"
 #include "../entities/LevelSpecific/PyramidCave/torchcup.h"
+#include "../entities/LevelSpecific/PyramidCave/KEYDOOR.h"
 #include "../entities/LevelSpecific/PyramidCave/snakestatue.h"
 #include "../entities/LevelSpecific/PyramidCave/sneakrail.h"
 #include "../entities/LevelSpecific/CosmicWall/cw_stage.h"
@@ -1195,6 +1196,11 @@ DWORD sa2PID = NULL;
 HANDLE sa2Handle = NULL;
 float timeUntilNextProcessAttach = ATTACH_DELAY;
 
+HANDLE Global::getSA2Handle()
+{
+    return sa2Handle;
+}
+
 DWORD getPIDByName(const char* processName)
 {
     PROCESSENTRY32 pe32 = {0};
@@ -1302,6 +1308,10 @@ void Global::attemptAttachToSA2()
                         DolphinBase::m_ARAMAccessible = false;
                     }
                 }
+                else if (sa2Handle != NULL && Global::sa2Type == Global::SA2Type::Steam) {
+                    KEYDOOR::loadStaticModels();
+                }
+
             }
         }
         else

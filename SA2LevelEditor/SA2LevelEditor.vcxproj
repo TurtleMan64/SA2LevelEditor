@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\KEYDOOR.cpp" />
     <ClCompile Include="src\collision\CollisionChecker.cpp" />
     <ClCompile Include="src\collision\CollisionModel.cpp" />
     <ClCompile Include="src\collision\Triangle3D.cpp" />
@@ -272,6 +273,7 @@
     <ClCompile Include="src\toolbox\Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\KEYDOOR.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\collision\collisionchecker.h" />
     <ClInclude Include="src\collision\collisionmodel.h" />

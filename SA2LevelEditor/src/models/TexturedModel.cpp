@@ -26,8 +26,13 @@ TexturedModel::TexturedModel(RawModel* model, ModelTexture* texture)
     }
 
     //Copy over the ModelTexture data
-    this->texture = ModelTexture(texture);
-    this->texture.addMeToAnimationsSetIfNeeded();
+    if (texture) {
+        this->texture = ModelTexture(texture);
+        this->texture.addMeToAnimationsSetIfNeeded();
+    }
+    else {
+        this->texture = ModelTexture();
+    }
 }
 
 RawModel* TexturedModel::getRawModel()

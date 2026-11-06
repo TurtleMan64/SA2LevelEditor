@@ -28,19 +28,19 @@ void processVertexBinary(int, int, int,
     std::vector<Vertex*>* vertices,
     std::vector<int>* indices);
 
-void dealWithAlreadyProcessedVertex(Vertex*, 
-    int, 
-    int, 
-    std::vector<int>*, 
+void dealWithAlreadyProcessedVertex(Vertex*,
+    int,
+    int,
+    std::vector<int>*,
     std::vector<Vertex*>*);
 
 void removeUnusedVertices(std::vector<Vertex*>* vertices);
 
 void convertDataToArrays(
-    std::vector<Vertex*>* vertices, 
+    std::vector<Vertex*>* vertices,
     std::vector<Vector2f>* textures,
-    std::vector<Vector3f>* normals, 
-    std::vector<float>* verticesArray, 
+    std::vector<Vector3f>* normals,
+    std::vector<float>* verticesArray,
     std::vector<float>* texturesArray,
     std::vector<float>* normalsArray,
     std::vector<float>* colorsArray);
@@ -54,7 +54,7 @@ std::vector<std::string> textureNamesList;
 int loadModel(std::list<TexturedModel*>* models, std::string filePath, std::string fileName)
 {
     int attemptBinaryOBJ = loadBinaryObjModel(models, filePath, fileName+".binobj");
-    
+
     if (attemptBinaryOBJ == -1)
     {
         int attemptBinaryVCL = loadBinaryVclModel(models, filePath, fileName+".binvcl");
@@ -65,8 +65,8 @@ int loadModel(std::list<TexturedModel*>* models, std::string filePath, std::stri
 
             if (attemptOBJ == -1)
             {
-                std::fprintf(stderr, "Error: Cannot load model from file\n'%s' or\n'%s' or\n'%s'\n", 
-                    ((filePath + fileName) + ".binobj").c_str(), 
+                std::fprintf(stderr, "Error: Cannot load model from file\n'%s' or\n'%s' or\n'%s'\n",
+                    ((filePath + fileName) + ".binobj").c_str(),
                     ((filePath + fileName) + ".binvcl").c_str(),
                     ((filePath + fileName) + ".obj").c_str());
             }
@@ -83,7 +83,7 @@ int loadModel(std::list<TexturedModel*>* models, std::string filePath, std::stri
 CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
 {
     CollisionModel* attemptBinaryCol = loadBinaryColCollisionModel(filePath, fileName+".bincol");
-    
+
     if (attemptBinaryCol == nullptr)
     {
         CollisionModel* attemptBinaryOBJ = loadBinaryObjCollisionModel(filePath, fileName+".binobj");
@@ -98,8 +98,8 @@ CollisionModel* loadCollisionModel(std::string filePath, std::string fileName)
 
                 if (attemptObj == nullptr)
                 {
-                    std::fprintf(stderr, "Error: Cannot load collision from file \n'%s' or\n'%s' or\n'%s' or \n'%s'\n", 
-                        ((filePath + fileName) + ".bincol").c_str(), 
+                    std::fprintf(stderr, "Error: Cannot load collision from file \n'%s' or\n'%s' or\n'%s' or \n'%s'\n",
+                        ((filePath + fileName) + ".bincol").c_str(),
                         ((filePath + fileName) + ".binobj").c_str(),
                         ((filePath + fileName) + ".binvcl").c_str(),
                         ((filePath + fileName) + ".obj").c_str());
@@ -143,7 +143,7 @@ int loadBinaryObjModel(std::list<TexturedModel*>* models, std::string filePath, 
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'o' || 
+    if (fileType[0] != 'o' ||
         fileType[1] != 'b' ||
         fileType[2] != 'j' ||
         fileType[3] != 0)
@@ -322,7 +322,7 @@ int loadBinaryVclModel(std::list<TexturedModel*>* models, std::string filePath, 
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'v' || 
+    if (fileType[0] != 'v' ||
         fileType[1] != 'c' ||
         fileType[2] != 'l' ||
         fileType[3] != 0)
@@ -367,10 +367,10 @@ int loadBinaryVclModel(std::list<TexturedModel*>* models, std::string filePath, 
         //new
         float t[3];
         fread(t, sizeof(float), 3, file);
-        
+
         Vector3f vertex(t[0], t[1], t[2]);
         Vertex* newVertex = new Vertex((int)vertices.size(), &vertex); INCR_NEW("Vertex");
-        
+
         unsigned char c[3];
         fread(c, sizeof(unsigned char), 3, file);
         float red   = ((float)c[0])/255.0f;
@@ -1041,7 +1041,7 @@ int loadBinaryObjModelWithMTL(std::list<TexturedModel*>* models, std::string fil
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'o' || 
+    if (fileType[0] != 'o' ||
         fileType[1] != 'b' ||
         fileType[2] != 'j' ||
         fileType[3] != 0)
@@ -1273,10 +1273,10 @@ void dealWithAlreadyProcessedVertex(
 
 
 void convertDataToArrays(
-    std::vector<Vertex*>* vertices, 
+    std::vector<Vertex*>* vertices,
     std::vector<Vector2f>* textures,
-    std::vector<Vector3f>* normals, 
-    std::vector<float>* verticesArray, 
+    std::vector<Vector3f>* normals,
+    std::vector<float>* verticesArray,
     std::vector<float>* texturesArray,
     std::vector<float>* normalsArray,
     std::vector<float>* colorsArray)
@@ -1473,7 +1473,7 @@ CollisionModel* loadBinaryColCollisionModel(std::string filePath, std::string fi
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'c' || 
+    if (fileType[0] != 'c' ||
         fileType[1] != 'o' ||
         fileType[2] != 'l' ||
         fileType[3] != 0)
@@ -1632,7 +1632,7 @@ CollisionModel* loadBinaryColCollisionModel(std::string filePath, std::string fi
 CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fileName)
 {
     FILE* file = nullptr;
-    int err = fopen_s(&file, (filePath+fileName).c_str(), "rb");
+    int err = fopen_s(&file, (filePath + fileName).c_str(), "rb");
     if (file == nullptr || err != 0)
     {
         //std::fprintf(stderr, "Error: Cannot load file '%s'\n", (filePath + fileName).c_str());
@@ -1646,18 +1646,18 @@ CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fi
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'v' || 
+    if (fileType[0] != 'v' ||
         fileType[1] != 'c' ||
         fileType[2] != 'l' ||
         fileType[3] != 0)
     {
-        std::fprintf(stdout, "Error: File '%s' is not a valid .binvcl file\n", (filePath+fileName).c_str());
+        std::fprintf(stdout, "Error: File '%s' is not a valid .binvcl file\n", (filePath + fileName).c_str());
         return nullptr;
     }
 
     CollisionModel* model = new CollisionModel; INCR_NEW("CollisionModel")
 
-    std::string line;
+        std::string line;
     std::vector<Vector3f> vertexList;
 
     int mtllibLength;
@@ -1710,11 +1710,11 @@ CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fi
 
             fread(&f[0], sizeof(int), 6, file);
 
-            Vector3f v1 = vertexList[f[0]-1];
-            Vector3f v2 = vertexList[f[2]-1];
-            Vector3f v3 = vertexList[f[4]-1];
+            Vector3f v1 = vertexList[f[0] - 1];
+            Vector3f v2 = vertexList[f[2] - 1];
+            Vector3f v3 = vertexList[f[4] - 1];
 
-            model->triangles.push_back(new Triangle3D(&v1, &v2, &v3)); INCR_NEW ("Triangle3D")
+            model->triangles.push_back(new Triangle3D(&v1, &v2, &v3)); INCR_NEW("Triangle3D")
         }
     }
 
@@ -1723,6 +1723,237 @@ CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fi
     model->generateMinMaxValues();
 
     return model;
+}
+
+int loadObjModelFromPCGame(std::list<TexturedModel*>* models, struct PCMeshObject* objectPtr)
+{
+    if (models->size() > 0)
+    {
+        return 1;
+    }
+
+
+    HANDLE handle = Global::getSA2Handle();
+
+    std::vector<float> vertices;
+    std::vector<float> normals;
+    std::vector<float> texCoords;
+    std::vector<float> colors;
+    std::vector<float> bary;
+    std::vector<RawModel> rawModels;
+    SIZE_T numberBytesRead;
+
+    struct PCMeshObject object;
+    if (!ReadProcessMemory(handle, objectPtr, &object, sizeof(struct PCMeshObject), &numberBytesRead) || \
+        numberBytesRead != sizeof(struct PCMeshObject)) {
+        return -1;
+    }
+
+    struct PCMeshModel model;
+    if (!ReadProcessMemory(handle, object.model, &model, sizeof(struct PCMeshModel), &numberBytesRead) || \
+        numberBytesRead != sizeof(struct PCMeshModel)) {
+        return -1;
+    }
+
+    vertices.resize(3 * model.numPoints);
+    if (!ReadProcessMemory(handle, model.points, vertices.data(), model.numPoints * 3 * sizeof(float), &numberBytesRead) || \
+        numberBytesRead != model.numPoints * 3 * sizeof(float)) {
+        return -1;
+    }
+    normals.resize(3 * model.numPoints);
+    if (!ReadProcessMemory(handle, model.normals, normals.data(), model.numPoints * 3 * sizeof(float), &numberBytesRead) || \
+        numberBytesRead != model.numPoints * 3 * sizeof(float)) {
+        return -1;
+    }
+
+    texCoords.resize(2 * model.numPoints);
+    colors.resize(3 * model.numPoints);
+    bary.resize(3 * model.numPoints);
+    for (uint32_t i = 0; i < model.numPoints; i++) {
+        texCoords[i*2]= 1.0f; // u
+        texCoords[i*2+1] = 1.0f; // v
+        colors[i * 3] = 0.8f;
+        colors[i * 3 + 1] = 0.8f;
+        colors[i * 3 + 2] = 0.8f;
+        bary[i * 3] = 0.0f;
+        bary[i * 3 + 1] = 0.0f;
+        bary[i * 3 + 2] = 0.0f;
+    }
+
+    std::vector<struct PCMeshset> meshsets;
+    meshsets.resize(model.numMeshsets);
+
+    if (!ReadProcessMemory(handle, model.meshsets, meshsets.data(), model.numMeshsets * sizeof(struct PCMeshset), &numberBytesRead) || \
+        numberBytesRead != model.numMeshsets * sizeof(struct PCMeshset)) {
+        return -1;
+    }
+
+    for (auto meshset : meshsets) {
+        std::vector<int> indices;
+        std::vector<int16_t> meshVertexLists;
+        switch (meshset.typeAndMaterialID & 0xC000)
+        {
+        case 0xC000:
+        {
+            int16_t listSize = 0;
+            for (int i = 0; i < meshset.numMeshes; i++) {
+                int16_t tmpListSize = 0;
+                uint32_t offsetShorts = i + listSize;
+                if (!ReadProcessMemory(handle, meshset.meshes + offsetShorts, &tmpListSize, sizeof(int16_t), &numberBytesRead) || \
+                    numberBytesRead != sizeof(int16_t)) {
+                    return -1;
+                }
+                tmpListSize = tmpListSize & 0x7fff;
+                listSize += tmpListSize;
+            }
+            meshVertexLists.resize(listSize + meshset.numMeshes);
+            if (!ReadProcessMemory(handle, meshset.meshes, meshVertexLists.data(), (listSize + meshset.numMeshes) * sizeof(int16_t), &numberBytesRead) || \
+                numberBytesRead != (listSize + meshset.numMeshes) * sizeof(int16_t)) {
+                return -1;
+            }
+            uint32_t offsetCount = 0;
+            for (uint32_t i = 0; i < meshset.numMeshes; i++) {
+                // meshVertexLists[offsetCount] will always be at least 3
+                // as it's the number of vertices
+                uint32_t numVerts = meshVertexLists[offsetCount] & 0x7fff;
+                bool rightWinding = meshVertexLists[offsetCount] & 0x8000;
+                indices.clear();
+                indices.shrink_to_fit();
+                if (rightWinding) {
+                    indices.emplace_back(meshVertexLists[offsetCount + 2]);
+                    indices.emplace_back(meshVertexLists[offsetCount + 1]);
+                }
+                else {
+                    indices.emplace_back(meshVertexLists[offsetCount + 1]);
+                    indices.emplace_back(meshVertexLists[offsetCount + 2]);
+                }
+                for (uint32_t j = 3; j <= numVerts; j++) {
+                    indices.emplace_back(meshVertexLists[offsetCount + j]);
+                }
+                offsetCount += (numVerts + 1);
+                std::unordered_set<int> seen;
+                std::vector<int> indicesSlice;
+                int startIdx = 0;
+                for (int j = 0; j < indices.size(); j++) {
+                    int index = indices[j];
+                    if (seen.find(index) != seen.end()) {
+                        indicesSlice = std::vector<int>(indices.begin() + startIdx, indices.begin() + j);
+                        rawModels.push_back(Loader::loadToVAO(&vertices, &texCoords, &normals, &colors, &indicesSlice, &bary));
+
+                        seen.clear();
+                        seen.insert(indices[j - 1]);
+                        seen.insert(indices[j - 2]);
+                        startIdx = j - 2;
+                    }
+                    seen.insert(index);
+                    bary[3 * index + 0] = 1.0f * ((j + 0) % 3 == 0);
+                    bary[3 * index + 1] = 1.0f * ((j + 1) % 3 == 0);
+                    bary[3 * index + 2] = 1.0f * ((j + 2) % 3 == 0);
+                }
+                indicesSlice = std::vector<int>(indices.begin() + startIdx, indices.end());
+                rawModels.push_back(Loader::loadToVAO(&vertices, &texCoords, &normals, &colors, &indicesSlice, &bary));
+            }
+        }
+
+        default:
+            continue;
+        }
+    }
+    for (RawModel rawModel : rawModels) {
+        TexturedModel* tm = new TexturedModel(&rawModel, nullptr); INCR_NEW("TexturedModel")
+        models->push_back(tm);
+    }
+    return 1;
+}
+
+
+CollisionModel* loadCollisionModelFromPCGame(PCMeshObject* objectPtr)
+{
+    HANDLE handle = Global::getSA2Handle();
+    CollisionModel* collisionModel = new CollisionModel; INCR_NEW("CollisionModel")
+    std::vector<Vector3f> vertices;
+    SIZE_T numberBytesRead;
+
+    struct PCMeshObject object;
+    if (!ReadProcessMemory(handle, objectPtr, &object, sizeof(struct PCMeshObject), &numberBytesRead) || \
+        numberBytesRead != sizeof(struct PCMeshObject)) {
+            return nullptr;
+    }
+
+    struct PCMeshModel model;
+    if (!ReadProcessMemory(handle, object.model, &model, sizeof(struct PCMeshModel), &numberBytesRead) || \
+        numberBytesRead != sizeof(struct PCMeshModel)) {
+        return nullptr;
+    }
+
+    vertices.resize(model.numPoints);
+    if (!ReadProcessMemory(handle, model.points, vertices.data(), model.numPoints * sizeof(Vector3f), &numberBytesRead) || \
+        numberBytesRead != model.numPoints * sizeof(Vector3f)) {
+        return nullptr;
+    }
+
+    std::vector<struct PCMeshset> meshsets;
+    meshsets.resize(model.numMeshsets);
+
+    if (!ReadProcessMemory(handle, model.meshsets, meshsets.data(), model.numMeshsets * sizeof(struct PCMeshset), &numberBytesRead) || \
+        numberBytesRead != model.numMeshsets * sizeof(struct PCMeshset)) {
+        return nullptr;
+    }
+
+    for (auto meshset : meshsets) {
+        std::vector<int16_t> meshVertexLists;
+        switch (meshset.typeAndMaterialID & 0xC000)
+        {
+        case 0xC000:
+        {
+            int32_t listSize = 0;
+            for (int i = 0; i < meshset.numMeshes; i++) {
+                int16_t tmpListSize = 0;
+                uint32_t offsetShorts = i + listSize;
+                if (!ReadProcessMemory(handle, meshset.meshes + offsetShorts, &tmpListSize, sizeof(int16_t), &numberBytesRead) || \
+                    numberBytesRead != sizeof(int16_t)) {
+                    return nullptr;
+                }
+                // MSB is used to indicate winding of triangles in strip
+                tmpListSize = tmpListSize & 0x7fff;
+                listSize += tmpListSize;
+            }
+            meshVertexLists.resize(listSize + meshset.numMeshes);
+            if (!ReadProcessMemory(handle, meshset.meshes, meshVertexLists.data(), (listSize + meshset.numMeshes) * sizeof(int16_t), &numberBytesRead) || \
+                numberBytesRead != (listSize + meshset.numMeshes) * sizeof(int16_t)) {
+                return nullptr;
+            }
+            uint32_t offsetCount = 0;
+            for (uint32_t i = 0; i < meshset.numMeshes; i++) {
+                // meshVertexLists[offsetCount] will always be at least 3
+                // as it's the number of vertices
+                uint32_t numVerts = meshVertexLists[offsetCount] & 0x7fff;
+                bool rightWinding = meshVertexLists[offsetCount] & 0x8000;
+                for (uint32_t j = 3; j <= numVerts; j++) {
+                    Vector3f v1, v2, v3;
+                    if (rightWinding) {
+                        v2 = vertices[meshVertexLists[offsetCount + j - 1]];
+                        v1 = vertices[meshVertexLists[offsetCount + j - 2]];
+                        v3 = vertices[meshVertexLists[offsetCount + j]];
+                    }
+                    else {
+                        v1 = vertices[meshVertexLists[offsetCount + j - 2]];
+                        v2 = vertices[meshVertexLists[offsetCount + j - 1]];
+                        v3 = vertices[meshVertexLists[offsetCount + j]];
+                    }
+                    collisionModel->triangles.push_back(new Triangle3D(&v1, &v2, &v3)); INCR_NEW("Triangle3D")
+                    rightWinding = !rightWinding;
+                }
+                offsetCount += (numVerts + 1);
+            }
+            break;
+        }
+        default:
+            return nullptr;
+        }
+    }
+    collisionModel->generateMinMaxValues();
+    return collisionModel;
 }
 
 CollisionModel* loadBinaryObjCollisionModel(std::string filePath, std::string fileName)
@@ -1742,7 +1973,7 @@ CollisionModel* loadBinaryObjCollisionModel(std::string filePath, std::string fi
 
     char fileType[4];
     fread(fileType, sizeof(char), 4, file);
-    if (fileType[0] != 'o' || 
+    if (fileType[0] != 'o' ||
         fileType[1] != 'b' ||
         fileType[2] != 'j' ||
         fileType[3] != 0)

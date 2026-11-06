@@ -6,6 +6,7 @@ class CollisionModel;
 
 #include <list>
 #include <string>
+#include "../collision/collisionmodel.h"
 
 //Attempts to load a model as either an OBJ or binary format.
 //Checks for binary file first, then tries OBJ.
@@ -47,4 +48,7 @@ CollisionModel* loadBinaryObjCollisionModel(std::string filePath, std::string fi
 
 //The CollisionModel returned must be deleted later.
 CollisionModel* loadBinaryVclCollisionModel(std::string filePath, std::string fileName);
+
+int loadObjModelFromPCGame(std::list<TexturedModel*>* models, struct PCMeshObject* objectPtr);
+CollisionModel* loadCollisionModelFromPCGame(struct PCMeshObject* objectPtr);
 #endif

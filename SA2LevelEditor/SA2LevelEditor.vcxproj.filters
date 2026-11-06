@@ -410,6 +410,9 @@
     <ClCompile Include="src\entities\LevelSpecific\WeaponsBed\TRUCK.cpp">
       <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\LevelSpecific\PyramidCave\KEYDOOR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main\main.h">
@@ -752,6 +755,7 @@
     <ClInclude Include="src\entities\LevelSpecific\WeaponsBed\truck.h">
       <Filter>Source Files\entities\LevelSpecific\WeaponsBed</Filter>
     </ClInclude>
+    <ClInclude Include="src\entities\LevelSpecific\PyramidCave\KEYDOOR.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SA2LevelEditor.rc">

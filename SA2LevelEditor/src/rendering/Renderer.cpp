@@ -29,11 +29,16 @@ void EntityRenderer::renderNEW(std::unordered_map<TexturedModel*, std::list<Enti
     {
         prepareTexturedModel(entry.first);
         std::list<Entity*>* entityList = &entry.second;
-
+        int noTexture = entry.first->getTexture()->getIDs()->size() == 0;
         for (Entity* entity : (*entityList))
         {
             prepareInstance(entity);
-            glDrawElements(GL_TRIANGLES, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+            if (noTexture) {
+                glDrawElements(GL_TRIANGLE_STRIP, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+            }
+            else {
+                glDrawElements(GL_TRIANGLES, (entry.first)->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
+            }
         }
         unbindTexturedModel();
     }
@@ -47,8 +52,11 @@ void EntityRenderer::prepareTexturedModel(TexturedModel* model)
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
     glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
 
     ModelTexture* texture = model->getTexture();
+    int noTexture = texture->getIDs()->size() == 0;
+
     //if (texture->getHasTransparency() != 0)
     {
         //Master_disableCulling();
@@ -60,10 +68,17 @@ void EntityRenderer::prepareTexturedModel(TexturedModel* model)
     shader->loadTransparency(texture->hasTransparency);
     shader->loadTextureOffsets(clockTime * (texture->scrollX), clockTime * (texture->scrollY));
     shader->loadMixFactor(texture->mixFactor());
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture->getID());
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture->getID2());
+    if (texture->getIDs()->size() > 0) {
+        shader->loadHasTexture(1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture->getID());
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture->getID2());
+
+    }
+    else {
+        shader->loadHasTexture(0);
+    }
 }
 
 void EntityRenderer::unbindTexturedModel()
@@ -72,6 +87,7 @@ void EntityRenderer::unbindTexturedModel()
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(3);
+    glDisableVertexAttribArray(4);
     glBindVertexArray(0);
 }
 
